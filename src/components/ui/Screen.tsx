@@ -1,0 +1,35 @@
+import type { ReactNode } from 'react'
+
+const safeAreaPadding = {
+  paddingLeft: 'max(1.25rem, env(safe-area-inset-left))',
+  paddingRight: 'max(1.25rem, env(safe-area-inset-right))',
+  paddingTop: '1.25rem',
+  paddingBottom: 'max(1.25rem, env(safe-area-inset-bottom))',
+}
+
+export function Screen({
+  children,
+  centered = false,
+  className = '',
+}: {
+  children: ReactNode
+  centered?: boolean
+  className?: string
+}) {
+  if (centered) {
+    return (
+      <div
+        className={`flex min-h-screen items-center justify-center ${className}`}
+        style={safeAreaPadding}
+      >
+        {children}
+      </div>
+    )
+  }
+
+  return (
+    <div className={`min-h-screen ${className}`} style={safeAreaPadding}>
+      <div className="mx-auto max-w-md">{children}</div>
+    </div>
+  )
+}
