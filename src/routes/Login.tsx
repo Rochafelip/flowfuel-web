@@ -2,6 +2,9 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { loginRequest } from '../services/api'
+import { Screen } from '../components/ui/Screen'
+import { TextField } from '../components/ui/TextField'
+import { Button } from '../components/ui/Button'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -27,7 +30,7 @@ export function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-5">
+    <Screen centered className="bg-gray-50">
       <form
         onSubmit={handleLogin}
         className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
@@ -36,34 +39,31 @@ export function Login() {
           Entrar
         </h1>
 
-        <input
-          className="mb-4 h-12 w-full rounded-lg border border-gray-300 px-3 text-base"
-          placeholder="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoCapitalize="none"
-        />
+        <div className="mb-4 flex flex-col gap-4">
+          <TextField
+            placeholder="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoCapitalize="none"
+          />
 
-        <input
-          className="mb-4 h-12 w-full rounded-lg border border-gray-300 px-3 text-base"
-          placeholder="Senha"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <TextField
+            placeholder="Senha"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-        <button
-          type="submit"
-          className="mb-4 h-12 w-full rounded-lg bg-blue-600 text-base font-bold text-white hover:bg-blue-700"
-        >
+        <Button type="submit" className="mb-4">
           Entrar
-        </button>
+        </Button>
 
         <Link to="/register" className="block text-center text-sm text-blue-600">
           Não tem conta? Criar conta
         </Link>
       </form>
-    </div>
+    </Screen>
   )
 }
