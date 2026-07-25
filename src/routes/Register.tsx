@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { registerRequest, loginRequest } from '../services/api'
-import { useAuth } from '../context/AuthContext'
+import { registerRequest } from '../services/api'
 
 export function Register() {
   const navigate = useNavigate()
@@ -10,8 +9,6 @@ export function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-
-  const { signIn } = useAuth()
 
   async function handleRegister(e: FormEvent) {
     e.preventDefault()
@@ -34,9 +31,8 @@ export function Register() {
     try {
       await registerRequest(name, email, password)
 
-      const data = await loginRequest(email, password)
-      await signIn(data.token)
-      navigate('/')
+      alert('Conta criada! Verifique seu email para ativar antes de entrar.')
+      navigate('/login')
     } catch (error) {
       alert('Erro ao criar conta. Tente novamente.')
       console.error(error)

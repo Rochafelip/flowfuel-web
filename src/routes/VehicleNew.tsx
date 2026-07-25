@@ -12,7 +12,7 @@ export function VehicleNew() {
   const [modelYear, setModelYear] = useState('')
   const [manufactureYear, setManufactureYear] = useState('')
   const [type, setType] = useState('Carro')
-  const [energyType, setEnergyType] = useState('0')
+  const [energyType, setEnergyType] = useState('COMBUSTION')
   const [fuelSubType, setFuelSubType] = useState('Gasolina')
   const [capacity, setCapacity] = useState('')
   const [color, setColor] = useState('')
@@ -44,7 +44,7 @@ export function VehicleNew() {
         method: 'POST',
         body: JSON.stringify({
           type,
-          energyType: parseInt(energyType),
+          energyType,
           fuelSubType,
           currentKm: parseInt(currentKm),
           capacity: parseInt(capacity),
@@ -117,13 +117,15 @@ export function VehicleNew() {
           onChange={(e) => setType(e.target.value)}
         />
 
-        <input
+        <select
           className={inputClass}
-          placeholder="Tipo de energia (0 = elétrico, 1 = híbrido, etc)"
           value={energyType}
           onChange={(e) => setEnergyType(e.target.value)}
-          inputMode="numeric"
-        />
+        >
+          <option value="COMBUSTION">Combustão</option>
+          <option value="ELECTRIC">Elétrico</option>
+          <option value="HYBRID">Híbrido</option>
+        </select>
 
         <input
           className={inputClass}

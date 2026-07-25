@@ -24,7 +24,7 @@ export function SelectVehicle() {
   async function loadVehicles() {
     try {
       const response = await authenticatedRequest('/vehicles')
-      setVehicles(response)
+      setVehicles(response.content)
     } catch (error) {
       console.log(error)
     } finally {

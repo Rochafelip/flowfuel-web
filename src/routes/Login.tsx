@@ -19,7 +19,7 @@ export function Login() {
 
     try {
       const data = await loginRequest(email, password)
-      await signIn(data.token)
+      await signIn(data.accessToken)
       navigate('/')
     } catch {
       alert('Email ou senha inválidos')
