@@ -18,9 +18,26 @@ function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
 }
 
-function MetricCard({ label, value }: { label: string; value: string }) {
+function IconBadge({ icon }: { icon: string }) {
+  return (
+    <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 text-base text-green-700">
+      {icon}
+    </div>
+  )
+}
+
+function MetricCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: string
+  label: string
+  value: string
+}) {
   return (
     <Card>
+      <IconBadge icon={icon} />
       <p className="text-sm text-gray-600">{label}</p>
       <p className="text-lg font-bold text-gray-900">{value}</p>
     </Card>
@@ -28,14 +45,17 @@ function MetricCard({ label, value }: { label: string; value: string }) {
 }
 
 function FuelMetricsCard({
+  icon,
   title,
   metrics,
 }: {
+  icon: string
   title: string
   metrics: FuelMetrics
 }) {
   return (
     <Card>
+      <IconBadge icon={icon} />
       <p className="mb-2 text-sm font-bold text-gray-700">{title}</p>
 
       <p className="text-sm text-gray-600">Consumo médio</p>
@@ -106,21 +126,25 @@ export function Home() {
 
       <div className="grid grid-cols-2 gap-3">
         <MetricCard
+          icon="💰"
           label="Total gasto"
           value={currencyFormatter.format(dashboard.totalSpent)}
         />
 
         <MetricCard
+          icon="⛽"
           label="Custo por km"
           value={`${currencyFormatter.format(dashboard.costPerKm)}/km`}
         />
 
         <MetricCard
+          icon="🧾"
           label="Total de abastecimentos"
           value={integerFormatter.format(dashboard.totalRefuels)}
         />
 
         <MetricCard
+          icon="📅"
           label="Último abastecimento"
           value={
             dashboard.lastRefuelDate
@@ -134,6 +158,7 @@ export function Home() {
         {dashboard.energyType !== 'HYBRID' &&
           dashboard.averageConsumption !== null && (
             <MetricCard
+              icon="📊"
               label="Consumo médio"
               value={`${dashboard.averageConsumption.toFixed(2)} ${
                 dashboard.consumptionUnit
@@ -144,8 +169,8 @@ export function Home() {
 
       {dashboard.energyType === 'HYBRID' && dashboard.breakdown && (
         <div className="mt-3 grid grid-cols-2 gap-3">
-          <FuelMetricsCard title="Combustível" metrics={dashboard.breakdown.fuel} />
-          <FuelMetricsCard title="Elétrico" metrics={dashboard.breakdown.electric} />
+          <FuelMetricsCard icon="⛽" title="Combustível" metrics={dashboard.breakdown.fuel} />
+          <FuelMetricsCard icon="🔌" title="Elétrico" metrics={dashboard.breakdown.electric} />
         </div>
       )}
     </Screen>
