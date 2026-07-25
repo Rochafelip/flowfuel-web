@@ -9,6 +9,7 @@ interface Vehicle {
   modelYear: number
   currentKm: number
   licensePlate: string
+  energyType: 'COMBUSTION' | 'ELECTRIC' | 'HYBRID'
 }
 
 interface VehicleContextData {
