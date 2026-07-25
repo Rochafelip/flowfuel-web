@@ -2,9 +2,9 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
-
-const inputClass =
-  'mb-4 h-12 w-full rounded-lg border border-gray-300 px-3 text-base'
+import { Screen } from '../components/ui/Screen'
+import { TextField } from '../components/ui/TextField'
+import { Button } from '../components/ui/Button'
 
 export function VehicleNew() {
   const [brand, setBrand] = useState('')
@@ -74,51 +74,46 @@ export function VehicleNew() {
   }
 
   return (
-    <div className="min-h-screen p-5">
+    <Screen>
       <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
         Cadastrar Veículo
       </h1>
 
-      <form onSubmit={handleCreateVehicle} className="mx-auto max-w-sm">
-        <input
-          className={inputClass}
+      <form onSubmit={handleCreateVehicle} className="flex flex-col gap-4">
+        <TextField
           placeholder="Marca"
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Modelo"
           value={model}
           onChange={(e) => setModel(e.target.value)}
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Ano"
           value={modelYear}
           onChange={(e) => setModelYear(e.target.value)}
           inputMode="numeric"
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Ano de Fabricação"
           value={manufactureYear}
           onChange={(e) => setManufactureYear(e.target.value)}
           inputMode="numeric"
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Tipo (ex: Carro)"
           value={type}
           onChange={(e) => setType(e.target.value)}
         />
 
         <select
-          className={inputClass}
+          className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base"
           value={energyType}
           onChange={(e) => setEnergyType(e.target.value)}
         >
@@ -127,50 +122,41 @@ export function VehicleNew() {
           <option value="HYBRID">Híbrido</option>
         </select>
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Subtipo de combustível (ex: Gasolina)"
           value={fuelSubType}
           onChange={(e) => setFuelSubType(e.target.value)}
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Capacidade (L)"
           value={capacity}
           onChange={(e) => setCapacity(e.target.value)}
           inputMode="numeric"
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Cor"
           value={color}
           onChange={(e) => setColor(e.target.value)}
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Placa"
           value={licensePlate}
           onChange={(e) => setLicensePlate(e.target.value.toUpperCase())}
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Km Atual"
           value={currentKm}
           onChange={(e) => setCurrentKm(e.target.value)}
           inputMode="numeric"
         />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="mb-4 h-12 w-full rounded-lg bg-blue-600 text-base font-bold text-white hover:bg-blue-700 disabled:opacity-60"
-        >
+        <Button type="submit" disabled={loading}>
           {loading ? 'Cadastrando...' : 'Cadastrar'}
-        </button>
+        </Button>
 
         <button
           type="button"
@@ -180,6 +166,6 @@ export function VehicleNew() {
           Voltar
         </button>
       </form>
-    </div>
+    </Screen>
   )
 }
