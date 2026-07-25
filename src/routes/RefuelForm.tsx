@@ -3,9 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import type { Refuel, RefuelRequest, RefuelType } from '../types/Refuel'
-
-const inputClass =
-  'mb-4 h-12 w-full rounded-lg border border-gray-300 px-3 text-base'
+import { Screen } from '../components/ui/Screen'
+import { Spinner } from '../components/ui/Spinner'
+import { TextField } from '../components/ui/TextField'
+import { Button } from '../components/ui/Button'
 
 export function RefuelForm() {
   const { id } = useParams<{ id: string }>()
@@ -89,29 +90,27 @@ export function RefuelForm() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-      </div>
+      <Screen centered>
+        <Spinner />
+      </Screen>
     )
   }
 
   return (
-    <div className="min-h-screen p-5">
+    <Screen>
       <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
         {isEditing ? 'Editar Abastecimento' : 'Novo Abastecimento'}
       </h1>
 
-      <form onSubmit={handleSubmit} className="mx-auto max-w-sm">
-        <input
-          className={inputClass}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <TextField
           placeholder="Odômetro (km)"
           value={odometer}
           onChange={(e) => setOdometer(e.target.value)}
           inputMode="numeric"
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder={
             isHybrid && refuelType === 'ELECTRIC'
               ? 'Quantidade (kWh)'
@@ -122,8 +121,7 @@ export function RefuelForm() {
           inputMode="decimal"
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Preço por unidade"
           value={pricePerUnit}
           onChange={(e) => setPricePerUnit(e.target.value)}
@@ -132,7 +130,7 @@ export function RefuelForm() {
 
         {isHybrid && (
           <select
-            className={inputClass}
+            className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base"
             value={refuelType}
             onChange={(e) => setRefuelType(e.target.value as RefuelType)}
           >
@@ -141,7 +139,7 @@ export function RefuelForm() {
           </select>
         )}
 
-        <label className="mb-4 flex items-center gap-2">
+        <label className="flex items-center gap-2">
           <input
             type="checkbox"
             checked={fullTank}
@@ -150,22 +148,18 @@ export function RefuelForm() {
           Tanque cheio
         </label>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="mb-4 h-12 w-full rounded-lg bg-blue-600 text-base font-bold text-white hover:bg-blue-700 disabled:opacity-60"
-        >
+        <Button type="submit" disabled={submitting}>
           {submitting ? 'Salvando...' : 'Salvar'}
-        </button>
+        </Button>
 
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="block w-full text-center text-sm text-blue-600"
+          className="block w-full text-center text-sm text-green-700"
         >
           Voltar
         </button>
       </form>
-    </div>
+    </Screen>
   )
 }

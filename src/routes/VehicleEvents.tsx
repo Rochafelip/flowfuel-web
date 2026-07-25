@@ -7,6 +7,11 @@ import {
   VEHICLE_EVENT_TYPE_LABELS,
   type VehicleEvent,
 } from '../types/VehicleEvent'
+import { Screen } from '../components/ui/Screen'
+import { Card } from '../components/ui/Card'
+import { Spinner } from '../components/ui/Spinner'
+import { ErrorState } from '../components/ui/ErrorState'
+import { Button } from '../components/ui/Button'
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -48,74 +53,72 @@ export function VehicleEvents() {
 
   if (loading && items.length === 0) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-      </div>
+      <Screen centered>
+        <Spinner />
+      </Screen>
     )
   }
 
   return (
-    <div className="min-h-screen p-5">
+    <Screen>
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-xl font-bold">Eventos</h1>
-        <button
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700"
+        <Button
+          className="w-auto px-4 text-sm"
           onClick={() => navigate('/vehicle-events/new')}
         >
           Novo evento
-        </button>
+        </Button>
       </div>
 
-      {error && (
-        <p className="mb-4 text-sm text-red-600">
-          Não foi possível carregar os eventos.
-        </p>
-      )}
+      {error && <ErrorState message="Não foi possível carregar os eventos." />}
 
       {items.length === 0 && !error && (
-        <p className="text-gray-500">Nenhum evento registrado</p>
+        <p className="text-gray-600">Nenhum evento registrado</p>
       )}
 
-      <ul>
+      <ul className="flex flex-col gap-3">
         {items.map((item) => (
-          <li key={item.id} className="mb-3 rounded-lg bg-gray-100 p-4">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="font-bold">{VEHICLE_EVENT_TYPE_LABELS[item.type]}</p>
-              <p className="text-sm text-gray-500">{formatDate(item.eventDate)}</p>
-            </div>
+          <li key={item.id}>
+            <Card>
+              <div className="mb-2 flex items-center justify-between">
+                <p className="font-bold">{VEHICLE_EVENT_TYPE_LABELS[item.type]}</p>
+                <p className="text-sm text-gray-600">{formatDate(item.eventDate)}</p>
+              </div>
 
-            <p className="font-bold">{currencyFormatter.format(item.amount)}</p>
-            {item.odometer !== null && <p>Odômetro: {item.odometer} km</p>}
-            {item.description && <p>{truncate(item.description, 100)}</p>}
+              <p className="font-bold">{currencyFormatter.format(item.amount)}</p>
+              {item.odometer !== null && <p>Odômetro: {item.odometer} km</p>}
+              {item.description && <p>{truncate(item.description, 100)}</p>}
 
-            <div className="mt-3 flex gap-3">
-              <Link
-                to={`/vehicle-events/${item.id}/edit`}
-                className="text-sm font-bold text-blue-600"
-              >
-                Editar
-              </Link>
-              <button
-                className="text-sm font-bold text-red-600 disabled:opacity-50"
-                disabled={deletingId === item.id}
-                onClick={() => handleDelete(item.id)}
-              >
-                Excluir
-              </button>
-            </div>
+              <div className="mt-3 flex gap-3">
+                <Link
+                  to={`/vehicle-events/${item.id}/edit`}
+                  className="text-sm font-bold text-green-700"
+                >
+                  Editar
+                </Link>
+                <button
+                  className="text-sm font-bold text-red-600 disabled:opacity-50"
+                  disabled={deletingId === item.id}
+                  onClick={() => handleDelete(item.id)}
+                >
+                  Excluir
+                </button>
+              </div>
+            </Card>
           </li>
         ))}
       </ul>
 
       {hasMore && (
         <button
-          className="mt-2 w-full rounded-lg bg-gray-200 py-3 text-sm font-bold text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+          className="mt-3 w-full rounded-lg bg-gray-200 py-3 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300 disabled:opacity-50"
           onClick={loadMore}
           disabled={loading}
         >
           {loading ? 'Carregando...' : 'Carregar mais'}
         </button>
       )}
-    </div>
+    </Screen>
   )
 }

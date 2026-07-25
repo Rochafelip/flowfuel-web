@@ -8,9 +8,10 @@ import {
   type VehicleEventRequest,
   type VehicleEventType,
 } from '../types/VehicleEvent'
-
-const inputClass =
-  'mb-4 h-12 w-full rounded-lg border border-gray-300 px-3 text-base'
+import { Screen } from '../components/ui/Screen'
+import { Spinner } from '../components/ui/Spinner'
+import { TextField } from '../components/ui/TextField'
+import { Button } from '../components/ui/Button'
 
 const EVENT_TYPES = Object.keys(VEHICLE_EVENT_TYPE_LABELS) as VehicleEventType[]
 
@@ -105,21 +106,21 @@ export function VehicleEventForm() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-      </div>
+      <Screen centered>
+        <Spinner />
+      </Screen>
     )
   }
 
   return (
-    <div className="min-h-screen p-5">
+    <Screen>
       <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
         {isEditing ? 'Editar Evento' : 'Novo Evento'}
       </h1>
 
-      <form onSubmit={handleSubmit} className="mx-auto max-w-sm">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <select
-          className={inputClass}
+          className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base"
           value={type}
           onChange={(e) => setType(e.target.value as VehicleEventType)}
         >
@@ -130,24 +131,21 @@ export function VehicleEventForm() {
           ))}
         </select>
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Valor (R$)"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           inputMode="decimal"
         />
 
-        <input
-          className={inputClass}
+        <TextField
           type="date"
           value={eventDate}
           max={todayIsoDate()}
           onChange={(e) => setEventDate(e.target.value)}
         />
 
-        <input
-          className={inputClass}
+        <TextField
           placeholder="Odômetro (km) - opcional"
           value={odometer}
           onChange={(e) => setOdometer(e.target.value)}
@@ -155,7 +153,7 @@ export function VehicleEventForm() {
         />
 
         <textarea
-          className="mb-4 w-full rounded-lg border border-gray-300 px-3 py-2 text-base"
+          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
           placeholder="Descrição (opcional)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -163,22 +161,18 @@ export function VehicleEventForm() {
           rows={4}
         />
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="mb-4 h-12 w-full rounded-lg bg-blue-600 text-base font-bold text-white hover:bg-blue-700 disabled:opacity-60"
-        >
+        <Button type="submit" disabled={submitting}>
           {submitting ? 'Salvando...' : 'Salvar'}
-        </button>
+        </Button>
 
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="block w-full text-center text-sm text-blue-600"
+          className="block w-full text-center text-sm text-green-700"
         >
           Voltar
         </button>
       </form>
-    </div>
+    </Screen>
   )
 }

@@ -4,6 +4,11 @@ import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import { usePaginatedList } from '../hooks/usePaginatedList'
 import type { Refuel } from '../types/Refuel'
+import { Screen } from '../components/ui/Screen'
+import { Card } from '../components/ui/Card'
+import { Spinner } from '../components/ui/Spinner'
+import { ErrorState } from '../components/ui/ErrorState'
+import { Button } from '../components/ui/Button'
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -41,90 +46,88 @@ export function Refuels() {
 
   if (loading && items.length === 0) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-      </div>
+      <Screen centered>
+        <Spinner />
+      </Screen>
     )
   }
 
   return (
-    <div className="min-h-screen p-5">
+    <Screen>
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-xl font-bold">Abastecimentos</h1>
-        <button
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700"
+        <Button
+          className="w-auto px-4 text-sm"
           onClick={() => navigate('/refuels/new')}
         >
           Novo abastecimento
-        </button>
+        </Button>
       </div>
 
-      {error && (
-        <p className="mb-4 text-sm text-red-600">
-          Não foi possível carregar os abastecimentos.
-        </p>
-      )}
+      {error && <ErrorState message="Não foi possível carregar os abastecimentos." />}
 
       {items.length === 0 && !error && (
-        <p className="text-gray-500">Nenhum abastecimento registrado</p>
+        <p className="text-gray-600">Nenhum abastecimento registrado</p>
       )}
 
-      <ul>
+      <ul className="flex flex-col gap-3">
         {items.map((item) => (
-          <li key={item.id} className="mb-3 rounded-lg bg-gray-100 p-4">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="font-bold">{formatDateTime(item.refuelDate)}</p>
-              {item.fullTank && (
-                <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-bold text-blue-700">
-                  Tanque cheio
-                </span>
+          <li key={item.id}>
+            <Card>
+              <div className="mb-2 flex items-center justify-between">
+                <p className="font-bold">{formatDateTime(item.refuelDate)}</p>
+                {item.fullTank && (
+                  <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-bold text-green-700">
+                    Tanque cheio
+                  </span>
+                )}
+              </div>
+
+              <p>Odômetro: {item.odometer} km</p>
+              {item.kmSinceLastRefuel !== null && (
+                <p>+{item.kmSinceLastRefuel} km desde o último</p>
               )}
-            </div>
+              <p>
+                Quantidade: {item.energyAmount}{' '}
+                {item.refuelType === 'FUEL' ? 'L' : 'kWh'}
+              </p>
+              <p>
+                Preço: {currencyFormatter.format(item.pricePerUnit)}
+                {item.refuelType === 'FUEL' ? '/L' : '/kWh'}
+              </p>
+              <p className="font-bold">
+                Total: {currencyFormatter.format(item.totalAmount)}
+              </p>
 
-            <p>Odômetro: {item.odometer} km</p>
-            {item.kmSinceLastRefuel !== null && (
-              <p>+{item.kmSinceLastRefuel} km desde o último</p>
-            )}
-            <p>
-              Quantidade: {item.energyAmount}{' '}
-              {item.refuelType === 'FUEL' ? 'L' : 'kWh'}
-            </p>
-            <p>
-              Preço: {currencyFormatter.format(item.pricePerUnit)}
-              {item.refuelType === 'FUEL' ? '/L' : '/kWh'}
-            </p>
-            <p className="font-bold">
-              Total: {currencyFormatter.format(item.totalAmount)}
-            </p>
-
-            <div className="mt-3 flex gap-3">
-              <Link
-                to={`/refuels/${item.id}/edit`}
-                className="text-sm font-bold text-blue-600"
-              >
-                Editar
-              </Link>
-              <button
-                className="text-sm font-bold text-red-600 disabled:opacity-50"
-                disabled={deletingId === item.id}
-                onClick={() => handleDelete(item.id)}
-              >
-                Excluir
-              </button>
-            </div>
+              <div className="mt-3 flex gap-3">
+                <Link
+                  to={`/refuels/${item.id}/edit`}
+                  className="text-sm font-bold text-green-700"
+                >
+                  Editar
+                </Link>
+                <button
+                  className="text-sm font-bold text-red-600 disabled:opacity-50"
+                  disabled={deletingId === item.id}
+                  onClick={() => handleDelete(item.id)}
+                >
+                  Excluir
+                </button>
+              </div>
+            </Card>
           </li>
         ))}
       </ul>
 
       {hasMore && (
         <button
-          className="mt-2 w-full rounded-lg bg-gray-200 py-3 text-sm font-bold text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+          className="mt-3 w-full rounded-lg bg-gray-200 py-3 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300 disabled:opacity-50"
           onClick={loadMore}
           disabled={loading}
         >
           {loading ? 'Carregando...' : 'Carregar mais'}
         </button>
       )}
-    </div>
+    </Screen>
   )
 }
