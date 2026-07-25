@@ -78,14 +78,19 @@ export function SelectVehicle() {
         {vehicles.map((item) => (
           <li key={item.id}>
             <button
-              className="w-full rounded-lg bg-gray-100 p-4 text-left transition-colors hover:bg-gray-200 active:bg-gray-300"
+              className="flex w-full items-center gap-3 rounded-xl bg-white p-4 text-left shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
               onClick={() => activateVehicle(item.id)}
             >
-              <p className="font-bold">
-                {item.brand} {item.model}
-              </p>
-              <p>Placa: {item.licensePlate}</p>
-              <p>Ano: {item.modelYear}</p>
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-base text-green-700">
+                🚗
+              </div>
+              <div>
+                <p className="font-bold">
+                  {item.brand} {item.model}
+                </p>
+                <p>Placa: {item.licensePlate}</p>
+                <p>Ano: {item.modelYear}</p>
+              </div>
             </button>
           </li>
         ))}
