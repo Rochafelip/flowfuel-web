@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
+import { Screen } from '../components/ui/Screen'
+import { Spinner } from '../components/ui/Spinner'
+import { Button } from '../components/ui/Button'
 
 interface VehicleListItem {
   id: number
@@ -47,36 +50,35 @@ export function SelectVehicle() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-      </div>
+      <Screen centered>
+        <Spinner />
+      </Screen>
     )
   }
 
   if (vehicles.length === 0) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center gap-4">
-        <p>Nenhum veículo cadastrado</p>
+      <Screen centered>
+        <div className="flex flex-col items-center gap-4">
+          <p>Nenhum veículo cadastrado</p>
 
-        <button
-          className="rounded-lg bg-blue-600 px-4 py-3 font-bold text-white hover:bg-blue-700"
-          onClick={() => navigate('/vehicles/new')}
-        >
-          Cadastrar Veículo
-        </button>
-      </div>
+          <Button onClick={() => navigate('/vehicles/new')} className="w-auto px-4">
+            Cadastrar Veículo
+          </Button>
+        </div>
+      </Screen>
     )
   }
 
   return (
-    <div className="min-h-screen p-5">
+    <Screen>
       <h1 className="mb-5 text-xl font-bold">Selecione um veículo</h1>
 
-      <ul>
+      <ul className="flex flex-col gap-3">
         {vehicles.map((item) => (
           <li key={item.id}>
             <button
-              className="mb-3 w-full rounded-lg bg-gray-100 p-4 text-left hover:bg-gray-200"
+              className="w-full rounded-lg bg-gray-100 p-4 text-left transition-colors hover:bg-gray-200 active:bg-gray-300"
               onClick={() => activateVehicle(item.id)}
             >
               <p className="font-bold">
@@ -88,6 +90,6 @@ export function SelectVehicle() {
           </li>
         ))}
       </ul>
-    </div>
+    </Screen>
   )
 }
