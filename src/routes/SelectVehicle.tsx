@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
+import { useVehicle } from '../context/VehicleContext'
 
 interface VehicleListItem {
   id: number
@@ -14,6 +15,7 @@ export function SelectVehicle() {
   const [vehicles, setVehicles] = useState<VehicleListItem[]>([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
+  const { loadActiveVehicle } = useVehicle()
 
   useEffect(() => {
     loadVehicles()
@@ -36,6 +38,7 @@ export function SelectVehicle() {
         method: 'PUT',
       })
 
+      await loadActiveVehicle()
       navigate('/')
     } catch (error) {
       console.log(error)
