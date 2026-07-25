@@ -60,7 +60,7 @@ export function Login() {
           Entrar
         </Button>
 
-        <Link to="/register" className="block text-center text-sm text-blue-600">
+        <Link to="/register" className="block text-center text-sm text-green-700">
           Não tem conta? Criar conta
         </Link>
       </form>

@@ -161,7 +161,7 @@ export function VehicleNew() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="block w-full text-center text-sm text-blue-600"
+          className="block w-full text-center text-sm text-green-700"
         >
           Voltar
         </button>

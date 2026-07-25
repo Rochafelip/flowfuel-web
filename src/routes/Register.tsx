@@ -86,7 +86,7 @@ export function Register() {
           Criar Conta
         </Button>
 
-        <Link to="/login" className="block text-center text-sm text-blue-600">
+        <Link to="/login" className="block text-center text-sm text-green-700">
           Já tem conta? Entrar
         </Link>
       </form>
