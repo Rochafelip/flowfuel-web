@@ -30,7 +30,7 @@ export function Login() {
   }
 
   return (
-    <Screen centered className="bg-gray-50">
+    <Screen centered>
       <form
         onSubmit={handleLogin}
         className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"

@@ -19,7 +19,7 @@ export function Screen({
   if (centered) {
     return (
       <div
-        className={`flex min-h-screen items-center justify-center ${className}`}
+        className={`flex min-h-screen items-center justify-center bg-green-50 ${className}`}
         style={safeAreaPadding}
       >
         {children}
@@ -28,7 +28,7 @@ export function Screen({
   }
 
   return (
-    <div className={`min-h-screen ${className}`} style={safeAreaPadding}>
+    <div className={`min-h-screen bg-green-50 ${className}`} style={safeAreaPadding}>
       <div className="mx-auto max-w-md">{children}</div>
     </div>
   )

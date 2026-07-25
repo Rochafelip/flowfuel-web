@@ -43,7 +43,7 @@ export function Register() {
   }
 
   return (
-    <Screen centered className="bg-gray-50">
+    <Screen centered>
       <form
         onSubmit={handleRegister}
         className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
