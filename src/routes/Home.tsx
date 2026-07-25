@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import type { Dashboard, FuelMetrics } from '../types/Dashboard'
+import { Screen } from '../components/ui/Screen'
+import { Card } from '../components/ui/Card'
+import { Spinner } from '../components/ui/Spinner'
+import { ErrorState } from '../components/ui/ErrorState'
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -14,12 +18,12 @@ function formatDate(dateString: string) {
   return new Date(dateString).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
 }
 
-function Card({ label, value }: { label: string; value: string }) {
+function MetricCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-gray-100 p-4">
-      <p className="text-sm text-gray-500">{label}</p>
+    <Card>
+      <p className="text-sm text-gray-600">{label}</p>
       <p className="text-lg font-bold text-gray-900">{value}</p>
-    </div>
+    </Card>
   )
 }
 
@@ -31,24 +35,24 @@ function FuelMetricsCard({
   metrics: FuelMetrics
 }) {
   return (
-    <div className="rounded-lg bg-gray-100 p-4">
+    <Card>
       <p className="mb-2 text-sm font-bold text-gray-700">{title}</p>
 
-      <p className="text-sm text-gray-500">Consumo médio</p>
+      <p className="text-sm text-gray-600">Consumo médio</p>
       <p className="mb-2 font-bold text-gray-900">
         {metrics.averageConsumption.toFixed(2)} {metrics.consumptionUnit}
       </p>
 
-      <p className="text-sm text-gray-500">Preço médio</p>
+      <p className="text-sm text-gray-600">Preço médio</p>
       <p className="mb-2 font-bold text-gray-900">
         {currencyFormatter.format(metrics.averagePrice)} {metrics.priceUnit}
       </p>
 
-      <p className="text-sm text-gray-500">Total gasto</p>
+      <p className="text-sm text-gray-600">Total gasto</p>
       <p className="font-bold text-gray-900">
         {currencyFormatter.format(metrics.totalSpent)}
       </p>
-    </div>
+    </Card>
   )
 }
 
@@ -82,41 +86,41 @@ export function Home() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-      </div>
+      <Screen centered>
+        <Spinner />
+      </Screen>
     )
   }
 
   if (error || !dashboard) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <p className="text-gray-500">Não foi possível carregar o dashboard</p>
-      </div>
+      <Screen centered>
+        <ErrorState message="Não foi possível carregar o dashboard" />
+      </Screen>
     )
   }
 
   return (
-    <div className="min-h-screen p-5">
+    <Screen>
       <h1 className="mb-5 text-xl font-bold">Dashboard</h1>
 
       <div className="grid grid-cols-2 gap-3">
-        <Card
+        <MetricCard
           label="Total gasto"
           value={currencyFormatter.format(dashboard.totalSpent)}
         />
 
-        <Card
+        <MetricCard
           label="Custo por km"
           value={`${currencyFormatter.format(dashboard.costPerKm)}/km`}
         />
 
-        <Card
+        <MetricCard
           label="Total de abastecimentos"
           value={integerFormatter.format(dashboard.totalRefuels)}
         />
 
-        <Card
+        <MetricCard
           label="Último abastecimento"
           value={
             dashboard.lastRefuelDate
@@ -129,7 +133,7 @@ export function Home() {
 
         {dashboard.energyType !== 'HYBRID' &&
           dashboard.averageConsumption !== null && (
-            <Card
+            <MetricCard
               label="Consumo médio"
               value={`${dashboard.averageConsumption.toFixed(2)} ${
                 dashboard.consumptionUnit
@@ -144,6 +148,6 @@ export function Home() {
           <FuelMetricsCard title="Elétrico" metrics={dashboard.breakdown.electric} />
         </div>
       )}
-    </div>
+    </Screen>
   )
 }
