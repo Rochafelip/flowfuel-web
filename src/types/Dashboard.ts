@@ -1,11 +1,29 @@
-export type Dashboard = {
-  averageConsumption: number
+export type FuelMetrics = {
+  totalEnergy: number
   totalSpent: number
-  monthlySpent: number
+  averagePrice: number
+  averageConsumption: number
+  energyUnit: string
+  priceUnit: string
+  consumptionUnit: string
+}
+
+export type Dashboard = {
+  vehicleId: number
+  energyType: 'COMBUSTION' | 'ELECTRIC' | 'HYBRID'
   totalRefuels: number
-  lastRefuel: {
-    refuelDate: string
-    totalAmount: number
-    litersRefueled: number
+  totalSpent: number
+  costPerKm: number
+  totalEnergy: number | null
+  averagePrice: number | null
+  averageConsumption: number | null
+  energyUnit: string | null
+  priceUnit: string | null
+  consumptionUnit: string | null
+  breakdown: {
+    fuel: FuelMetrics
+    electric: FuelMetrics
   } | null
+  lastRefuelDate: string | null
+  lastOdometer: number | null
 }
