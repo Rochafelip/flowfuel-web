@@ -2,14 +2,17 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
+import { useFipeSelection } from '../hooks/useFipeSelection'
 import { Screen } from '../components/ui/Screen'
 import { TextField } from '../components/ui/TextField'
 import { Button } from '../components/ui/Button'
 
+const selectClass =
+  'h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-60'
+
 export function VehicleNew() {
-  const [brand, setBrand] = useState('')
-  const [model, setModel] = useState('')
-  const [modelYear, setModelYear] = useState('')
+  const fipe = useFipeSelection()
+
   const [manufactureYear, setManufactureYear] = useState('')
   const [type, setType] = useState('Carro')
   const [energyType, setEnergyType] = useState('COMBUSTION')
@@ -26,9 +29,9 @@ export function VehicleNew() {
     e.preventDefault()
 
     if (
-      !brand ||
-      !model ||
-      !modelYear ||
+      !fipe.brandName ||
+      !fipe.modelName ||
+      !fipe.modelYear ||
       !manufactureYear ||
       !licensePlate ||
       !currentKm ||
@@ -48,10 +51,10 @@ export function VehicleNew() {
           fuelSubType,
           currentKm: parseInt(currentKm),
           capacity: parseInt(capacity),
-          brand,
-          model,
+          brand: fipe.brandName,
+          model: fipe.modelName,
           manufactureYear: parseInt(manufactureYear),
-          modelYear: parseInt(modelYear),
+          modelYear: fipe.modelYear,
           color,
           licensePlate,
         }),
@@ -80,24 +83,92 @@ export function VehicleNew() {
       </h1>
 
       <form onSubmit={handleCreateVehicle} className="flex flex-col gap-4">
-        <TextField
-          placeholder="Marca"
-          value={brand}
-          onChange={(e) => setBrand(e.target.value)}
-        />
+        {fipe.brandsError ? (
+          <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 px-3 py-3 text-sm">
+            <span>Não foi possível carregar as marcas.</span>
+            <button
+              type="button"
+              onClick={fipe.retryBrands}
+              className="font-bold text-green-700"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        ) : (
+          <select
+            className={selectClass}
+            value={fipe.brandCode}
+            onChange={(e) => fipe.selectBrand(e.target.value)}
+            disabled={fipe.loadingBrands}
+          >
+            <option value="">
+              {fipe.loadingBrands ? 'Carregando marcas...' : 'Selecione a marca'}
+            </option>
+            {fipe.brands.map((brand) => (
+              <option key={brand.codigo} value={String(brand.codigo)}>
+                {brand.nome}
+              </option>
+            ))}
+          </select>
+        )}
 
-        <TextField
-          placeholder="Modelo"
-          value={model}
-          onChange={(e) => setModel(e.target.value)}
-        />
+        {fipe.modelsError ? (
+          <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 px-3 py-3 text-sm">
+            <span>Não foi possível carregar os modelos.</span>
+            <button
+              type="button"
+              onClick={fipe.retryModels}
+              className="font-bold text-green-700"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        ) : (
+          <select
+            className={selectClass}
+            value={fipe.modelCode}
+            onChange={(e) => fipe.selectModel(e.target.value)}
+            disabled={!fipe.brandCode || fipe.loadingModels}
+          >
+            <option value="">
+              {fipe.loadingModels ? 'Carregando modelos...' : 'Selecione o modelo'}
+            </option>
+            {fipe.models.map((model) => (
+              <option key={model.codigo} value={String(model.codigo)}>
+                {model.nome}
+              </option>
+            ))}
+          </select>
+        )}
 
-        <TextField
-          placeholder="Ano"
-          value={modelYear}
-          onChange={(e) => setModelYear(e.target.value)}
-          inputMode="numeric"
-        />
+        {fipe.yearsError ? (
+          <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 px-3 py-3 text-sm">
+            <span>Não foi possível carregar os anos.</span>
+            <button
+              type="button"
+              onClick={fipe.retryYears}
+              className="font-bold text-green-700"
+            >
+              Tentar novamente
+            </button>
+          </div>
+        ) : (
+          <select
+            className={selectClass}
+            value={fipe.yearCode}
+            onChange={(e) => fipe.selectYear(e.target.value)}
+            disabled={!fipe.modelCode || fipe.loadingYears}
+          >
+            <option value="">
+              {fipe.loadingYears ? 'Carregando anos...' : 'Selecione o ano'}
+            </option>
+            {fipe.years.map((year) => (
+              <option key={year.codigo} value={String(year.codigo)}>
+                {year.nome}
+              </option>
+            ))}
+          </select>
+        )}
 
         <TextField
           placeholder="Ano de Fabricação"
@@ -113,7 +184,7 @@ export function VehicleNew() {
         />
 
         <select
-          className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base"
+          className={selectClass}
           value={energyType}
           onChange={(e) => setEnergyType(e.target.value)}
         >
