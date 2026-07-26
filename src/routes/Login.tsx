@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { loginRequest } from '../services/api'
+import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { TextField } from '../components/ui/TextField'
 import { Button } from '../components/ui/Button'
@@ -11,12 +12,13 @@ export function Login() {
   const [password, setPassword] = useState('')
   const { signIn } = useAuth()
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault()
 
     if (!email || !password) {
-      alert('Por favor, preencha email e senha')
+      showToast('Por favor, preencha email e senha')
       return
     }
 
@@ -25,7 +27,7 @@ export function Login() {
       await signIn(data.accessToken)
       navigate('/')
     } catch {
-      alert('Email ou senha inválidos')
+      showToast('Email ou senha inválidos')
     }
   }
 
