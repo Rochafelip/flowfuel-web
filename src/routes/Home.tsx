@@ -323,7 +323,7 @@ export function Home() {
   const isFirstUse = dashboard.totalRefuels === 0
 
   return (
-    <Screen>
+    <Screen wide>
       <VehicleHeader
         name={`${activeVehicle.brand} ${activeVehicle.model}`}
         subtitle={formatLastRefuelSubtitle(dashboard.lastRefuelDate)}
