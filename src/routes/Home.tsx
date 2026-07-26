@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import type { Dashboard, FuelMetrics } from '../types/Dashboard'
@@ -6,6 +7,7 @@ import { Screen } from '../components/ui/Screen'
 import { Card } from '../components/ui/Card'
 import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
+import { Button } from '../components/ui/Button'
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -77,6 +79,7 @@ function FuelMetricsCard({
 }
 
 export function Home() {
+  const navigate = useNavigate()
   const { activeVehicle } = useVehicle()
   const [dashboard, setDashboard] = useState<Dashboard | null>(null)
   const [loading, setLoading] = useState(true)
@@ -173,6 +176,18 @@ export function Home() {
           <FuelMetricsCard icon="🔌" title="Elétrico" metrics={dashboard.breakdown.electric} />
         </div>
       )}
+
+      <Button className="mt-5" onClick={() => navigate('/refuels/new')}>
+        Novo Abastecimento
+      </Button>
+
+      <button
+        type="button"
+        onClick={() => navigate('/refuels')}
+        className="mt-3 block w-full text-center text-sm text-green-700"
+      >
+        Ver histórico de abastecimentos
+      </button>
     </Screen>
   )
 }
