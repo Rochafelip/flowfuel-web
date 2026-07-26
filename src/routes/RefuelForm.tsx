@@ -4,6 +4,7 @@ import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import type { Refuel, RefuelRequest, RefuelType } from '../types/Refuel'
 import type { Dashboard } from '../types/Dashboard'
+import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { Spinner } from '../components/ui/Spinner'
 import { TextField } from '../components/ui/TextField'
@@ -18,6 +19,7 @@ export function RefuelForm() {
   const isEditing = Boolean(id)
   const { activeVehicle } = useVehicle()
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const [distanceMode, setDistanceMode] = useState<DistanceMode>('odometer')
   const [odometer, setOdometer] = useState('')
@@ -54,7 +56,7 @@ export function RefuelForm() {
       setRefuelType(refuel.refuelType)
     } catch (err) {
       console.log(err)
-      alert('Erro ao carregar abastecimento')
+      showToast('Erro ao carregar abastecimento')
       navigate('/refuels')
     } finally {
       setLoading(false)
@@ -94,7 +96,7 @@ export function RefuelForm() {
       priceMode === 'total' ? Boolean(totalValue) : Boolean(pricePerUnit)
 
     if (!distanceFilled || !energyAmount || !priceFilled || !activeVehicle) {
-      alert('Preencha todos os campos')
+      showToast('Preencha todos os campos')
       return
     }
 
@@ -122,10 +124,11 @@ export function RefuelForm() {
         })
       }
 
+      showToast('Abastecimento salvo com sucesso.', 'success')
       navigate('/refuels')
     } catch (err) {
       console.log(err)
-      alert('Erro ao salvar abastecimento')
+      showToast('Erro ao salvar abastecimento')
     } finally {
       setSubmitting(false)
     }
