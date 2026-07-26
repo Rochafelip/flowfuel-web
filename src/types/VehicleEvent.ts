@@ -21,6 +21,18 @@ export const VEHICLE_EVENT_TYPE_LABELS: Record<VehicleEventType, string> = {
   OTHER: 'Outro',
 }
 
+export const VEHICLE_EVENT_TYPE_ICONS: Record<VehicleEventType, string> = {
+  FUEL: '⛽',
+  MAINTENANCE: '🔧',
+  OIL_CHANGE: '🛢️',
+  CAR_WASH: '🚿',
+  TIRES: '🛞',
+  INSURANCE: '📄',
+  TAX: '📄',
+  DOCUMENTS: '📄',
+  OTHER: '📦',
+}
+
 export type VehicleEvent = {
   id: number
   vehicleId: number
