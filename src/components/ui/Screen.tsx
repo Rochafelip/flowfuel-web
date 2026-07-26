@@ -10,10 +10,12 @@ const safeAreaPadding = {
 export function Screen({
   children,
   centered = false,
+  wide = false,
   className = '',
 }: {
   children: ReactNode
   centered?: boolean
+  wide?: boolean
   className?: string
 }) {
   if (centered) {
@@ -29,7 +31,7 @@ export function Screen({
 
   return (
     <div className={`min-h-screen bg-green-50 ${className}`} style={safeAreaPadding}>
-      <div className="mx-auto max-w-md">{children}</div>
+      <div className={`mx-auto ${wide ? 'max-w-3xl' : 'max-w-md'}`}>{children}</div>
     </div>
   )
 }
