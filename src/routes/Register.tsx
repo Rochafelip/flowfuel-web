@@ -1,12 +1,14 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { registerRequest } from '../services/api'
+import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { TextField } from '../components/ui/TextField'
 import { Button } from '../components/ui/Button'
 
 export function Register() {
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -17,27 +19,27 @@ export function Register() {
     e.preventDefault()
 
     if (!name || !email || !password || !confirmPassword) {
-      alert('Por favor, preencha todos os campos')
+      showToast('Por favor, preencha todos os campos')
       return
     }
 
     if (password !== confirmPassword) {
-      alert('As senhas não coincidem')
+      showToast('As senhas não coincidem')
       return
     }
 
     if (password.length < 6) {
-      alert('A senha deve ter no mínimo 6 caracteres')
+      showToast('A senha deve ter no mínimo 6 caracteres')
       return
     }
 
     try {
       await registerRequest(name, email, password)
 
-      alert('Conta criada! Verifique seu email para ativar antes de entrar.')
+      showToast('Conta criada! Verifique seu email para ativar antes de entrar.', 'success')
       navigate('/login')
     } catch (error) {
-      alert('Erro ao criar conta. Tente novamente.')
+      showToast('Erro ao criar conta. Tente novamente.')
       console.error(error)
     }
   }
