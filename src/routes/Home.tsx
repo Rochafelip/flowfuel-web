@@ -131,21 +131,47 @@ function SpendCarousel({
     { label: 'Gasto total', value: totalSpent },
   ]
 
+  function goToPage(index: number) {
+    onPageChange((index + pages.length) % pages.length)
+  }
+
   return (
     <Card className="mt-3">
-      <p className="text-sm text-gray-600">{pages[page].label}</p>
-      <p className="font-mono text-3xl font-bold text-gray-900">
-        {currencyFormatter.format(pages[page].value)}
-      </p>
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          aria-label={`Ver ${pages[(page - 1 + pages.length) % pages.length].label}`}
+          onClick={() => goToPage(page - 1)}
+          className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+        >
+          ‹
+        </button>
 
-      <div className="mt-3 flex justify-center gap-2">
-        {pages.map((_, index) => (
+        <div className="text-center">
+          <p className="text-sm text-gray-600">{pages[page].label}</p>
+          <p className="font-mono text-3xl font-bold text-gray-900">
+            {currencyFormatter.format(pages[page].value)}
+          </p>
+        </div>
+
+        <button
+          type="button"
+          aria-label={`Ver ${pages[(page + 1) % pages.length].label}`}
+          onClick={() => goToPage(page + 1)}
+          className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+        >
+          ›
+        </button>
+      </div>
+
+      <div className="mt-2 flex justify-center gap-2">
+        {pages.map((p, index) => (
           <button
             key={index}
             type="button"
-            aria-label={`Página ${index + 1}`}
-            onClick={() => onPageChange(index)}
-            className={`h-2 w-2 rounded-full ${
+            aria-label={`Ver ${p.label}`}
+            onClick={() => goToPage(index)}
+            className={`h-2.5 w-2.5 rounded-full ${
               index === page ? 'bg-green-600' : 'bg-gray-300'
             }`}
           />
