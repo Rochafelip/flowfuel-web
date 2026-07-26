@@ -188,6 +188,18 @@ export function Home() {
       >
         Ver histórico de abastecimentos
       </button>
+
+      <Button className="mt-5" onClick={() => navigate('/vehicle-events/new')}>
+        Novo Evento
+      </Button>
+
+      <button
+        type="button"
+        onClick={() => navigate('/vehicle-events')}
+        className="mt-3 block w-full text-center text-sm text-green-700"
+      >
+        Ver histórico de eventos
+      </button>
     </Screen>
   )
 }
