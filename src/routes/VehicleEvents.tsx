@@ -7,6 +7,8 @@ import {
   VEHICLE_EVENT_TYPE_LABELS,
   type VehicleEvent,
 } from '../types/VehicleEvent'
+import { useToast } from '../context/ToastContext'
+import { useConfirm } from '../context/ConfirmContext'
 import { Screen } from '../components/ui/Screen'
 import { Card } from '../components/ui/Card'
 import { Spinner } from '../components/ui/Spinner'
@@ -30,6 +32,8 @@ export function VehicleEvents() {
   const { activeVehicle } = useVehicle()
   const navigate = useNavigate()
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const { showToast } = useToast()
+  const confirm = useConfirm()
 
   const { items, loading, error, hasMore, loadMore, reload } =
     usePaginatedList<VehicleEvent>(
@@ -37,15 +41,16 @@ export function VehicleEvents() {
     )
 
   async function handleDelete(id: number) {
-    if (!confirm('Excluir este evento?')) return
+    if (!(await confirm('Excluir este evento?'))) return
 
     try {
       setDeletingId(id)
       await authenticatedRequest(`/vehicle-events/${id}`, { method: 'DELETE' })
       await reload()
+      showToast('Evento excluído.', 'success')
     } catch (err) {
       console.log(err)
-      alert('Erro ao excluir evento')
+      showToast('Erro ao excluir evento')
     } finally {
       setDeletingId(null)
     }
@@ -90,15 +95,15 @@ export function VehicleEvents() {
               {item.odometer !== null && <p>Odômetro: {item.odometer} km</p>}
               {item.description && <p>{truncate(item.description, 100)}</p>}
 
-              <div className="mt-3 flex gap-3">
+              <div className="mt-3 flex items-center gap-2">
                 <Link
                   to={`/vehicle-events/${item.id}/edit`}
-                  className="text-sm font-bold text-green-700"
+                  className="rounded-md px-2 py-3 text-sm font-bold text-green-700 active:bg-green-50"
                 >
                   Editar
                 </Link>
                 <button
-                  className="text-sm font-bold text-red-600 disabled:opacity-50"
+                  className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
                   disabled={deletingId === item.id}
                   onClick={() => handleDelete(item.id)}
                 >
