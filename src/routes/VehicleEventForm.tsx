@@ -120,7 +120,7 @@ export function VehicleEventForm() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <select
-          className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base"
+          className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
           value={type}
           onChange={(e) => setType(e.target.value as VehicleEventType)}
         >
