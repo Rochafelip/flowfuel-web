@@ -1,5 +1,11 @@
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://flowfuel-api.fly.dev'
 
+export function clearSession() {
+  localStorage.removeItem('@token')
+  localStorage.removeItem('@app_token')
+  localStorage.removeItem('@active_vehicle')
+}
+
 export async function loginRequest(email: string, password: string) {
   const response = await fetch(`${BASE_URL}/api/v1/auth/login`, {
     method: 'POST',
@@ -57,6 +63,8 @@ export async function authenticatedRequest(
   })
 
   if (response.status === 401) {
+    clearSession()
+    window.location.href = '/login'
     throw new Error('Unauthorized')
   }
 

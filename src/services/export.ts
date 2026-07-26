@@ -1,3 +1,5 @@
+import { clearSession } from './api'
+
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://flowfuel-api.fly.dev'
 
 export async function downloadExport(endpoint: string, fallbackFileName: string) {
@@ -8,6 +10,12 @@ export async function downloadExport(endpoint: string, fallbackFileName: string)
       Authorization: `Bearer ${token}`,
     },
   })
+
+  if (response.status === 401) {
+    clearSession()
+    window.location.href = '/login'
+    throw new Error('Erro ao exportar')
+  }
 
   if (!response.ok) {
     throw new Error('Erro ao exportar')
