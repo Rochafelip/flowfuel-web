@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import { useFipeSelection } from '../hooks/useFipeSelection'
+import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { TextField } from '../components/ui/TextField'
 import { Button } from '../components/ui/Button'
@@ -24,6 +25,7 @@ export function VehicleNew() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const { loadActiveVehicle } = useVehicle()
+  const { showToast } = useToast()
 
   async function handleCreateVehicle(e: FormEvent) {
     e.preventDefault()
@@ -37,7 +39,7 @@ export function VehicleNew() {
       !currentKm ||
       !capacity
     ) {
-      alert('Preencha todos os campos')
+      showToast('Preencha todos os campos')
       return
     }
 
@@ -66,11 +68,12 @@ export function VehicleNew() {
         })
 
         await loadActiveVehicle()
+        showToast('Veículo cadastrado com sucesso.', 'success')
         navigate('/')
       }
     } catch (error) {
       console.log(error)
-      alert('Erro ao cadastrar veículo')
+      showToast('Erro ao cadastrar veículo')
     } finally {
       setLoading(false)
     }
