@@ -16,7 +16,9 @@ Este spec adapta essa referência ao que o backend (`flowfuel`) e o frontend atu
 
 ## Objetivo
 
-Substituir `Home.tsx` por um dashboard estruturado (cabeçalho do veículo, carrossel de gasto, grid de indicadores, dica do dia, último abastecimento detalhado, atividade recente) e introduzir uma navegação persistente (bottom nav + FAB) usada por todas as rotas protegidas, não só a Home.
+Substituir `Home.tsx` por um dashboard estruturado (cabeçalho do veículo, carrossel de gasto, grid de indicadores, dica do dia, último abastecimento detalhado, atividade recente).
+
+**Nota (2026-07-26):** este spec originalmente também definia a navegação persistente entre rotas protegidas (bottom nav + FAB). Essa parte foi **superada** pelo spec `docs/superpowers/specs/2026-07-26-responsive-app-shell-design.md` (sidebar fixa no desktop / drawer + hambúrguer no mobile, sem FAB) — ver seção "Navegação" abaixo. Este spec passa a cobrir **só o conteúdo da tela Home**; a navegação entre telas é responsabilidade exclusiva do spec de app shell.
 
 ## Estrutura da tela, de cima para baixo
 
@@ -90,18 +92,11 @@ Não é necessário criar um novo hook: `usePaginatedList` já existente serve p
 - **Erro:** um único `ErrorState` de tela cheia com botão "Tentar novamente" (reexecuta as 3 chamadas) se qualquer uma das 3 falhar — mesmo padrão já usado em `Home.tsx` hoje.
 - Sem pull-to-refresh (não há padrão equivalente no app hoje; fora de escopo).
 
-## Navegação: bottom nav + FAB
+## Navegação
 
-Novo layout `ProtectedLayout` (`src/routes/ProtectedLayout.tsx`), inserido entre `ProtectedRoute` e as rotas protegidas em `App.tsx`, envolvendo `Home`, `Refuels`, `VehicleEvents` e as duas novas rotas placeholder com uma barra inferior fixa.
+A navegação persistente entre `Home`, `Refuels` e `VehicleEvents` é definida em `docs/superpowers/specs/2026-07-26-responsive-app-shell-design.md`: `AppLayout` envolve todas as rotas protegidas com uma sidebar fixa (≥1024px) ou drawer + botão hambúrguer (<1024px), 3 itens (Dashboard, Abastecimentos, Eventos) — **sem bottom nav, sem FAB, sem rotas placeholder de Postos/Perfil** (essas duas foram cortadas junto com o FAB; não fazem parte do escopo atual do app).
 
-- 5 abas: Home (`/`), Histórico (`/refuels`), Postos (`/gas-stations`, placeholder), Eventos (`/vehicle-events`), Perfil (`/profile`, placeholder). Ícone outline quando inativa, preenchido quando ativa (usar `useLocation` do `react-router-dom` para destacar a aba atual).
-- FAB embutido na barra, contextual: ícone "+" com "Novo evento" → `/vehicle-events/new` quando a aba ativa é Eventos; em qualquer outra aba (inclusive Home), ícone de posto com "Registrar abastecimento" → `/refuels/new`.
-- `Screen` ganha padding-bottom extra (reservando espaço pra barra fixa) quando renderizado dentro do `ProtectedLayout` — ajuste pontual no componente `Screen` ou um wrapper específico do layout, a decidir na implementação.
-- Botões "Novo Abastecimento"/"Novo Evento" e os links "Ver histórico..." que hoje existem no fim do `Home.tsx` são removidos — a navegação para essas ações passa a ser só pela bottom nav + FAB.
-
-### Placeholders Postos/Perfil
-
-Um único componente genérico `ComingSoon` (`src/components/ui/ComingSoon.tsx`), recebendo `title` e `icon` como props, renderizado nas rotas `/gas-stations` e `/profile`. Sem layout dedicado além disso.
+Sem FAB, os botões de ação primária no fim do conteúdo da Home (`Novo Abastecimento`, `Ver histórico de abastecimentos`, `Novo Evento`, `Ver histórico de eventos` — os mesmos que já existem no `Home.tsx` de hoje) **não são removidos**; continuam no fim do conteúdo da Home tal como estão hoje, logo após o card "Atividade recente" (item 7).
 
 ## Tipografia
 
@@ -113,10 +108,11 @@ Um único componente genérico `ComingSoon` (`src/components/ui/ComingSoon.tsx`)
 Sem suíte automatizada configurada (mesma situação do spec de dashboard-integration). Verificação manual: `npm run dev`, logar, garantir veículo ativo, conferir:
 - Primeiro uso (veículo sem abastecimentos) vs. uso normal.
 - Carrossel de gasto (as 2 páginas, navegação por swipe/toque nos pontinhos).
-- Bottom nav destacando a aba ativa corretamente em cada rota.
-- FAB mudando de ação/ícone na aba Eventos vs. demais abas.
 - Atividade recente mesclando refuels + eventos na ordem certa.
 - Estados de loading/erro de tela cheia (simular falha de rede via devtools).
+- Botões de ação (Novo Abastecimento/Novo Evento e links de histórico) no fim da tela, navegando corretamente.
+
+Verificação da navegação em si (sidebar/drawer/item ativo) pertence ao spec `2026-07-26-responsive-app-shell-design.md`, não a este.
 
 ## Fora de escopo (não fazer agora)
 
@@ -126,5 +122,5 @@ Sem suíte automatizada configurada (mesma situação do spec de dashboard-integ
 - Bottom sheet de troca de veículo.
 - Carregamento em camadas por seção.
 - Ícones "Sobre o app" e notificações.
-- Telas reais de Postos e Perfil (além do placeholder `ComingSoon`).
 - Pull-to-refresh.
+- Navegação persistente (sidebar/drawer/hambúrguer) — ver `2026-07-26-responsive-app-shell-design.md`.
