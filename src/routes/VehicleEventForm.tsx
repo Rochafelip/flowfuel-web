@@ -8,6 +8,7 @@ import {
   type VehicleEventRequest,
   type VehicleEventType,
 } from '../types/VehicleEvent'
+import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { Spinner } from '../components/ui/Spinner'
 import { TextField } from '../components/ui/TextField'
@@ -24,6 +25,7 @@ export function VehicleEventForm() {
   const isEditing = Boolean(id)
   const { activeVehicle } = useVehicle()
   const navigate = useNavigate()
+  const { showToast } = useToast()
 
   const [type, setType] = useState<VehicleEventType>('MAINTENANCE')
   const [amount, setAmount] = useState('')
@@ -51,7 +53,7 @@ export function VehicleEventForm() {
       setDescription(event.description ?? '')
     } catch (err) {
       console.log(err)
-      alert('Erro ao carregar evento')
+      showToast('Erro ao carregar evento')
       navigate('/vehicle-events')
     } finally {
       setLoading(false)
@@ -62,12 +64,12 @@ export function VehicleEventForm() {
     e.preventDefault()
 
     if (!amount || !eventDate || !activeVehicle) {
-      alert('Preencha todos os campos obrigatórios')
+      showToast('Preencha todos os campos obrigatórios')
       return
     }
 
     if (eventDate > todayIsoDate()) {
-      alert('A data do evento não pode ser futura')
+      showToast('A data do evento não pode ser futura')
       return
     }
 
@@ -95,10 +97,11 @@ export function VehicleEventForm() {
         })
       }
 
+      showToast('Evento salvo com sucesso.', 'success')
       navigate('/vehicle-events')
     } catch (err) {
       console.log(err)
-      alert('Erro ao salvar evento')
+      showToast('Erro ao salvar evento')
     } finally {
       setSubmitting(false)
     }
