@@ -188,7 +188,7 @@ salvar/excluir abastecimento e evento com sucesso, ativar veículo, exclusão
 menos um `GET` para conferir o toast de erro). Confirmar que:
 
 - Nenhum `window.alert`/`window.confirm` nativo aparece mais em nenhum dos
-  20 pontos da primeira tabela.
+  21 pontos da primeira tabela.
 - Toasts de sucesso aparecem nos 6 pontos da segunda tabela, sem atrasar a
   navegação que já acontecia.
 - No máximo 3 toasts visíveis ao mesmo tempo — disparar 4+ toasts em
@@ -218,7 +218,7 @@ menos um `GET` para conferir o toast de erro). Confirmar que:
 - `npm run build` passa sem erros.
 - Nenhuma ocorrência de `alert(` ou `confirm(` restante em `src/routes/*.tsx`
   (buscável via `grep -rn 'alert(\|confirm(' src/routes/`).
-- Todos os 20 pontos da primeira tabela e os 6 pontos da tabela de toasts de
+- Todos os 21 pontos da primeira tabela e os 6 pontos da tabela de toasts de
   sucesso verificados manualmente conforme a seção de Testes.
 - `ConfirmDialog` fecha com Esc/backdrop, foco inicial no "Cancelar" e foco
   de retorno funcionando.
