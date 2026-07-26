@@ -7,6 +7,8 @@ import { Register } from './routes/Register'
 import { SelectVehicle } from './routes/SelectVehicle'
 import { VehicleNew } from './routes/VehicleNew'
 import { Home } from './routes/Home'
+import { Refuels } from './routes/Refuels'
+import { RefuelForm } from './routes/RefuelForm'
 
 export default function App() {
   return (
@@ -21,6 +23,9 @@ export default function App() {
               <Route path="/select-vehicle" element={<SelectVehicle />} />
               <Route path="/vehicles/new" element={<VehicleNew />} />
               <Route path="/" element={<Home />} />
+              <Route path="/refuels" element={<Refuels />} />
+              <Route path="/refuels/new" element={<RefuelForm />} />
+              <Route path="/refuels/:id/edit" element={<RefuelForm />} />
             </Route>
           </Routes>
         </VehicleProvider>
