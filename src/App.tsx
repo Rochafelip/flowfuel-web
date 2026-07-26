@@ -16,6 +16,7 @@ import { Refuels } from './routes/Refuels'
 import { RefuelForm } from './routes/RefuelForm'
 import { VehicleEvents } from './routes/VehicleEvents'
 import { VehicleEventForm } from './routes/VehicleEventForm'
+import { Export } from './routes/Export'
 
 export default function App() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
                     <Route path="/vehicle-events" element={<VehicleEvents />} />
                     <Route path="/vehicle-events/new" element={<VehicleEventForm />} />
                     <Route path="/vehicle-events/:id/edit" element={<VehicleEventForm />} />
+                    <Route path="/export" element={<Export />} />
                   </Route>
                 </Route>
               </Routes>
