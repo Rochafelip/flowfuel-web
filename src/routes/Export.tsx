@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { authenticatedRequest } from '../services/api'
+import { downloadExport } from '../services/export'
 import {
   VEHICLE_EVENT_TYPE_LABELS,
   type VehicleEventType,
@@ -9,6 +10,7 @@ import { Screen } from '../components/ui/Screen'
 import { Spinner } from '../components/ui/Spinner'
 import { TextField } from '../components/ui/TextField'
 import { SegmentedToggle } from '../components/ui/SegmentedToggle'
+import { Button } from '../components/ui/Button'
 
 interface VehicleListItem {
   id: number
@@ -17,6 +19,7 @@ interface VehicleListItem {
 }
 
 type DataType = 'REFUELS' | 'EVENTS'
+type ExportFileFormat = 'csv' | 'xlsx'
 
 const EVENT_TYPES = Object.keys(VEHICLE_EVENT_TYPE_LABELS) as VehicleEventType[]
 
@@ -42,6 +45,8 @@ export function Export() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [dateError, setDateError] = useState<string | null>(null)
+  const [format, setFormat] = useState<ExportFileFormat>('csv')
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     loadVehicles()
@@ -72,6 +77,37 @@ export function Export() {
     setDateError(validateDates(startDate, value))
   }
 
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault()
+
+    const validationError = validateDates(startDate, endDate)
+    if (validationError) {
+      setDateError(validationError)
+      return
+    }
+
+    const params = new URLSearchParams()
+    params.set('vehicleId', vehicleId)
+    params.set('format', format)
+    if (startDate) params.set('startDate', startDate)
+    if (endDate) params.set('endDate', endDate)
+
+    const basePath = dataType === 'REFUELS' ? '/exports/refuels' : '/exports/events'
+    if (dataType === 'EVENTS' && eventType) {
+      params.set('type', eventType)
+    }
+
+    try {
+      setExporting(true)
+      await downloadExport(`${basePath}?${params.toString()}`, `flowfuel-export.${format}`)
+    } catch (err) {
+      console.log(err)
+      showToast('Não foi possível exportar. Tente novamente.')
+    } finally {
+      setExporting(false)
+    }
+  }
+
   if (loadingVehicles) {
     return (
       <Screen centered>
@@ -92,7 +128,7 @@ export function Export() {
     <Screen wide>
       <h1 className="mb-5 text-xl font-bold">Exportar dados</h1>
 
-      <form className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <select
           className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
           value={vehicleId}
@@ -149,6 +185,19 @@ export function Export() {
         </div>
 
         {dateError && <p className="text-sm text-red-600">{dateError}</p>}
+
+        <SegmentedToggle
+          value={format}
+          onChange={setFormat}
+          options={[
+            { value: 'csv', label: 'CSV' },
+            { value: 'xlsx', label: 'Excel' },
+          ]}
+        />
+
+        <Button type="submit" disabled={exporting || Boolean(dateError)}>
+          {exporting ? 'Exportando...' : 'Exportar'}
+        </Button>
       </form>
     </Screen>
   )
