@@ -6,7 +6,7 @@
 
 **Architecture:** two new small library files (`fuelSavingTips.ts`, `relativeDate.ts`) provide pure helpers; `Home.tsx` is rewritten to fetch `dashboard`, `refuels` and `vehicle-events` in parallel and derive monthly spend / recent activity on the client, per `docs/superpowers/specs/2026-07-26-home-screen-redesign-design.md`. Navigation between screens (sidebar/drawer) is **out of scope** — it's owned by the separate `docs/superpowers/specs/2026-07-26-responsive-app-shell-design.md` spec/plan, not this one. The existing "Novo Abastecimento" / "Novo Evento" action buttons at the bottom of `Home.tsx` stay exactly as they are today (no FAB in this design).
 
-**Tech Stack:** React 19, TypeScript, Vite, Tailwind CSS, react-router-dom v7. No test runner is configured in this project (no Jest/Vitest in `package.json`) — verification is TypeScript type-checking (this project's `build` script is `tsc -b && vite build`; use `npx tsc -b --noEmit` per Task 1's exact command) plus manual browser testing per Task 6's test plan.
+**Tech Stack:** React 19, TypeScript, Vite, Tailwind CSS, react-router-dom v7. No test runner is configured in this project (no Jest/Vitest in `package.json`) — verification is TypeScript type-checking (this project's `build` script is `tsc -b && vite build`; use `npx tsc -b` per Task 1's exact command) plus manual browser testing per Task 6's test plan.
 
 **Reference spec:** `docs/superpowers/specs/2026-07-26-home-screen-redesign-design.md`
 
@@ -31,8 +31,8 @@ Modify: src/routes/Home.tsx
 
 - [ ] **Step 1: Confirm the type-check command**
 
-Run: `cd /home/rocha/Projetos/flowfuel-frontend && npx tsc -b --noEmit`
-Expected: no output (clean exit, no type errors) — this confirms the exact command to use for every subsequent task's type-check step. If `npx tsc` fails with a permission error in this environment, use `node node_modules/typescript/bin/tsc -b --noEmit` instead for all remaining tasks.
+Run: `cd /home/rocha/Projetos/flowfuel-frontend && npx tsc -b`
+Expected: no output (clean exit, no type errors) — this confirms the exact command to use for every subsequent task's type-check step. If `npx tsc` fails with a permission error in this environment, use `node node_modules/typescript/bin/tsc -b` instead for all remaining tasks.
 
 ---
 
@@ -68,7 +68,7 @@ export function getTipOfTheDay(date = new Date()): string {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output.
 
 - [ ] **Step 3: Commit**
@@ -144,7 +144,7 @@ export function formatActivityDate(dateString: string): string {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output.
 
 - [ ] **Step 3: Commit**
@@ -209,7 +209,7 @@ export const VEHICLE_EVENT_TYPE_ICONS: Record<VehicleEventType, string> = {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output.
 
 - [ ] **Step 3: Commit**
@@ -870,7 +870,7 @@ export function Home() {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output.
 
 - [ ] **Step 3: Commit**
@@ -928,4 +928,4 @@ Simulate a network failure (devtools → offline, or block the `/dashboard` requ
 - The monthly-spend calculation has a known limitation (documented in the design spec): if a vehicle has more than 50 refuels + vehicle-events combined in the current month, the sum will be incomplete, since `MONTHLY_LOOKBACK_SIZE = 50` is not re-paginated. Not fixed in this plan — accepted trade-off from the design spec.
 - `recentActivity`'s sort (`a.date < b.date`) does plain string comparison across `LocalDate` (`"YYYY-MM-DD"`) and `LocalDateTime` (`"YYYY-MM-DDTHH:mm:ss"`) values — this is chronologically correct except for same-day ordering between a refuel and an event on the exact same date, where the date-only string sorts as "earlier" than the same-day datetime string. Accepted minor imprecision, not fixed in this plan.
 - Navigation between screens (sidebar/drawer) is intentionally out of scope for this plan — it's owned by the separate `docs/superpowers/plans/` entry for `2026-07-26-responsive-app-shell-design.md`. Don't add a bottom nav or FAB here; the existing "Novo Abastecimento"/"Novo Evento" buttons at the end of `Home.tsx` stay as they are today.
-- No test runner configured in this project — verification is `tsc -b --noEmit` per task plus the manual pass in Task 6.
+- No test runner configured in this project — verification is `tsc -b` per task plus the manual pass in Task 6.
