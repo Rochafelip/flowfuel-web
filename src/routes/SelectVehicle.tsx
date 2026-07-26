@@ -71,7 +71,7 @@ export function SelectVehicle() {
   }
 
   return (
-    <Screen>
+    <Screen wide>
       <h1 className="mb-5 text-xl font-bold">Selecione um veículo</h1>
 
       <ul className="flex flex-col gap-3">

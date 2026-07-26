@@ -53,7 +53,7 @@ export function Refuels() {
   }
 
   return (
-    <Screen>
+    <Screen wide>
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-xl font-bold">Abastecimentos</h1>
         <Button

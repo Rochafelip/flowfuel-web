@@ -113,7 +113,7 @@ export function VehicleEventForm() {
   }
 
   return (
-    <Screen>
+    <Screen wide>
       <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
         {isEditing ? 'Editar Evento' : 'Novo Evento'}
       </h1>

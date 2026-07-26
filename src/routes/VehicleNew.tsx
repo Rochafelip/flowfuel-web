@@ -77,7 +77,7 @@ export function VehicleNew() {
   }
 
   return (
-    <Screen>
+    <Screen wide>
       <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
         Cadastrar Veículo
       </h1>

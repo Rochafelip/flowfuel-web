@@ -145,7 +145,7 @@ export function RefuelForm() {
       : null
 
   return (
-    <Screen>
+    <Screen wide>
       <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
         {isEditing ? 'Editar Abastecimento' : 'Novo Abastecimento'}
       </h1>

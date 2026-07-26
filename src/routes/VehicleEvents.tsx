@@ -60,7 +60,7 @@ export function VehicleEvents() {
   }
 
   return (
-    <Screen>
+    <Screen wide>
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-xl font-bold">Eventos</h1>
         <Button
