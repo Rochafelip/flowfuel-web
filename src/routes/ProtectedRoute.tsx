@@ -23,7 +23,11 @@ export function ProtectedRoute() {
     return <Navigate to="/login" replace />
   }
 
-  if (!activeVehicle && location.pathname !== '/vehicles/new') {
+  if (
+    !activeVehicle &&
+    location.pathname !== '/vehicles/new' &&
+    location.pathname !== '/select-vehicle'
+  ) {
     return <Navigate to="/select-vehicle" replace />
   }
 
