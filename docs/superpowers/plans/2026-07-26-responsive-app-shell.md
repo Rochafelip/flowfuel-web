@@ -6,7 +6,7 @@
 
 **Architecture:** Six new presentational components under `src/components/layout/` (`NavLinks`, `Sidebar`, `Topbar`, `MobileDrawer`, `VehicleSwitcherLink`, `AppLayout`) compose into a layout-route (`AppLayout`) that wraps every route currently nested under `<ProtectedRoute />` in `src/App.tsx`. Desktop/mobile switching is pure Tailwind (`hidden lg:flex` / `lg:hidden`) — no JS viewport detection. `Screen.tsx` gets a new `wide` prop (`max-w-3xl` instead of `max-w-md`) applied to the authenticated screens only; `Login`/`Register` keep today's behavior untouched. Per `docs/superpowers/specs/2026-07-26-home-screen-redesign-design.md`, `Home.tsx`'s content (dashboard cards, action buttons) is owned by a separate, actively-developed plan — this plan only touches its `<Screen>` wrapper, in its own late task, re-reading the file fresh before editing.
 
-**Tech Stack:** React 19, TypeScript, Vite, Tailwind CSS, react-router-dom v7.6. No test runner is configured in this project (no Jest/Vitest in `package.json`) — verification is TypeScript type-checking (`npx tsc -b --noEmit`) plus manual browser testing in the final task.
+**Tech Stack:** React 19, TypeScript, Vite, Tailwind CSS, react-router-dom v7.6. No test runner is configured in this project (no Jest/Vitest in `package.json`) — verification is TypeScript type-checking (`npx tsc -b` — **not** `--noEmit`, which errors on this composite project with `TS6310`) plus manual browser testing in the final task.
 
 **Reference spec:** `docs/superpowers/specs/2026-07-26-responsive-app-shell-design.md`
 
@@ -52,7 +52,7 @@ Modify: src/routes/Home.tsx
 
 - [ ] **Step 1: Confirm the type-check command**
 
-Run: `cd /home/rocha/Projetos/flowfuel-frontend && npx tsc -b --noEmit`
+Run: `cd /home/rocha/Projetos/flowfuel-frontend && npx tsc -b`
 Expected: no output, clean exit (code 0) — confirms the exact command used for every subsequent task's type-check step. If `npx tsc` fails with a permission/PATH error in this environment, use `node node_modules/typescript/bin/tsc -b --noEmit` instead for all remaining tasks.
 
 ---
@@ -106,7 +106,7 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit.
 
 - [ ] **Step 3: Commit**
@@ -145,7 +145,7 @@ export function Sidebar() {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit.
 
 - [ ] **Step 3: Commit**
@@ -194,7 +194,7 @@ export function VehicleSwitcherLink() {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit.
 
 - [ ] **Step 3: Commit**
@@ -242,7 +242,7 @@ export function Topbar({ onOpenDrawer }: { onOpenDrawer: () => void }) {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit.
 
 - [ ] **Step 3: Commit**
@@ -325,7 +325,7 @@ export function MobileDrawer({
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit. (The `onClose` dependency on the second `useEffect` is stable enough in practice since `AppLayout`, Task 7, will pass a `useState` setter directly — no `useCallback` needed.)
 
 - [ ] **Step 3: Commit**
@@ -376,7 +376,7 @@ export function AppLayout() {
 
 - [ ] **Step 2: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit.
 
 - [ ] **Step 3: Commit**
@@ -484,7 +484,7 @@ export function Screen({
 
 - [ ] **Step 3: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit. (No existing call site passes `wide`, so this is purely additive — every current screen keeps rendering at `max-w-md`.)
 
 - [ ] **Step 4: Commit**
@@ -603,7 +603,7 @@ export default function App() {
 
 - [ ] **Step 3: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit.
 
 - [ ] **Step 4: Manual smoke check**
@@ -660,7 +660,7 @@ Change line 80 from `<Screen>` to `<Screen wide>`.
 
 - [ ] **Step 7: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit.
 
 - [ ] **Step 8: Commit**
@@ -692,7 +692,7 @@ Change that one `<Screen>` occurrence to `<Screen wide>`, leaving every other li
 
 - [ ] **Step 3: Type-check**
 
-Run: `npx tsc -b --noEmit`
+Run: `npx tsc -b`
 Expected: no output, clean exit.
 
 - [ ] **Step 4: Commit**
