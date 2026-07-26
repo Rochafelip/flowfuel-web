@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
+import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { Spinner } from '../components/ui/Spinner'
 import { Button } from '../components/ui/Button'
@@ -19,6 +20,7 @@ export function SelectVehicle() {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const { loadActiveVehicle } = useVehicle()
+  const { showToast } = useToast()
 
   useEffect(() => {
     loadVehicles()
@@ -30,6 +32,7 @@ export function SelectVehicle() {
       setVehicles(response.content)
     } catch (error) {
       console.log(error)
+      showToast('Não foi possível carregar seus veículos')
     } finally {
       setLoading(false)
     }
@@ -42,6 +45,7 @@ export function SelectVehicle() {
       })
 
       await loadActiveVehicle()
+      showToast('Veículo ativado.', 'success')
       navigate('/')
     } catch (error) {
       console.log(error)
