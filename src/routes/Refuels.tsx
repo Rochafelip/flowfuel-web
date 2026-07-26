@@ -4,6 +4,8 @@ import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import { usePaginatedList } from '../hooks/usePaginatedList'
 import type { Refuel } from '../types/Refuel'
+import { useToast } from '../context/ToastContext'
+import { useConfirm } from '../context/ConfirmContext'
 import { Screen } from '../components/ui/Screen'
 import { Card } from '../components/ui/Card'
 import { Spinner } from '../components/ui/Spinner'
@@ -23,6 +25,8 @@ export function Refuels() {
   const { activeVehicle } = useVehicle()
   const navigate = useNavigate()
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const { showToast } = useToast()
+  const confirm = useConfirm()
 
   const { items, loading, error, hasMore, loadMore, reload } =
     usePaginatedList<Refuel>(
@@ -30,15 +34,16 @@ export function Refuels() {
     )
 
   async function handleDelete(id: number) {
-    if (!confirm('Excluir este abastecimento?')) return
+    if (!(await confirm('Excluir este abastecimento?'))) return
 
     try {
       setDeletingId(id)
       await authenticatedRequest(`/refuels/${id}`, { method: 'DELETE' })
       await reload()
+      showToast('Abastecimento excluído.', 'success')
     } catch (err) {
       console.log(err)
-      alert('Erro ao excluir abastecimento')
+      showToast('Erro ao excluir abastecimento')
     } finally {
       setDeletingId(null)
     }
@@ -99,15 +104,15 @@ export function Refuels() {
                 Total: {currencyFormatter.format(item.totalAmount)}
               </p>
 
-              <div className="mt-3 flex gap-3">
+              <div className="mt-3 flex items-center gap-2">
                 <Link
                   to={`/refuels/${item.id}/edit`}
-                  className="text-sm font-bold text-green-700"
+                  className="rounded-md px-2 py-3 text-sm font-bold text-green-700 active:bg-green-50"
                 >
                   Editar
                 </Link>
                 <button
-                  className="text-sm font-bold text-red-600 disabled:opacity-50"
+                  className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
                   disabled={deletingId === item.id}
                   onClick={() => handleDelete(item.id)}
                 >
