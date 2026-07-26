@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { VehicleProvider } from './context/VehicleContext'
 import { ProtectedRoute } from './routes/ProtectedRoute'
+import { AppLayout } from './components/layout/AppLayout'
 import { Login } from './routes/Login'
 import { Register } from './routes/Register'
 import { SelectVehicle } from './routes/SelectVehicle'
@@ -22,15 +23,17 @@ export default function App() {
             <Route path="/register" element={<Register />} />
 
             <Route element={<ProtectedRoute />}>
-              <Route path="/select-vehicle" element={<SelectVehicle />} />
-              <Route path="/vehicles/new" element={<VehicleNew />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/refuels" element={<Refuels />} />
-              <Route path="/refuels/new" element={<RefuelForm />} />
-              <Route path="/refuels/:id/edit" element={<RefuelForm />} />
-              <Route path="/vehicle-events" element={<VehicleEvents />} />
-              <Route path="/vehicle-events/new" element={<VehicleEventForm />} />
-              <Route path="/vehicle-events/:id/edit" element={<VehicleEventForm />} />
+              <Route element={<AppLayout />}>
+                <Route path="/select-vehicle" element={<SelectVehicle />} />
+                <Route path="/vehicles/new" element={<VehicleNew />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/refuels" element={<Refuels />} />
+                <Route path="/refuels/new" element={<RefuelForm />} />
+                <Route path="/refuels/:id/edit" element={<RefuelForm />} />
+                <Route path="/vehicle-events" element={<VehicleEvents />} />
+                <Route path="/vehicle-events/new" element={<VehicleEventForm />} />
+                <Route path="/vehicle-events/:id/edit" element={<VehicleEventForm />} />
+              </Route>
             </Route>
           </Routes>
         </VehicleProvider>
