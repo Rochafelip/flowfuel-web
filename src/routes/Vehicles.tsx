@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import {
   activateVehicle,
   deleteVehicle,
+  getVehicleShare,
   listSharedVehicles,
   listVehicles,
+  revokeVehicleShare,
+  shareVehicle,
 } from '../services/vehicle'
 import { useVehicle } from '../context/VehicleContext'
 import { useToast } from '../context/ToastContext'
@@ -15,6 +18,7 @@ import { Card } from '../components/ui/Card'
 import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
 import { Button } from '../components/ui/Button'
+import { ShareVehicleDialog } from '../components/ui/ShareVehicleDialog'
 
 function formatKm(km: number) {
   return `${km.toLocaleString('pt-BR')} km`
@@ -35,6 +39,10 @@ export function Vehicles() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [busyId, setBusyId] = useState<number | null>(null)
+  const [shareByVehicleId, setShareByVehicleId] = useState<Record<number, VehicleShare | null>>({})
+  const [sharingVehicle, setSharingVehicle] = useState<Vehicle | null>(null)
+  const [shareSubmitting, setShareSubmitting] = useState(false)
+  const [shareBusyId, setShareBusyId] = useState<number | null>(null)
 
   useEffect(() => {
     load()
@@ -51,6 +59,17 @@ export function Vehicles() {
       ])
       setVehicles(page.content)
       setSharedVehicles(shared)
+
+      const shareEntries = await Promise.all(
+        page.content.map(async (v) => {
+          try {
+            return [v.id, await getVehicleShare(v.id)] as const
+          } catch {
+            return [v.id, null] as const
+          }
+        })
+      )
+      setShareByVehicleId(Object.fromEntries(shareEntries))
     } catch (err) {
       console.log(err)
       setError(true)
@@ -92,6 +111,41 @@ export function Vehicles() {
       showToast(err instanceof Error ? err.message : 'Não foi possível excluir o veículo')
     } finally {
       setBusyId(null)
+    }
+  }
+
+  async function handleShareSubmit(vehicle: Vehicle, email: string, durationDays: number) {
+    try {
+      setShareSubmitting(true)
+      await shareVehicle(vehicle.id, email, durationDays)
+      setSharingVehicle(null)
+      const share = await getVehicleShare(vehicle.id)
+      setShareByVehicleId((current) => ({ ...current, [vehicle.id]: share }))
+      showToast('Convite enviado.', 'success')
+    } catch (err) {
+      console.log(err)
+      showToast(err instanceof Error ? err.message : 'Não foi possível compartilhar o veículo')
+    } finally {
+      setShareSubmitting(false)
+    }
+  }
+
+  async function handleRevoke(share: VehicleShare) {
+    const ok = await confirm(
+      `Revogar o compartilhamento com "${share.guestName}"? Esta ação não pode ser desfeita.`
+    )
+    if (!ok) return
+
+    try {
+      setShareBusyId(share.id)
+      await revokeVehicleShare(share.id)
+      setShareByVehicleId((current) => ({ ...current, [share.vehicleId]: null }))
+      showToast('Compartilhamento revogado.', 'success')
+    } catch (err) {
+      console.log(err)
+      showToast(err instanceof Error ? err.message : 'Não foi possível revogar o compartilhamento')
+    } finally {
+      setShareBusyId(null)
     }
   }
 
@@ -175,6 +229,41 @@ export function Vehicles() {
                       Excluir
                     </button>
                   </div>
+
+                  {(() => {
+                    const share = shareByVehicleId[vehicle.id]
+                    const isShareBusy = shareBusyId === share?.id
+
+                    if (!share) {
+                      return (
+                        <div className="mt-2">
+                          <button
+                            className="rounded-md px-2 py-3 text-sm font-bold text-blue-700 disabled:opacity-50 active:bg-blue-50"
+                            onClick={() => setSharingVehicle(vehicle)}
+                          >
+                            Compartilhar
+                          </button>
+                        </div>
+                      )
+                    }
+
+                    return (
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
+                          {share.status === 'PENDING'
+                            ? `Convite enviado para ${share.guestName ?? 'convidado'}`
+                            : `Compartilhado com ${share.guestName}`}
+                        </span>
+                        <button
+                          className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
+                          disabled={isShareBusy}
+                          onClick={() => handleRevoke(share)}
+                        >
+                          Revogar
+                        </button>
+                      </div>
+                    )
+                  })()}
                 </Card>
               </li>
             )
@@ -204,6 +293,15 @@ export function Vehicles() {
             ))}
           </ul>
         </div>
+      )}
+
+      {sharingVehicle && (
+        <ShareVehicleDialog
+          vehicle={sharingVehicle}
+          submitting={shareSubmitting}
+          onConfirm={(email, durationDays) => handleShareSubmit(sharingVehicle, email, durationDays)}
+          onDismiss={() => setSharingVehicle(null)}
+        />
       )}
     </Screen>
   )
