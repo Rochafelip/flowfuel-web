@@ -428,26 +428,6 @@ export function Home() {
       <Button className="mt-6" onClick={() => navigate('/refuels/new')}>
         Novo Abastecimento
       </Button>
-
-      <button
-        type="button"
-        onClick={() => navigate('/refuels')}
-        className="mt-3 block w-full text-center text-sm text-green-700"
-      >
-        Ver histórico de abastecimentos
-      </button>
-
-      <Button className="mt-6" onClick={() => navigate('/vehicle-events/new')}>
-        Novo Evento
-      </Button>
-
-      <button
-        type="button"
-        onClick={() => navigate('/vehicle-events')}
-        className="mt-3 block w-full text-center text-sm text-green-700"
-      >
-        Ver histórico de eventos
-      </button>
     </Screen>
   )
 }
