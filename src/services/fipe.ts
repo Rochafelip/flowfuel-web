@@ -1,5 +1,7 @@
 const FIPE_BASE_URL = 'https://parallelum.com.br/fipe/api/v1'
 
+export type FipeVehicleCategory = 'carros' | 'motos'
+
 export interface FipeOption {
   codigo: string | number
   nome: string
@@ -15,21 +17,25 @@ async function fipeRequest<T>(path: string): Promise<T> {
   return response.json()
 }
 
-export function fetchBrands(): Promise<FipeOption[]> {
-  return fipeRequest<FipeOption[]>('/carros/marcas')
+export function fetchBrands(category: FipeVehicleCategory): Promise<FipeOption[]> {
+  return fipeRequest<FipeOption[]>(`/${category}/marcas`)
 }
 
-export function fetchModels(brandCode: string): Promise<FipeOption[]> {
+export function fetchModels(
+  category: FipeVehicleCategory,
+  brandCode: string
+): Promise<FipeOption[]> {
   return fipeRequest<{ modelos: FipeOption[] }>(
-    `/carros/marcas/${brandCode}/modelos`
+    `/${category}/marcas/${brandCode}/modelos`
   ).then((result) => result.modelos)
 }
 
 export function fetchYears(
+  category: FipeVehicleCategory,
   brandCode: string,
   modelCode: string
 ): Promise<FipeOption[]> {
   return fipeRequest<FipeOption[]>(
-    `/carros/marcas/${brandCode}/modelos/${modelCode}/anos`
+    `/${category}/marcas/${brandCode}/modelos/${modelCode}/anos`
   )
 }
