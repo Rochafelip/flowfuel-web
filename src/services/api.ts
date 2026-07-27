@@ -47,6 +47,43 @@ export async function registerRequest(
   return response.json()
 }
 
+export async function resendActivationRequest(email: string) {
+  const response = await fetch(`${BASE_URL}/api/v1/auth/resend-activation`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  })
+
+  if (!response.ok) {
+    throw new Error('Erro ao reenviar o código de ativação')
+  }
+
+  return response.json()
+}
+
+export async function activateRequest(token: string) {
+  const response = await fetch(`${BASE_URL}/api/v1/auth/activate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  })
+
+  if (!response.ok) {
+    try {
+      const err = await response.json()
+      throw new Error(err.detail || 'Código de ativação inválido ou expirado')
+    } catch {
+      throw new Error('Código de ativação inválido ou expirado')
+    }
+  }
+
+  return response.json()
+}
+
 export async function authenticatedRequest(
   endpoint: string,
   options?: Partial<RequestInit>
@@ -70,6 +107,32 @@ export async function authenticatedRequest(
 
   if (!response.ok) {
     throw new Error('Erro na requisição')
+  }
+
+  return response.json()
+}
+
+export async function uploadVehiclePhoto(vehicleId: number, file: File) {
+  const token = localStorage.getItem('@token')
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await fetch(`${BASE_URL}/api/v1/vehicles/${vehicleId}/photo`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
+
+  if (response.status === 401) {
+    clearSession()
+    window.location.href = '/login'
+    throw new Error('Unauthorized')
+  }
+
+  if (!response.ok) {
+    throw new Error('Erro ao enviar foto do veículo')
   }
 
   return response.json()
