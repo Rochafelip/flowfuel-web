@@ -136,7 +136,7 @@ function SpendCarousel({
   }
 
   return (
-    <Card className="mt-3">
+    <Card className="mt-6">
       <div className="flex items-center justify-between">
         <button
           type="button"
@@ -183,7 +183,7 @@ function SpendCarousel({
 
 function TipOfTheDayCard() {
   return (
-    <Card className="mt-3">
+    <Card className="mt-6">
       <p className="mb-1 text-sm font-bold text-gray-700">💡 Dica do dia</p>
       <p className="text-sm text-gray-600">{getTipOfTheDay()}</p>
     </Card>
@@ -194,7 +194,7 @@ function LastRefuelDetailCard({ refuel }: { refuel: Refuel }) {
   const isElectric = refuel.refuelType === 'ELECTRIC'
 
   return (
-    <Card className="mt-3">
+    <Card className="mt-6">
       <p className="mb-2 text-sm font-bold text-gray-700">Último abastecimento</p>
 
       <p className="text-sm text-gray-600">Data</p>
@@ -223,7 +223,7 @@ function LastRefuelDetailCard({ refuel }: { refuel: Refuel }) {
 
 function RecentActivityCard({ items }: { items: ActivityItem[] }) {
   return (
-    <Card className="mt-3">
+    <Card className="mt-6">
       <p className="mb-2 text-sm font-bold text-gray-700">Atividade recente</p>
 
       {items.length === 0 ? (
@@ -307,7 +307,7 @@ export function Home() {
     return (
       <Screen centered>
         <ErrorState message="Não foi possível carregar o dashboard" />
-        <Button className="mt-5" onClick={loadHome}>
+        <Button fullWidth={false} className="mt-6" onClick={loadHome}>
           Tentar novamente
         </Button>
       </Screen>
@@ -374,7 +374,7 @@ export function Home() {
             totalSpent={dashboard.totalSpent}
           />
 
-          <div className="mt-3 grid grid-cols-2 gap-3">
+          <div className="mt-6 grid grid-cols-2 gap-3">
             {dashboard.energyType !== 'HYBRID' && dashboard.averageConsumption !== null && (
               <MetricCard
                 icon="📊"
@@ -411,7 +411,7 @@ export function Home() {
           </div>
 
           {dashboard.energyType === 'HYBRID' && dashboard.breakdown && (
-            <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="mt-6 grid grid-cols-2 gap-3">
               <FuelMetricsCard icon="⛽" title="Combustível" metrics={dashboard.breakdown.fuel} />
               <FuelMetricsCard icon="🔌" title="Elétrico" metrics={dashboard.breakdown.electric} />
             </div>
@@ -425,7 +425,7 @@ export function Home() {
 
       {!isFirstUse && <RecentActivityCard items={recentActivity} />}
 
-      <Button className="mt-5" onClick={() => navigate('/refuels/new')}>
+      <Button className="mt-6" onClick={() => navigate('/refuels/new')}>
         Novo Abastecimento
       </Button>
 
@@ -437,7 +437,7 @@ export function Home() {
         Ver histórico de abastecimentos
       </button>
 
-      <Button className="mt-5" onClick={() => navigate('/vehicle-events/new')}>
+      <Button className="mt-6" onClick={() => navigate('/vehicle-events/new')}>
         Novo Evento
       </Button>
 

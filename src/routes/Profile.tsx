@@ -141,82 +141,87 @@ export function Profile() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">Perfil</h1>
+      <h1 className="mb-6 text-center text-2xl font-bold text-gray-900 lg:text-left">Perfil</h1>
 
-      <div className="flex flex-col items-center gap-4">
-        <label className="relative flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-gray-300 bg-gray-50">
-          {avatarUrl ? (
-            <img src={avatarUrl} alt="Foto de perfil" className="h-full w-full object-cover" />
-          ) : (
-            <span className="text-3xl font-bold text-gray-400">
-              {(profile.name ?? profile.email).charAt(0).toUpperCase()}
-            </span>
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[220px_1fr] lg:items-start lg:gap-8">
+        <div className="flex flex-col items-center gap-4">
+          <label className="relative flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-gray-300 bg-gray-50">
+            {avatarUrl ? (
+              <img src={avatarUrl} alt="Foto de perfil" className="h-full w-full object-cover" />
+            ) : (
+              <span className="text-3xl font-bold text-gray-400">
+                {(profile.name ?? profile.email).charAt(0).toUpperCase()}
+              </span>
+            )}
+            {isUploadingPhoto && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                <Spinner />
+              </div>
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handlePhotoChange}
+              disabled={isUploadingPhoto || isDeletingPhoto}
+            />
+          </label>
+
+          {profile.profilePicture && (
+            <button
+              type="button"
+              onClick={handleDeletePhoto}
+              disabled={isDeletingPhoto || isUploadingPhoto}
+              className="text-sm font-bold text-red-600 disabled:opacity-60"
+            >
+              {isDeletingPhoto ? 'Removendo...' : 'Remover foto'}
+            </button>
           )}
-          {isUploadingPhoto && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-              <Spinner />
-            </div>
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handlePhotoChange}
-            disabled={isUploadingPhoto || isDeletingPhoto}
-          />
-        </label>
 
-        {profile.profilePicture && (
-          <button
-            type="button"
-            onClick={handleDeletePhoto}
-            disabled={isDeletingPhoto || isUploadingPhoto}
-            className="text-sm font-bold text-red-600 disabled:opacity-60"
-          >
-            {isDeletingPhoto ? 'Removendo...' : 'Remover foto'}
-          </button>
-        )}
+          <p className="text-lg font-bold text-gray-900">{profile.name ?? profile.email}</p>
 
-        <p className="text-lg font-bold text-gray-900">{profile.name ?? profile.email}</p>
-      </div>
+          <div className="flex w-full justify-evenly">
+            <StatItem count={stats?.vehiclesCount} label="Veículos" />
+            <StatItem count={stats?.refuelsCount} label="Abastecimentos" />
+            <StatItem count={stats?.eventsCount} label="Eventos" />
+          </div>
+        </div>
 
-      <div className="mt-6 flex justify-evenly">
-        <StatItem count={stats?.vehiclesCount} label="Veículos" />
-        <StatItem count={stats?.refuelsCount} label="Abastecimentos" />
-        <StatItem count={stats?.eventsCount} label="Eventos" />
-      </div>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-3 rounded-xl bg-white p-4 shadow-sm">
+            <InfoField label="Email" value={profile.email} />
+            <InfoField label="Telefone" value={profile.phone ?? 'Não informado'} />
+            {profile.createdAt && (
+              <InfoField
+                label="Membro desde"
+                value={new Date(profile.createdAt).toLocaleDateString('pt-BR')}
+              />
+            )}
+          </div>
 
-      <div className="mt-6 flex flex-col gap-3 rounded-xl bg-white p-4 shadow-sm">
-        <InfoField label="Email" value={profile.email} />
-        <InfoField label="Telefone" value={profile.phone ?? 'Não informado'} />
-        {profile.createdAt && (
-          <InfoField
-            label="Membro desde"
-            value={new Date(profile.createdAt).toLocaleDateString('pt-BR')}
-          />
-        )}
-      </div>
+          <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-sm">
+            <ActionRow label="Editar perfil" onClick={() => navigate('/profile/edit')} />
+            <div className="border-t border-gray-100" />
+            <ActionRow label="Trocar senha" onClick={() => navigate('/profile/change-password')} />
+          </div>
 
-      <div className="mt-6 flex flex-col overflow-hidden rounded-xl bg-white shadow-sm">
-        <ActionRow label="Editar perfil" onClick={() => navigate('/profile/edit')} />
-        <div className="border-t border-gray-100" />
-        <ActionRow label="Trocar senha" onClick={() => navigate('/profile/change-password')} />
-      </div>
+          <Button onClick={handleLogout} fullWidth={false} className="lg:self-start">
+            Sair
+          </Button>
 
-      <div className="mt-6">
-        <Button onClick={handleLogout}>Sair</Button>
-      </div>
-
-      <div className="mt-8 flex flex-col gap-3 rounded-xl border border-red-200 p-4">
-        <p className="text-center text-sm font-bold text-red-600">Zona de Perigo</p>
-        <button
-          type="button"
-          onClick={() => setShowDeleteDialog(true)}
-          disabled={isDeletingAccount}
-          className="h-12 rounded-lg bg-red-600 text-base font-bold text-white transition-colors hover:bg-red-700 disabled:opacity-60"
-        >
-          {isDeletingAccount ? 'Excluindo...' : 'Excluir conta permanentemente'}
-        </button>
+          <div className="flex flex-col gap-3 rounded-xl border border-red-200 p-4">
+            <p className="text-center text-sm font-bold text-red-600 lg:text-left">Zona de Perigo</p>
+            <Button
+              variant="danger"
+              fullWidth={false}
+              className="lg:self-start"
+              onClick={() => setShowDeleteDialog(true)}
+              disabled={isDeletingAccount}
+            >
+              {isDeletingAccount ? 'Excluindo...' : 'Excluir conta permanentemente'}
+            </Button>
+          </div>
+        </div>
       </div>
 
       {showDeleteDialog && (

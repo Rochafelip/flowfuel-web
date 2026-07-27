@@ -68,10 +68,7 @@ export function VehicleEvents() {
     <Screen wide>
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-xl font-bold">Eventos</h1>
-        <Button
-          className="w-auto px-4 text-sm"
-          onClick={() => navigate('/vehicle-events/new')}
-        >
+        <Button fullWidth={false} className="text-sm" onClick={() => navigate('/vehicle-events/new')}>
           Novo evento
         </Button>
       </div>
@@ -117,7 +114,7 @@ export function VehicleEvents() {
 
       {hasMore && (
         <button
-          className="mt-3 w-full rounded-lg bg-gray-200 py-3 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300 disabled:opacity-50"
+          className="mx-auto mt-3 block w-auto rounded-lg bg-gray-200 px-6 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300 disabled:opacity-50"
           onClick={loadMore}
           disabled={loading}
         >
