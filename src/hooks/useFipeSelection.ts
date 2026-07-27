@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react'
-import { fetchBrands, fetchModels, fetchYears, type FipeOption } from '../services/fipe'
+import {
+  fetchBrands,
+  fetchModels,
+  fetchYears,
+  type FipeOption,
+  type FipeVehicleCategory,
+} from '../services/fipe'
 
-export function useFipeSelection() {
+export function useFipeSelection(category: FipeVehicleCategory) {
   const [brands, setBrands] = useState<FipeOption[]>([])
   const [models, setModels] = useState<FipeOption[]>([])
   const [years, setYears] = useState<FipeOption[]>([])
@@ -21,15 +27,23 @@ export function useFipeSelection() {
   function loadBrands() {
     setLoadingBrands(true)
     setBrandsError(false)
-    fetchBrands()
+    fetchBrands(category)
       .then(setBrands)
       .catch(() => setBrandsError(true))
       .finally(() => setLoadingBrands(false))
   }
 
   useEffect(() => {
+    setBrandCode('')
+    setModelCode('')
+    setYearCode('')
+    setModels([])
+    setYears([])
     loadBrands()
-  }, [])
+    // loadBrands is intentionally not in the dep array: it closes over `category`
+    // itself, and including it would just re-describe this same effect.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [category])
 
   function selectBrand(code: string) {
     setBrandCode(code)
@@ -42,7 +56,7 @@ export function useFipeSelection() {
 
     setLoadingModels(true)
     setModelsError(false)
-    fetchModels(code)
+    fetchModels(category, code)
       .then(setModels)
       .catch(() => setModelsError(true))
       .finally(() => setLoadingModels(false))
@@ -57,7 +71,7 @@ export function useFipeSelection() {
 
     setLoadingYears(true)
     setYearsError(false)
-    fetchYears(brandCode, code)
+    fetchYears(category, brandCode, code)
       .then(setYears)
       .catch(() => setYearsError(true))
       .finally(() => setLoadingYears(false))
