@@ -18,6 +18,9 @@ import { RefuelForm } from './routes/RefuelForm'
 import { VehicleEvents } from './routes/VehicleEvents'
 import { VehicleEventForm } from './routes/VehicleEventForm'
 import { Export } from './routes/Export'
+import { Profile } from './routes/Profile'
+import { ProfileEdit } from './routes/ProfileEdit'
+import { ChangePassword } from './routes/ChangePassword'
 
 export default function App() {
   return (
@@ -43,6 +46,9 @@ export default function App() {
                     <Route path="/vehicle-events/new" element={<VehicleEventForm />} />
                     <Route path="/vehicle-events/:id/edit" element={<VehicleEventForm />} />
                     <Route path="/export" element={<Export />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/profile/edit" element={<ProfileEdit />} />
+                    <Route path="/profile/change-password" element={<ChangePassword />} />
                   </Route>
                 </Route>
               </Routes>
