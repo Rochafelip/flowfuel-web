@@ -1,16 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { authenticatedRequest } from '../services/api'
 import { useAuth } from './AuthContext'
-
-interface Vehicle {
-  id: string
-  brand: string
-  model: string
-  modelYear: number
-  currentKm: number
-  licensePlate: string
-  energyType: 'COMBUSTION' | 'ELECTRIC' | 'HYBRID'
-}
+import type { Vehicle } from '../types/Vehicle'
 
 interface VehicleContextData {
   activeVehicle: Vehicle | null
