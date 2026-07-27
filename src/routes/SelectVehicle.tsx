@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
+import { activateVehicle } from '../services/vehicle'
 import { useVehicle } from '../context/VehicleContext'
 import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
@@ -38,11 +39,9 @@ export function SelectVehicle() {
     }
   }
 
-  async function activateVehicle(id: number) {
+  async function activateSelectedVehicle(id: number) {
     try {
-      await authenticatedRequest(`/vehicles/${id}/active`, {
-        method: 'PUT',
-      })
+      await activateVehicle(id)
 
       await loadActiveVehicle()
       showToast('Veículo ativado.', 'success')
@@ -84,7 +83,7 @@ export function SelectVehicle() {
           <li key={item.id}>
             <button
               className="flex w-full items-center gap-3 rounded-xl bg-white p-4 text-left shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
-              onClick={() => activateVehicle(item.id)}
+              onClick={() => activateSelectedVehicle(item.id)}
             >
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-base text-green-700">
                 🚗
