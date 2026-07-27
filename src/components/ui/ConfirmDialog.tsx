@@ -53,7 +53,7 @@ export function ConfirmDialog() {
             onClick={() => resolveRequest(true)}
             className="rounded-lg bg-red-600 px-4 py-2 text-sm font-bold text-white hover:bg-red-700"
           >
-            Excluir
+            {request.confirmLabel}
           </button>
         </div>
       </div>

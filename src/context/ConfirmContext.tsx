@@ -2,12 +2,13 @@ import { createContext, useCallback, useContext, useState, type ReactNode } from
 
 interface ConfirmRequest {
   message: string
+  confirmLabel: string
   resolve: (value: boolean) => void
 }
 
 interface ConfirmContextData {
   request: ConfirmRequest | null
-  confirm: (message: string) => Promise<boolean>
+  confirm: (message: string, confirmLabel?: string) => Promise<boolean>
   resolveRequest: (value: boolean) => void
 }
 
@@ -16,9 +17,9 @@ const ConfirmContext = createContext<ConfirmContextData>({} as ConfirmContextDat
 export function ConfirmProvider({ children }: { children: ReactNode }) {
   const [request, setRequest] = useState<ConfirmRequest | null>(null)
 
-  const confirm = useCallback((message: string) => {
+  const confirm = useCallback((message: string, confirmLabel = 'Excluir') => {
     return new Promise<boolean>((resolve) => {
-      setRequest({ message, resolve })
+      setRequest({ message, confirmLabel, resolve })
     })
   }, [])
 
