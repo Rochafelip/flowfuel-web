@@ -137,3 +137,19 @@ export async function uploadVehiclePhoto(vehicleId: number, file: File) {
 
   return response.json()
 }
+
+export async function fetchAuthenticatedBlob(path: string): Promise<Blob> {
+  const token = localStorage.getItem('@token')
+
+  const response = await fetch(`${BASE_URL}/api/v1${path}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error('Erro ao carregar imagem')
+  }
+
+  return response.blob()
+}
