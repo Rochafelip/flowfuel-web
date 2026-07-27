@@ -36,8 +36,7 @@ export function Register() {
     try {
       await registerRequest(name, email, password)
 
-      showToast('Conta criada! Verifique seu email para ativar antes de entrar.', 'success')
-      navigate('/login')
+      navigate(`/activate?email=${encodeURIComponent(email)}`)
     } catch (error) {
       showToast('Erro ao criar conta. Tente novamente.')
       console.error(error)
