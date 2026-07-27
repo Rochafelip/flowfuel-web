@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
+  acceptVehicleShare,
   activateVehicle,
   deleteVehicle,
   getVehicleShare,
+  listPendingShares,
   listSharedVehicles,
   listVehicles,
+  rejectVehicleShare,
   revokeVehicleShare,
   shareVehicle,
 } from '../services/vehicle'
@@ -40,6 +43,7 @@ export function Vehicles() {
   const [error, setError] = useState(false)
   const [busyId, setBusyId] = useState<number | null>(null)
   const [shareByVehicleId, setShareByVehicleId] = useState<Record<number, VehicleShare | null>>({})
+  const [pendingInvites, setPendingInvites] = useState<VehicleShare[]>([])
   const [sharingVehicle, setSharingVehicle] = useState<Vehicle | null>(null)
   const [shareSubmitting, setShareSubmitting] = useState(false)
   const [shareBusyId, setShareBusyId] = useState<number | null>(null)
@@ -53,12 +57,14 @@ export function Vehicles() {
     try {
       setLoading(true)
       setError(false)
-      const [page, shared] = await Promise.all([
+      const [page, shared, pending] = await Promise.all([
         listVehicles(),
         listSharedVehicles().catch(() => []),
+        listPendingShares().catch(() => []),
       ])
       setVehicles(page.content)
       setSharedVehicles(shared)
+      setPendingInvites(pending)
 
       const shareEntries = await Promise.all(
         page.content.map(async (v) => {
@@ -144,6 +150,34 @@ export function Vehicles() {
     } catch (err) {
       console.log(err)
       showToast(err instanceof Error ? err.message : 'Não foi possível revogar o compartilhamento')
+    } finally {
+      setShareBusyId(null)
+    }
+  }
+
+  async function handleAcceptInvite(share: VehicleShare) {
+    try {
+      setShareBusyId(share.id)
+      await acceptVehicleShare(share.id)
+      await load()
+      showToast('Convite aceito.', 'success')
+    } catch (err) {
+      console.log(err)
+      showToast(err instanceof Error ? err.message : 'Não foi possível aceitar o convite')
+    } finally {
+      setShareBusyId(null)
+    }
+  }
+
+  async function handleRejectInvite(share: VehicleShare) {
+    try {
+      setShareBusyId(share.id)
+      await rejectVehicleShare(share.id)
+      await load()
+      showToast('Convite rejeitado.', 'success')
+    } catch (err) {
+      console.log(err)
+      showToast(err instanceof Error ? err.message : 'Não foi possível rejeitar o convite')
     } finally {
       setShareBusyId(null)
     }
@@ -269,6 +303,44 @@ export function Vehicles() {
             )
           })}
         </ul>
+      )}
+
+      {pendingInvites.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-3 text-lg font-bold">Convites pendentes</h2>
+          <ul className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
+            {pendingInvites.map((invite) => {
+              const isInviteBusy = shareBusyId === invite.id
+
+              return (
+                <li key={invite.id}>
+                  <Card>
+                    <p className="font-bold">
+                      {invite.vehicleBrand} {invite.vehicleModel}
+                    </p>
+                    <p>De: {invite.ownerName}</p>
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <button
+                        className="rounded-md px-2 py-3 text-sm font-bold text-green-700 disabled:opacity-50 active:bg-green-50"
+                        disabled={isInviteBusy}
+                        onClick={() => handleAcceptInvite(invite)}
+                      >
+                        Aceitar
+                      </button>
+                      <button
+                        className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
+                        disabled={isInviteBusy}
+                        onClick={() => handleRejectInvite(invite)}
+                      >
+                        Rejeitar
+                      </button>
+                    </div>
+                  </Card>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       )}
 
       {sharedVehicles.length > 0 && (
