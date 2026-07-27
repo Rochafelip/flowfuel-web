@@ -38,7 +38,7 @@ export function Register() {
 
       navigate(`/activate?email=${encodeURIComponent(email)}`)
     } catch (error) {
-      showToast('Erro ao criar conta. Tente novamente.')
+      showToast(error instanceof Error ? error.message : 'Erro ao criar conta. Tente novamente.')
       console.error(error)
     }
   }

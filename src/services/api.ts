@@ -38,7 +38,7 @@ export async function registerRequest(
   if (!response.ok) {
     try {
       const err = await response.json()
-      throw new Error(err.message || 'Erro ao criar conta')
+      throw new Error(err.detail || 'Erro ao criar conta')
     } catch {
       throw new Error('Erro ao criar conta')
     }
