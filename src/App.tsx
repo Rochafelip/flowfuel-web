@@ -9,6 +9,7 @@ import { ToastContainer } from './components/ui/ToastContainer'
 import { ConfirmDialog } from './components/ui/ConfirmDialog'
 import { Login } from './routes/Login'
 import { Register } from './routes/Register'
+import { Activate } from './routes/Activate'
 import { SelectVehicle } from './routes/SelectVehicle'
 import { VehicleNew } from './routes/VehicleNew'
 import { Home } from './routes/Home'
@@ -28,6 +29,7 @@ export default function App() {
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/activate" element={<Activate />} />
 
                 <Route element={<ProtectedRoute />}>
                   <Route element={<AppLayout />}>
