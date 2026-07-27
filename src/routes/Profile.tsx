@@ -200,6 +200,8 @@ export function Profile() {
           </div>
 
           <div className="flex flex-col overflow-hidden rounded-xl bg-white shadow-sm">
+            <ActionRow label="Meus veículos" onClick={() => navigate('/vehicles')} />
+            <div className="border-t border-gray-100" />
             <ActionRow label="Editar perfil" onClick={() => navigate('/profile/edit')} />
             <div className="border-t border-gray-100" />
             <ActionRow label="Trocar senha" onClick={() => navigate('/profile/change-password')} />
