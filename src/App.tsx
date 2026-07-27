@@ -12,6 +12,8 @@ import { Register } from './routes/Register'
 import { Activate } from './routes/Activate'
 import { SelectVehicle } from './routes/SelectVehicle'
 import { VehicleNew } from './routes/VehicleNew'
+import { Vehicles } from './routes/Vehicles'
+import { VehicleEdit } from './routes/VehicleEdit'
 import { Home } from './routes/Home'
 import { Refuels } from './routes/Refuels'
 import { RefuelForm } from './routes/RefuelForm'
@@ -38,6 +40,8 @@ export default function App() {
                   <Route element={<AppLayout />}>
                     <Route path="/select-vehicle" element={<SelectVehicle />} />
                     <Route path="/vehicles/new" element={<VehicleNew />} />
+                    <Route path="/vehicles" element={<Vehicles />} />
+                    <Route path="/vehicles/:id/edit" element={<VehicleEdit />} />
                     <Route path="/" element={<Home />} />
                     <Route path="/refuels" element={<Refuels />} />
                     <Route path="/refuels/new" element={<RefuelForm />} />
