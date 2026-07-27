@@ -56,7 +56,7 @@ export function RefuelForm() {
       setRefuelType(refuel.refuelType)
     } catch (err) {
       console.log(err)
-      showToast('Erro ao carregar abastecimento')
+      showToast(err instanceof Error ? err.message : 'Erro ao carregar abastecimento')
       navigate('/refuels')
     } finally {
       setLoading(false)
@@ -128,7 +128,7 @@ export function RefuelForm() {
       navigate('/refuels')
     } catch (err) {
       console.log(err)
-      showToast('Erro ao salvar abastecimento')
+      showToast(err instanceof Error ? err.message : 'Erro ao salvar abastecimento')
     } finally {
       setSubmitting(false)
     }

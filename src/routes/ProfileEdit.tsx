@@ -33,7 +33,7 @@ export function ProfileEdit() {
       })
       .catch((err) => {
         console.log(err)
-        showToast('Não foi possível carregar seu perfil')
+        showToast(err instanceof Error ? err.message : 'Não foi possível carregar seu perfil')
       })
       .finally(() => setLoading(false))
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,7 +55,7 @@ export function ProfileEdit() {
       navigate('/profile')
     } catch (err) {
       console.log(err)
-      showToast('Não foi possível salvar as alterações')
+      showToast(err instanceof Error ? err.message : 'Não foi possível salvar as alterações')
     } finally {
       setSubmitting(false)
     }

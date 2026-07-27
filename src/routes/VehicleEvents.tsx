@@ -50,7 +50,7 @@ export function VehicleEvents() {
       showToast('Evento excluído.', 'success')
     } catch (err) {
       console.log(err)
-      showToast('Erro ao excluir evento')
+      showToast(err instanceof Error ? err.message : 'Erro ao excluir evento')
     } finally {
       setDeletingId(null)
     }

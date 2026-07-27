@@ -44,7 +44,7 @@ export function Activate() {
       startCooldown()
     } catch (error) {
       console.log(error)
-      showToast('Erro ao reenviar o código.')
+      showToast(error instanceof Error ? error.message : 'Erro ao reenviar o código.')
     } finally {
       setIsResending(false)
     }

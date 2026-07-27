@@ -1,4 +1,4 @@
-import { authenticatedRequest } from './api'
+import { authenticatedRequest, extractErrorMessage } from './api'
 import type { PageResponse } from '../types/Page'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://flowfuel-api.fly.dev'
@@ -79,12 +79,7 @@ export async function changePasswordRequest(
   })
 
   if (!response.ok) {
-    try {
-      const err = await response.json()
-      throw new Error(err.detail || 'Não foi possível trocar a senha')
-    } catch {
-      throw new Error('Não foi possível trocar a senha')
-    }
+    throw new Error(await extractErrorMessage(response, 'Não foi possível trocar a senha'))
   }
 }
 
@@ -105,7 +100,7 @@ export async function uploadProfilePictureRequest(
   })
 
   if (!response.ok) {
-    throw new Error('Não foi possível enviar a foto')
+    throw new Error(await extractErrorMessage(response, 'Não foi possível enviar a foto'))
   }
 
   return response.json()
@@ -121,7 +116,7 @@ export async function deleteProfilePictureRequest(userId: number): Promise<void>
   })
 
   if (!response.ok) {
-    throw new Error('Não foi possível remover a foto')
+    throw new Error(await extractErrorMessage(response, 'Não foi possível remover a foto'))
   }
 }
 
@@ -135,6 +130,6 @@ export async function deleteAccountRequest(userId: number): Promise<void> {
   })
 
   if (!response.ok) {
-    throw new Error('Não foi possível excluir a conta')
+    throw new Error(await extractErrorMessage(response, 'Não foi possível excluir a conta'))
   }
 }

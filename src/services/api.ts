@@ -6,6 +6,21 @@ export function clearSession() {
   localStorage.removeItem('@active_vehicle')
 }
 
+export async function extractErrorMessage(response: Response, fallback: string): Promise<string> {
+  try {
+    const body = await response.json()
+    if (Array.isArray(body?.errors) && body.errors.length > 0) {
+      const fieldMessages = body.errors
+        .map((e: { message?: string }) => e.message)
+        .filter(Boolean)
+      if (fieldMessages.length > 0) return fieldMessages.join(' ')
+    }
+    return body?.detail || fallback
+  } catch {
+    return fallback
+  }
+}
+
 export async function loginRequest(email: string, password: string) {
   const response = await fetch(`${BASE_URL}/api/v1/auth/login`, {
     method: 'POST',
@@ -16,7 +31,7 @@ export async function loginRequest(email: string, password: string) {
   })
 
   if (!response.ok) {
-    throw new Error('Email ou senha inválidos')
+    throw new Error(await extractErrorMessage(response, 'Email ou senha inválidos'))
   }
 
   return response.json()
@@ -36,12 +51,7 @@ export async function registerRequest(
   })
 
   if (!response.ok) {
-    try {
-      const err = await response.json()
-      throw new Error(err.detail || 'Erro ao criar conta')
-    } catch {
-      throw new Error('Erro ao criar conta')
-    }
+    throw new Error(await extractErrorMessage(response, 'Erro ao criar conta'))
   }
 
   return response.json()
@@ -57,7 +67,7 @@ export async function resendActivationRequest(email: string) {
   })
 
   if (!response.ok) {
-    throw new Error('Erro ao reenviar o código de ativação')
+    throw new Error(await extractErrorMessage(response, 'Erro ao reenviar o código de ativação'))
   }
 
   return response.json()
@@ -73,12 +83,7 @@ export async function activateRequest(token: string) {
   })
 
   if (!response.ok) {
-    try {
-      const err = await response.json()
-      throw new Error(err.detail || 'Código de ativação inválido ou expirado')
-    } catch {
-      throw new Error('Código de ativação inválido ou expirado')
-    }
+    throw new Error(await extractErrorMessage(response, 'Código de ativação inválido ou expirado'))
   }
 
   return response.json()
@@ -106,7 +111,7 @@ export async function authenticatedRequest(
   }
 
   if (!response.ok) {
-    throw new Error('Erro na requisição')
+    throw new Error(await extractErrorMessage(response, 'Erro na requisição'))
   }
 
   return response.json()
@@ -132,7 +137,7 @@ export async function uploadVehiclePhoto(vehicleId: number, file: File) {
   }
 
   if (!response.ok) {
-    throw new Error('Erro ao enviar foto do veículo')
+    throw new Error(await extractErrorMessage(response, 'Erro ao enviar foto do veículo'))
   }
 
   return response.json()
@@ -148,7 +153,7 @@ export async function fetchAuthenticatedBlob(path: string): Promise<Blob> {
   })
 
   if (!response.ok) {
-    throw new Error('Erro ao carregar imagem')
+    throw new Error(await extractErrorMessage(response, 'Erro ao carregar imagem'))
   }
 
   return response.blob()

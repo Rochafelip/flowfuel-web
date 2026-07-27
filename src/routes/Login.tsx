@@ -26,8 +26,8 @@ export function Login() {
       const data = await loginRequest(email, password)
       await signIn(data.accessToken)
       navigate('/')
-    } catch {
-      showToast('Email ou senha inválidos')
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Email ou senha inválidos')
     }
   }
 

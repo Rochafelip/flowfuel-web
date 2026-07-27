@@ -61,7 +61,7 @@ export function Export() {
       }
     } catch (err) {
       console.log(err)
-      showToast('Não foi possível carregar seus veículos')
+      showToast(err instanceof Error ? err.message : 'Não foi possível carregar seus veículos')
     } finally {
       setLoadingVehicles(false)
     }
@@ -102,7 +102,7 @@ export function Export() {
       await downloadExport(`${basePath}?${params.toString()}`, `flowfuel-export.${format}`)
     } catch (err) {
       console.log(err)
-      showToast('Não foi possível exportar. Tente novamente.')
+      showToast(err instanceof Error ? err.message : 'Não foi possível exportar. Tente novamente.')
     } finally {
       setExporting(false)
     }

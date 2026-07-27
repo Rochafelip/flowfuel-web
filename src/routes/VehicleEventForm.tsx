@@ -53,7 +53,7 @@ export function VehicleEventForm() {
       setDescription(event.description ?? '')
     } catch (err) {
       console.log(err)
-      showToast('Erro ao carregar evento')
+      showToast(err instanceof Error ? err.message : 'Erro ao carregar evento')
       navigate('/vehicle-events')
     } finally {
       setLoading(false)
@@ -101,7 +101,7 @@ export function VehicleEventForm() {
       navigate('/vehicle-events')
     } catch (err) {
       console.log(err)
-      showToast('Erro ao salvar evento')
+      showToast(err instanceof Error ? err.message : 'Erro ao salvar evento')
     } finally {
       setSubmitting(false)
     }

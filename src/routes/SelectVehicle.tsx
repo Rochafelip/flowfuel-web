@@ -32,7 +32,7 @@ export function SelectVehicle() {
       setVehicles(response.content)
     } catch (error) {
       console.log(error)
-      showToast('Não foi possível carregar seus veículos')
+      showToast(error instanceof Error ? error.message : 'Não foi possível carregar seus veículos')
     } finally {
       setLoading(false)
     }
@@ -49,6 +49,7 @@ export function SelectVehicle() {
       navigate('/')
     } catch (error) {
       console.log(error)
+      showToast(error instanceof Error ? error.message : 'Não foi possível ativar o veículo')
     }
   }
 

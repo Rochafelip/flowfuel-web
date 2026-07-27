@@ -1,4 +1,4 @@
-import { clearSession } from './api'
+import { clearSession, extractErrorMessage } from './api'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://flowfuel-api.fly.dev'
 
@@ -18,7 +18,7 @@ export async function downloadExport(endpoint: string, fallbackFileName: string)
   }
 
   if (!response.ok) {
-    throw new Error('Erro ao exportar')
+    throw new Error(await extractErrorMessage(response, 'Erro ao exportar'))
   }
 
   const blob = await response.blob()

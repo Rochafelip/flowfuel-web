@@ -226,7 +226,7 @@ export function VehicleNew() {
       navigate('/')
     } catch (error) {
       console.log(error)
-      showToast('Erro ao cadastrar veículo')
+      showToast(error instanceof Error ? error.message : 'Erro ao cadastrar veículo')
     } finally {
       setIsSubmitting(false)
     }

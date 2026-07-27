@@ -75,7 +75,7 @@ export function Profile() {
       await load()
     } catch (err) {
       console.log(err)
-      showToast('Não foi possível enviar a foto')
+      showToast(err instanceof Error ? err.message : 'Não foi possível enviar a foto')
     } finally {
       setIsUploadingPhoto(false)
     }
@@ -91,7 +91,7 @@ export function Profile() {
       await load()
     } catch (err) {
       console.log(err)
-      showToast('Não foi possível remover a foto')
+      showToast(err instanceof Error ? err.message : 'Não foi possível remover a foto')
     } finally {
       setIsDeletingPhoto(false)
     }
@@ -113,7 +113,7 @@ export function Profile() {
       navigate('/login')
     } catch (err) {
       console.log(err)
-      showToast('Não foi possível excluir a conta')
+      showToast(err instanceof Error ? err.message : 'Não foi possível excluir a conta')
       setIsDeletingAccount(false)
     }
   }

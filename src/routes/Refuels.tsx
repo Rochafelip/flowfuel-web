@@ -43,7 +43,7 @@ export function Refuels() {
       showToast('Abastecimento excluído.', 'success')
     } catch (err) {
       console.log(err)
-      showToast('Erro ao excluir abastecimento')
+      showToast(err instanceof Error ? err.message : 'Erro ao excluir abastecimento')
     } finally {
       setDeletingId(null)
     }
