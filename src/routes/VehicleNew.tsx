@@ -311,38 +311,49 @@ export function VehicleNew() {
           <Step4Photo photoPreviewUrl={photoPreviewUrl} onPhotoChange={handlePhotoChange} />
         )}
 
-        <div className="mt-2 flex flex-col gap-2">
-          <Button type="submit" disabled={isSubmitting}>
-            {currentStep < 4 ? 'Continuar' : isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
-          </Button>
-
+        <div className="mt-2 flex flex-col gap-3">
           {currentStep === 3 && (
             <button
               type="button"
               onClick={skipLicensePlate}
-              className="block w-full text-center text-sm text-green-700"
+              className="text-center text-sm font-bold text-green-700"
             >
               Preencher placa depois
             </button>
           )}
 
-          {currentStep > 1 ? (
-            <button
-              type="button"
-              onClick={goToPreviousStep}
-              className="block w-full text-center text-sm text-green-700"
+          <div className="flex gap-3">
+            {currentStep > 1 ? (
+              <Button
+                type="button"
+                variant="secondary"
+                fullWidth={false}
+                className="flex-1 lg:flex-none lg:px-8"
+                onClick={goToPreviousStep}
+              >
+                Voltar
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="secondary"
+                fullWidth={false}
+                className="flex-1 lg:flex-none lg:px-8"
+                onClick={() => navigate(-1)}
+              >
+                Cancelar
+              </Button>
+            )}
+
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              fullWidth={false}
+              className="flex-1 lg:flex-none lg:px-10"
             >
-              Voltar
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => navigate(-1)}
-              className="block w-full text-center text-sm text-green-700"
-            >
-              Cancelar
-            </button>
-          )}
+              {currentStep < 4 ? 'Continuar' : isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
+            </Button>
+          </div>
         </div>
       </form>
     </Screen>

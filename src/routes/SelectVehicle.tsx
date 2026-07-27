@@ -66,7 +66,7 @@ export function SelectVehicle() {
         <div className="flex flex-col items-center gap-4">
           <p>Nenhum veículo cadastrado</p>
 
-          <Button onClick={() => navigate('/vehicles/new')} className="w-auto px-4">
+          <Button onClick={() => navigate('/vehicles/new')} fullWidth={false}>
             Cadastrar Veículo
           </Button>
         </div>
@@ -78,7 +78,7 @@ export function SelectVehicle() {
     <Screen wide>
       <h1 className="mb-5 text-xl font-bold">Selecione um veículo</h1>
 
-      <ul className="flex flex-col gap-3">
+      <ul className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
         {vehicles.map((item) => (
           <li key={item.id}>
             <button

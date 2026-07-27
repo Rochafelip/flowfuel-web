@@ -195,7 +195,11 @@ export function Export() {
           ]}
         />
 
-        <Button type="submit" disabled={exporting || Boolean(dateError)}>
+        <Button
+          type="submit"
+          disabled={exporting || Boolean(dateError)}
+          className="lg:w-auto lg:self-end lg:px-10"
+        >
           {exporting ? 'Exportando...' : 'Exportar'}
         </Button>
       </form>

@@ -252,7 +252,7 @@ export function RefuelForm() {
           Tanque cheio
         </label>
 
-        <Button type="submit" disabled={submitting}>
+        <Button type="submit" disabled={submitting} className="lg:w-auto lg:self-end lg:px-10">
           {submitting ? 'Salvando...' : 'Salvar'}
         </Button>
 
