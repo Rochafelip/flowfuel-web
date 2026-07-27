@@ -196,8 +196,12 @@ export function VehicleNew() {
       }
 
       if (showFuelType) payload.fuelSubType = fuelType
-      if (showTankCapacity && tankCapacity) payload.capacity = Number(tankCapacity)
-      if (showBatteryCapacity && batteryCapacity) payload.batteryCapacity = Number(batteryCapacity)
+      if (showTankCapacity && tankCapacity) {
+        payload.capacity = Number(tankCapacity.replace(',', '.'))
+      }
+      if (showBatteryCapacity && batteryCapacity) {
+        payload.batteryCapacity = Number(batteryCapacity.replace(',', '.'))
+      }
       if (payload.capacity === undefined && payload.batteryCapacity !== undefined) {
         payload.capacity = payload.batteryCapacity
       }
