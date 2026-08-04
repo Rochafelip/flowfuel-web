@@ -1,3 +1,5 @@
+import { apiFetch } from './httpClient'
+
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://flowfuel-api.fly.dev'
 
 export function clearSession() {
@@ -22,7 +24,7 @@ export async function extractErrorMessage(response: Response, fallback: string):
 }
 
 export async function loginRequest(email: string, password: string) {
-  const response = await fetch(`${BASE_URL}/api/v1/auth/login`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -42,7 +44,7 @@ export async function registerRequest(
   email: string,
   password: string
 ) {
-  const response = await fetch(`${BASE_URL}/api/v1/auth/register`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -58,7 +60,7 @@ export async function registerRequest(
 }
 
 export async function resendActivationRequest(email: string) {
-  const response = await fetch(`${BASE_URL}/api/v1/auth/resend-activation`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/resend-activation`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -74,7 +76,7 @@ export async function resendActivationRequest(email: string) {
 }
 
 export async function activateRequest(token: string) {
-  const response = await fetch(`${BASE_URL}/api/v1/auth/activate`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/activate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -95,7 +97,7 @@ export async function authenticatedRequest(
 ) {
   const token = localStorage.getItem('@token')
 
-  const response = await fetch(`${BASE_URL}/api/v1${endpoint}`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1${endpoint}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -122,7 +124,7 @@ export async function uploadVehiclePhoto(vehicleId: number, file: File) {
   const formData = new FormData()
   formData.append('file', file)
 
-  const response = await fetch(`${BASE_URL}/api/v1/vehicles/${vehicleId}/photo`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/vehicles/${vehicleId}/photo`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -146,7 +148,7 @@ export async function uploadVehiclePhoto(vehicleId: number, file: File) {
 export async function fetchAuthenticatedBlob(path: string): Promise<Blob> {
   const token = localStorage.getItem('@token')
 
-  const response = await fetch(`${BASE_URL}/api/v1${path}`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1${path}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
