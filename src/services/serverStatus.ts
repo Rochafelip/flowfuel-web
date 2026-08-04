@@ -11,10 +11,10 @@ function notify() {
 }
 
 export function reportNetworkError() {
-  if (isUnreachable) return
+  const changed = !isUnreachable || dismissed
   isUnreachable = true
   dismissed = false
-  notify()
+  if (changed) notify()
 }
 
 export function reportNetworkSuccess() {
