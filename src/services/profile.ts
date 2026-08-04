@@ -1,4 +1,5 @@
 import { authenticatedRequest, extractErrorMessage } from './api'
+import { apiFetch } from './httpClient'
 import type { PageResponse } from '../types/Page'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://flowfuel-api.fly.dev'
@@ -69,7 +70,7 @@ export async function changePasswordRequest(
   newPassword: string
 ): Promise<void> {
   const token = localStorage.getItem('@token')
-  const response = await fetch(`${BASE_URL}/api/v1/auth/${userId}/password`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/${userId}/password`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -91,7 +92,7 @@ export async function uploadProfilePictureRequest(
   const formData = new FormData()
   formData.append('file', file)
 
-  const response = await fetch(`${BASE_URL}/api/v1/auth/${userId}/upload-profile-picture`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/${userId}/upload-profile-picture`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -108,7 +109,7 @@ export async function uploadProfilePictureRequest(
 
 export async function deleteProfilePictureRequest(userId: number): Promise<void> {
   const token = localStorage.getItem('@token')
-  const response = await fetch(`${BASE_URL}/api/v1/auth/${userId}/profile-picture`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/${userId}/profile-picture`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -122,7 +123,7 @@ export async function deleteProfilePictureRequest(userId: number): Promise<void>
 
 export async function deleteAccountRequest(userId: number): Promise<void> {
   const token = localStorage.getItem('@token')
-  const response = await fetch(`${BASE_URL}/api/v1/auth/${userId}`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/${userId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
