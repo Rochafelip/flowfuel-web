@@ -1,3 +1,5 @@
+import { useSyncExternalStore } from 'react'
+
 type Listener = () => void
 
 let isUnreachable = false
@@ -34,4 +36,9 @@ export function subscribe(listener: Listener): () => void {
 
 export function getSnapshot() {
   return isUnreachable && !dismissed
+}
+
+export function useServerStatus() {
+  const visible = useSyncExternalStore(subscribe, getSnapshot)
+  return { visible, dismiss: dismissServerStatus }
 }
