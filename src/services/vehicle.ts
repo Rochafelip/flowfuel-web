@@ -1,4 +1,5 @@
 import { authenticatedRequest, clearSession } from './api'
+import { apiFetch } from './httpClient'
 import type { PageResponse } from '../types/Page'
 import type { Vehicle, VehicleShare } from '../types/Vehicle'
 
@@ -24,7 +25,7 @@ export function updateVehicle(id: number, payload: Record<string, unknown>): Pro
 // which throws SyntaxError on an empty body, so this does its own fetch.
 export async function activateVehicle(id: number): Promise<void> {
   const token = localStorage.getItem('@token')
-  const response = await fetch(`${BASE_URL}/api/v1/vehicles/${id}/active`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/vehicles/${id}/active`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -46,7 +47,7 @@ export async function activateVehicle(id: number): Promise<void> {
 // shape as activateVehicle above, same reason for a raw fetch here.
 export async function deleteVehicle(id: number): Promise<void> {
   const token = localStorage.getItem('@token')
-  const response = await fetch(`${BASE_URL}/api/v1/vehicles/${id}`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/vehicles/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -66,7 +67,7 @@ export async function deleteVehicle(id: number): Promise<void> {
 
 export async function getVehicleShare(vehicleId: number): Promise<VehicleShare | null> {
   const token = localStorage.getItem('@token')
-  const response = await fetch(`${BASE_URL}/api/v1/vehicle-shares/vehicle/${vehicleId}`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/vehicle-shares/vehicle/${vehicleId}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -91,7 +92,7 @@ export async function getVehicleShare(vehicleId: number): Promise<VehicleShare |
 
 export async function revokeVehicleShare(id: number): Promise<void> {
   const token = localStorage.getItem('@token')
-  const response = await fetch(`${BASE_URL}/api/v1/vehicle-shares/${id}`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1/vehicle-shares/${id}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${token}`,
