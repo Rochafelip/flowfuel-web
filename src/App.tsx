@@ -6,6 +6,7 @@ import { ConfirmProvider } from './context/ConfirmContext'
 import { ProtectedRoute } from './routes/ProtectedRoute'
 import { AppLayout } from './components/layout/AppLayout'
 import { ToastContainer } from './components/ui/ToastContainer'
+import { ServerStatusBanner } from './components/ui/ServerStatusBanner'
 import { ConfirmDialog } from './components/ui/ConfirmDialog'
 import { Login } from './routes/Login'
 import { Register } from './routes/Register'
@@ -56,6 +57,7 @@ export default function App() {
                   </Route>
                 </Route>
               </Routes>
+              <ServerStatusBanner />
               <ToastContainer />
               <ConfirmDialog />
             </VehicleProvider>
