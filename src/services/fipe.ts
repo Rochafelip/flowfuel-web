@@ -1,3 +1,5 @@
+import { apiFetch } from './httpClient'
+
 const FIPE_BASE_URL = 'https://parallelum.com.br/fipe/api/v1'
 
 export type FipeVehicleCategory = 'carros' | 'motos'
@@ -8,7 +10,7 @@ export interface FipeOption {
 }
 
 async function fipeRequest<T>(path: string): Promise<T> {
-  const response = await fetch(`${FIPE_BASE_URL}${path}`)
+  const response = await apiFetch(`${FIPE_BASE_URL}${path}`)
 
   if (!response.ok) {
     throw new Error(`Falha ao consultar FIPE: ${response.status}`)

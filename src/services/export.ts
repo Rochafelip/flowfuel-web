@@ -1,11 +1,12 @@
 import { clearSession, extractErrorMessage } from './api'
+import { apiFetch } from './httpClient'
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://flowfuel-api.fly.dev'
 
 export async function downloadExport(endpoint: string, fallbackFileName: string) {
   const token = localStorage.getItem('@token')
 
-  const response = await fetch(`${BASE_URL}/api/v1${endpoint}`, {
+  const response = await apiFetch(`${BASE_URL}/api/v1${endpoint}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
