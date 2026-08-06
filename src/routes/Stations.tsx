@@ -79,8 +79,7 @@ export function Stations() {
       },
       { timeout: 10_000 }
     )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchStations])
+  }, [fetchStations, radiusMeters])
 
   useEffect(() => {
     requestLocation()
