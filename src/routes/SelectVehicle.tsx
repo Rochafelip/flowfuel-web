@@ -20,7 +20,7 @@ export function SelectVehicle() {
   const [vehicles, setVehicles] = useState<VehicleListItem[]>([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
-  const { loadActiveVehicle } = useVehicle()
+  const { activeVehicle, loadActiveVehicle } = useVehicle()
   const { showToast } = useToast()
 
   useEffect(() => {
@@ -89,9 +89,16 @@ export function SelectVehicle() {
                 🚗
               </div>
               <div>
-                <p className="font-bold">
-                  {item.brand} {item.model}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="font-bold">
+                    {item.brand} {item.model}
+                  </p>
+                  {activeVehicle?.id === item.id && (
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-700">
+                      Ativo
+                    </span>
+                  )}
+                </div>
                 <p>Placa: {item.licensePlate}</p>
                 <p>Ano: {item.modelYear}</p>
               </div>
