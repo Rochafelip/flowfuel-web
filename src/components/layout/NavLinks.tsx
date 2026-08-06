@@ -6,6 +6,7 @@ const navItems = [
   { to: '/', label: 'Dashboard', icon: '📊', end: true },
   { to: '/refuels', label: 'Abastecimentos', icon: '⛽', end: false },
   { to: '/vehicle-events', label: 'Eventos', icon: '🔧', end: false },
+  { to: '/stations', label: 'Postos', icon: '⛽', end: false },
   { to: '/export', label: 'Exportar', icon: '📤', end: false },
   { to: '/profile', label: 'Perfil', icon: '👤', end: false },
 ]
