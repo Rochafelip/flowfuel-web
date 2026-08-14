@@ -85,21 +85,40 @@ export function Refuels() {
                 )}
               </div>
 
-              <p>Odômetro: {item.odometer} km</p>
               {item.kmSinceLastRefuel !== null && (
-                <p>+{item.kmSinceLastRefuel} km desde o último</p>
+                <p className="mb-2 text-sm text-gray-600">
+                  +{item.kmSinceLastRefuel} km desde o último
+                </p>
               )}
-              <p>
-                Quantidade: {item.energyAmount}{' '}
-                {item.refuelType === 'FUEL' ? 'L' : 'kWh'}
-              </p>
-              <p>
-                Preço: {currencyFormatter.format(item.pricePerUnit)}
-                {item.refuelType === 'FUEL' ? '/L' : '/kWh'}
-              </p>
-              <p className="font-bold">
-                Total: {currencyFormatter.format(item.totalAmount)}
-              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-sm text-gray-600">Odômetro</p>
+                  <p className="font-mono font-bold text-gray-900">{item.odometer} km</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-600">Quantidade</p>
+                  <p className="font-mono font-bold text-gray-900">
+                    {item.energyAmount} {item.refuelType === 'FUEL' ? 'L' : 'kWh'}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-600">Preço</p>
+                  <p className="font-mono font-bold text-gray-900">
+                    {currencyFormatter.format(item.pricePerUnit)}
+                    {item.refuelType === 'FUEL' ? '/L' : '/kWh'}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-600">Total</p>
+                  <p className="font-mono font-bold text-green-700">
+                    {currencyFormatter.format(item.totalAmount)}
+                  </p>
+                </div>
+              </div>
 
               <div className="mt-3 flex items-center gap-2">
                 <Link
