@@ -31,7 +31,7 @@ const currencyFormatter = new Intl.NumberFormat('pt-BR', {
 const integerFormatter = new Intl.NumberFormat('pt-BR')
 
 const MONTHLY_LOOKBACK_SIZE = 50
-const ACTIVITY_FEED_SIZE = 5
+const ACTIVITY_FEED_SIZE = 3
 
 type ActivityItem = {
   id: string
@@ -263,26 +263,36 @@ function LastRefuelDetailCard({ refuel }: { refuel: Refuel }) {
     <Card className="mt-6">
       <p className="mb-2 text-sm font-bold text-gray-700">Último abastecimento</p>
 
-      <p className="text-sm text-gray-600">Data</p>
-      <p className="mb-2 font-bold text-gray-900">
-        {new Date(refuel.refuelDate).toLocaleDateString('pt-BR')}
-      </p>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <p className="text-sm text-gray-600">Data</p>
+          <p className="font-bold text-gray-900">
+            {new Date(refuel.refuelDate).toLocaleDateString('pt-BR')}
+          </p>
+        </div>
 
-      <p className="text-sm text-gray-600">{isElectric ? 'Energia' : 'Litros'}</p>
-      <p className="mb-2 font-mono font-bold text-gray-900">
-        {refuel.energyAmount.toFixed(2)} {isElectric ? 'kWh' : 'L'}
-      </p>
+        <div>
+          <p className="text-sm text-gray-600">{isElectric ? 'Energia' : 'Litros'}</p>
+          <p className="font-mono font-bold text-gray-900">
+            {refuel.energyAmount.toFixed(2)} {isElectric ? 'kWh' : 'L'}
+          </p>
+        </div>
 
-      <p className="text-sm text-gray-600">Valor pago</p>
-      <p className="mb-2 font-mono font-bold text-gray-900">
-        {currencyFormatter.format(refuel.totalAmount)}
-      </p>
+        <div>
+          <p className="text-sm text-gray-600">Valor pago</p>
+          <p className="font-mono font-bold text-gray-900">
+            {currencyFormatter.format(refuel.totalAmount)}
+          </p>
+        </div>
 
-      <p className="text-sm text-gray-600">Preço por litro</p>
-      <p className="font-mono text-lg font-bold text-green-700">
-        {currencyFormatter.format(refuel.pricePerUnit)}
-        {isElectric ? '/kWh' : '/L'}
-      </p>
+        <div>
+          <p className="text-sm text-gray-600">Preço por litro</p>
+          <p className="font-mono font-bold text-green-700">
+            {currencyFormatter.format(refuel.pricePerUnit)}
+            {isElectric ? '/kWh' : '/L'}
+          </p>
+        </div>
+      </div>
     </Card>
   )
 }
