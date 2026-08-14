@@ -10,7 +10,9 @@ import { Screen } from '../components/ui/Screen'
 import { Card } from '../components/ui/Card'
 import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
-import { Button } from '../components/ui/Button'
+import { Button, ghostButtonClasses, ghostDangerButtonClasses } from '../components/ui/Button'
+import { DataField } from '../components/ui/DataField'
+import { EmptyState } from '../components/ui/EmptyState'
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -69,13 +71,19 @@ export function Refuels() {
       {error && <ErrorState message="Não foi possível carregar os abastecimentos." />}
 
       {items.length === 0 && !error && (
-        <p className="text-gray-600">Nenhum abastecimento registrado</p>
+        <EmptyState
+          icon="⛽"
+          title="Nenhum abastecimento ainda"
+          description="Registre seu primeiro abastecimento para começar a acompanhar consumo e gastos."
+          actionLabel="Registrar abastecimento"
+          onAction={() => navigate('/refuels/new')}
+        />
       )}
 
       <ul className="flex flex-col gap-3">
         {items.map((item) => (
           <li key={item.id}>
-            <Card>
+            <Card interactive>
               <div className="mb-2 flex items-center justify-between">
                 <p className="font-bold">{formatDateTime(item.refuelDate)}</p>
                 {item.fullTank && (
@@ -92,47 +100,31 @@ export function Refuels() {
               )}
 
               <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <p className="text-sm text-gray-600">Odômetro</p>
-                  <p className="font-mono font-bold text-gray-900">{item.odometer} km</p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-600">Quantidade</p>
-                  <p className="font-mono font-bold text-gray-900">
-                    {item.energyAmount} {item.refuelType === 'FUEL' ? 'L' : 'kWh'}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-600">Preço</p>
-                  <p className="font-mono font-bold text-gray-900">
-                    {currencyFormatter.format(item.pricePerUnit)}
-                    {item.refuelType === 'FUEL' ? '/L' : '/kWh'}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-sm text-gray-600">Total</p>
-                  <p className="font-mono font-bold text-green-700">
-                    {currencyFormatter.format(item.totalAmount)}
-                  </p>
-                </div>
+                <DataField label="Odômetro" value={`${item.odometer} km`} />
+                <DataField
+                  label="Quantidade"
+                  value={`${item.energyAmount} ${item.refuelType === 'FUEL' ? 'L' : 'kWh'}`}
+                />
+                <DataField
+                  label="Preço"
+                  value={`${currencyFormatter.format(item.pricePerUnit)}${
+                    item.refuelType === 'FUEL' ? '/L' : '/kWh'
+                  }`}
+                />
+                <DataField label="Total" value={currencyFormatter.format(item.totalAmount)} accent />
               </div>
 
               <div className="mt-3 flex items-center gap-2">
-                <Link
-                  to={`/refuels/${item.id}/edit`}
-                  className="rounded-md px-2 py-3 text-sm font-bold text-green-700 active:bg-green-50"
-                >
-                  Editar
+                <Link to={`/refuels/${item.id}/edit`} className={ghostButtonClasses}>
+                  ✏️ Editar
                 </Link>
                 <button
-                  className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
+                  type="button"
+                  className={ghostDangerButtonClasses}
                   disabled={deletingId === item.id}
                   onClick={() => handleDelete(item.id)}
                 >
-                  Excluir
+                  🗑️ Excluir
                 </button>
               </div>
             </Card>
