@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { NavLinks } from './NavLinks'
 
 export function MobileDrawer({
@@ -37,12 +37,18 @@ export function MobileDrawer({
       />
       <div className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white p-4 shadow-xl">
         <div className="mb-6 flex items-center justify-between">
-          <p className="text-lg font-bold text-green-700">⛽ FlowFuel</p>
+          <Link
+            to="/"
+            onClick={onClose}
+            className="rounded-lg px-2 py-1 text-lg font-bold text-green-700 transition-colors hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+          >
+            ⛽ FlowFuel
+          </Link>
           <button
             type="button"
             onClick={onClose}
             aria-label="Fechar menu"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-xl text-gray-700 hover:bg-green-50"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-xl text-gray-700 hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
           >
             ✕
           </button>
