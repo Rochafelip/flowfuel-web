@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
-import type { Dashboard, FuelMetrics } from '../types/Dashboard'
+import type { Dashboard, FuelMetrics, SpendingCategory } from '../types/Dashboard'
 import type { Refuel } from '../types/Refuel'
 import type { VehicleEvent } from '../types/VehicleEvent'
 import {
@@ -14,13 +14,13 @@ import { Card } from '../components/ui/Card'
 import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
 import { Button } from '../components/ui/Button'
+import { SpendingBreakdownChart } from '../components/ui/SpendingBreakdownChart'
 import {
   formatLastRefuelSubtitle,
   formatLastRefuelLabel,
   formatActivityDate,
   isDateStringInMonth,
 } from '../lib/relativeDate'
-import { getTipOfTheDay } from '../lib/fuelSavingTips'
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -184,11 +184,13 @@ function SpendCarousel({
   )
 }
 
-function TipOfTheDayCard() {
+function SpendingBreakdownCard({ data }: { data: SpendingCategory[] }) {
+  if (data.length === 0) return null
+
   return (
     <Card className="mt-6">
-      <p className="mb-1 text-sm font-bold text-gray-700">💡 Dica do dia</p>
-      <p className="text-sm text-gray-600">{getTipOfTheDay()}</p>
+      <p className="mb-4 text-sm font-bold text-gray-700">Composição de gastos</p>
+      <SpendingBreakdownChart data={data} />
     </Card>
   )
 }
@@ -423,7 +425,7 @@ export function Home() {
         </>
       )}
 
-      <TipOfTheDayCard />
+      {!isFirstUse && <SpendingBreakdownCard data={dashboard.spendingBreakdown} />}
 
       {!isFirstUse && lastRefuel && <LastRefuelDetailCard refuel={lastRefuel} />}
 

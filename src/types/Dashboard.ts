@@ -1,3 +1,8 @@
+export type SpendingCategory = {
+  category: string
+  amount: number
+}
+
 export type FuelMetrics = {
   totalEnergy: number
   totalSpent: number
@@ -14,6 +19,7 @@ export type Dashboard = {
   totalRefuels: number
   totalSpent: number
   totalOverallSpent: number
+  spendingBreakdown: SpendingCategory[]
   costPerKm: number
   totalEnergy: number | null
   averagePrice: number | null
