@@ -5,6 +5,7 @@ import { loginRequest } from '../services/api'
 import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { TextField } from '../components/ui/TextField'
+import { PasswordField } from '../components/ui/PasswordField'
 import { Button } from '../components/ui/Button'
 
 export function Login() {
@@ -50,9 +51,8 @@ export function Login() {
             autoCapitalize="none"
           />
 
-          <TextField
+          <PasswordField
             placeholder="Senha"
-            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />

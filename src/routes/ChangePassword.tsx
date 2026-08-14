@@ -5,7 +5,7 @@ import { useToast } from '../context/ToastContext'
 import { decodeUserIdFromToken } from '../lib/jwt'
 import { changePasswordRequest } from '../services/profile'
 import { Screen } from '../components/ui/Screen'
-import { TextField } from '../components/ui/TextField'
+import { PasswordField } from '../components/ui/PasswordField'
 import { Button } from '../components/ui/Button'
 
 export function ChangePassword() {
@@ -57,9 +57,8 @@ export function ChangePassword() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
-          <TextField
+          <PasswordField
             placeholder="Senha atual"
-            type="password"
             value={currentPassword}
             onChange={(e) => {
               setCurrentPassword(e.target.value)
@@ -71,16 +70,14 @@ export function ChangePassword() {
           )}
         </div>
 
-        <TextField
+        <PasswordField
           placeholder="Nova senha"
-          type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
 
-        <TextField
+        <PasswordField
           placeholder="Confirmar nova senha"
-          type="password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
