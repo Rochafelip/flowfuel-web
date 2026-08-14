@@ -120,15 +120,18 @@ function SpendCarousel({
   onPageChange,
   monthlySpent,
   totalSpent,
+  totalOverallSpent,
 }: {
   page: number
   onPageChange: (page: number) => void
   monthlySpent: number
   totalSpent: number
+  totalOverallSpent: number
 }) {
   const pages = [
     { label: 'Gasto do mês', value: monthlySpent },
-    { label: 'Gasto total', value: totalSpent },
+    { label: 'Gasto de combustível', value: totalSpent },
+    { label: 'Gastos totais', value: totalOverallSpent },
   ]
 
   function goToPage(index: number) {
@@ -372,6 +375,7 @@ export function Home() {
             onPageChange={setSpendPage}
             monthlySpent={monthlySpent}
             totalSpent={dashboard.totalSpent}
+            totalOverallSpent={dashboard.totalOverallSpent}
           />
 
           <div className="mt-6 grid grid-cols-2 gap-3">

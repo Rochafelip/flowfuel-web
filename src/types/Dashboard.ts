@@ -13,6 +13,7 @@ export type Dashboard = {
   energyType: 'COMBUSTION' | 'ELECTRIC' | 'HYBRID'
   totalRefuels: number
   totalSpent: number
+  totalOverallSpent: number
   costPerKm: number
   totalEnergy: number | null
   averagePrice: number | null
