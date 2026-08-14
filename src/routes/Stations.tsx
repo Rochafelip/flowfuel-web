@@ -188,7 +188,7 @@ export function Stations() {
             const address = formatStationAddress(station.street, station.houseNumber)
             return (
               <li key={station.placeId}>
-                <Card>
+                <Card interactive>
                   <div className="flex items-center gap-2">
                     <span className="text-xl">{STATION_TYPE_ICONS[station.type]}</span>
                     <p className="flex-1 truncate font-bold">{station.name}</p>
