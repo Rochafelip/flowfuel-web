@@ -13,7 +13,8 @@ import { Screen } from '../components/ui/Screen'
 import { Card } from '../components/ui/Card'
 import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
-import { Button } from '../components/ui/Button'
+import { Button, ghostButtonClasses, ghostDangerButtonClasses } from '../components/ui/Button'
+import { EmptyState } from '../components/ui/EmptyState'
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -76,13 +77,19 @@ export function VehicleEvents() {
       {error && <ErrorState message="Não foi possível carregar os eventos." />}
 
       {items.length === 0 && !error && (
-        <p className="text-gray-600">Nenhum evento registrado</p>
+        <EmptyState
+          icon="🧾"
+          title="Nenhum evento ainda"
+          description="Registre manutenções, seguros e outros gastos do seu veículo."
+          actionLabel="Novo evento"
+          onAction={() => navigate('/vehicle-events/new')}
+        />
       )}
 
       <ul className="flex flex-col gap-3">
         {items.map((item) => (
           <li key={item.id}>
-            <Card>
+            <Card interactive>
               <div className="mb-2 flex items-center justify-between">
                 <p className="font-bold">{VEHICLE_EVENT_TYPE_LABELS[item.type]}</p>
                 <p className="text-sm text-gray-600">{formatDate(item.eventDate)}</p>
@@ -93,18 +100,16 @@ export function VehicleEvents() {
               {item.description && <p>{truncate(item.description, 100)}</p>}
 
               <div className="mt-3 flex items-center gap-2">
-                <Link
-                  to={`/vehicle-events/${item.id}/edit`}
-                  className="rounded-md px-2 py-3 text-sm font-bold text-green-700 active:bg-green-50"
-                >
-                  Editar
+                <Link to={`/vehicle-events/${item.id}/edit`} className={ghostButtonClasses}>
+                  ✏️ Editar
                 </Link>
                 <button
-                  className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
+                  type="button"
+                  className={ghostDangerButtonClasses}
                   disabled={deletingId === item.id}
                   onClick={() => handleDelete(item.id)}
                 >
-                  Excluir
+                  🗑️ Excluir
                 </button>
               </div>
             </Card>
