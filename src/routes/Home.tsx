@@ -15,6 +15,8 @@ import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
 import { Button } from '../components/ui/Button'
 import { SpendingBreakdownChart } from '../components/ui/SpendingBreakdownChart'
+import { DataField } from '../components/ui/DataField'
+import { EmptyState } from '../components/ui/EmptyState'
 import {
   formatLastRefuelSubtitle,
   formatLastRefuelLabel,
@@ -61,8 +63,7 @@ function MetricCard({
   return (
     <Card>
       <IconBadge icon={icon} />
-      <p className="text-sm text-gray-600">{label}</p>
-      <p className="font-mono text-lg font-bold text-gray-900">{value}</p>
+      <DataField label={label} value={value} size="lg" />
     </Card>
   )
 }
@@ -81,20 +82,21 @@ function FuelMetricsCard({
       <IconBadge icon={icon} />
       <p className="mb-2 text-sm font-bold text-gray-700">{title}</p>
 
-      <p className="text-sm text-gray-600">Consumo médio</p>
-      <p className="mb-2 font-mono font-bold text-gray-900">
-        {metrics.averageConsumption.toFixed(2)} {metrics.consumptionUnit}
-      </p>
+      <div className="mb-2">
+        <DataField
+          label="Consumo médio"
+          value={`${metrics.averageConsumption.toFixed(2)} ${metrics.consumptionUnit}`}
+        />
+      </div>
 
-      <p className="text-sm text-gray-600">Preço médio</p>
-      <p className="mb-2 font-mono font-bold text-gray-900">
-        {currencyFormatter.format(metrics.averagePrice)} {metrics.priceUnit}
-      </p>
+      <div className="mb-2">
+        <DataField
+          label="Preço médio"
+          value={`${currencyFormatter.format(metrics.averagePrice)} ${metrics.priceUnit}`}
+        />
+      </div>
 
-      <p className="text-sm text-gray-600">Total gasto</p>
-      <p className="font-mono font-bold text-gray-900">
-        {currencyFormatter.format(metrics.totalSpent)}
-      </p>
+      <DataField label="Total gasto" value={currencyFormatter.format(metrics.totalSpent)} />
     </Card>
   )
 }
@@ -264,34 +266,24 @@ function LastRefuelDetailCard({ refuel }: { refuel: Refuel }) {
       <p className="mb-2 text-sm font-bold text-gray-700">Último abastecimento</p>
 
       <div className="grid grid-cols-2 gap-3">
-        <div>
-          <p className="text-sm text-gray-600">Data</p>
-          <p className="font-bold text-gray-900">
-            {new Date(refuel.refuelDate).toLocaleDateString('pt-BR')}
-          </p>
-        </div>
+        <DataField
+          label="Data"
+          value={new Date(refuel.refuelDate).toLocaleDateString('pt-BR')}
+          mono={false}
+        />
 
-        <div>
-          <p className="text-sm text-gray-600">{isElectric ? 'Energia' : 'Litros'}</p>
-          <p className="font-mono font-bold text-gray-900">
-            {refuel.energyAmount.toFixed(2)} {isElectric ? 'kWh' : 'L'}
-          </p>
-        </div>
+        <DataField
+          label={isElectric ? 'Energia' : 'Litros'}
+          value={`${refuel.energyAmount.toFixed(2)} ${isElectric ? 'kWh' : 'L'}`}
+        />
 
-        <div>
-          <p className="text-sm text-gray-600">Valor pago</p>
-          <p className="font-mono font-bold text-gray-900">
-            {currencyFormatter.format(refuel.totalAmount)}
-          </p>
-        </div>
+        <DataField label="Valor pago" value={currencyFormatter.format(refuel.totalAmount)} />
 
-        <div>
-          <p className="text-sm text-gray-600">Preço por litro</p>
-          <p className="font-mono font-bold text-green-700">
-            {currencyFormatter.format(refuel.pricePerUnit)}
-            {isElectric ? '/kWh' : '/L'}
-          </p>
-        </div>
+        <DataField
+          label="Preço por litro"
+          value={`${currencyFormatter.format(refuel.pricePerUnit)}${isElectric ? '/kWh' : '/L'}`}
+          accent
+        />
       </div>
     </Card>
   )
@@ -307,7 +299,10 @@ function RecentActivityCard({ items }: { items: ActivityItem[] }) {
       ) : (
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
-            <li key={item.id} className="flex items-center justify-between">
+            <li
+              key={item.id}
+              className="flex items-center justify-between rounded-lg px-1 py-1 transition-colors hover:bg-gray-50"
+            >
               <div className="flex items-center gap-2">
                 <span className="text-lg">{item.icon}</span>
                 <div>
@@ -449,14 +444,13 @@ export function Home() {
       />
 
       {isFirstUse ? (
-        <Card className="text-center">
-          <p className="mb-2 text-4xl">🚗</p>
-          <p className="mb-1 text-lg font-bold text-gray-900">Pronto para começar</p>
-          <p className="mb-4 text-sm text-gray-600">
-            Registre seu primeiro abastecimento para ver o dashboard do seu veículo.
-          </p>
-          <Button onClick={() => navigate('/refuels/new')}>Registrar abastecimento</Button>
-        </Card>
+        <EmptyState
+          icon="🚗"
+          title="Pronto para começar"
+          description="Registre seu primeiro abastecimento para ver o dashboard do seu veículo."
+          actionLabel="Registrar abastecimento"
+          onAction={() => navigate('/refuels/new')}
+        />
       ) : (
         <>
           <SpendCarousel
