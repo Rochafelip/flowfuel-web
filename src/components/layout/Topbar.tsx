@@ -7,7 +7,7 @@ export function Topbar({ onOpenDrawer }: { onOpenDrawer: () => void }) {
         type="button"
         onClick={onOpenDrawer}
         aria-label="Abrir menu"
-        className="-ml-2 flex h-9 w-9 items-center justify-center rounded-lg text-xl text-gray-700 hover:bg-green-50 lg:hidden"
+        className="-ml-2 flex h-9 w-9 items-center justify-center rounded-lg text-xl text-gray-700 hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 lg:hidden"
       >
         ☰
       </button>
