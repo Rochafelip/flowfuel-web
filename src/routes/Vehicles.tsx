@@ -22,6 +22,7 @@ import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
 import { Button } from '../components/ui/Button'
 import { ShareVehicleDialog } from '../components/ui/ShareVehicleDialog'
+import { EmptyState } from '../components/ui/EmptyState'
 
 function formatKm(km: number) {
   return `${km.toLocaleString('pt-BR')} km`
@@ -214,7 +215,13 @@ export function Vehicles() {
       </div>
 
       {vehicles.length === 0 ? (
-        <p className="text-gray-600">Nenhum veículo cadastrado</p>
+        <EmptyState
+          icon="🚗"
+          title="Nenhum veículo cadastrado"
+          description="Cadastre seu primeiro veículo para começar a acompanhar abastecimentos e gastos."
+          actionLabel="Novo veículo"
+          onAction={() => navigate('/vehicles/new')}
+        />
       ) : (
         <ul className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
           {vehicles.map((vehicle) => {
@@ -223,7 +230,7 @@ export function Vehicles() {
 
             return (
               <li key={vehicle.id}>
-                <Card>
+                <Card interactive>
                   <div className="mb-2 flex items-center justify-between">
                     <p className="font-bold">
                       {vehicle.brand} {vehicle.model}
@@ -240,28 +247,34 @@ export function Vehicles() {
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {!isActive && (
-                      <button
-                        className="rounded-md px-2 py-3 text-sm font-bold text-green-700 disabled:opacity-50 active:bg-green-50"
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        fullWidth={false}
                         disabled={isBusy}
                         onClick={() => handleActivate(vehicle.id)}
                       >
                         Definir como ativo
-                      </button>
+                      </Button>
                     )}
-                    <button
-                      className="rounded-md px-2 py-3 text-sm font-bold text-green-700 disabled:opacity-50 active:bg-green-50"
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      fullWidth={false}
                       disabled={isBusy}
                       onClick={() => navigate(`/vehicles/${vehicle.id}/edit`)}
                     >
                       Editar
-                    </button>
-                    <button
-                      className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
+                    </Button>
+                    <Button
+                      variant="ghost-danger"
+                      size="sm"
+                      fullWidth={false}
                       disabled={isBusy}
                       onClick={() => handleDelete(vehicle)}
                     >
                       Excluir
-                    </button>
+                    </Button>
                   </div>
 
                   {(() => {
@@ -271,12 +284,14 @@ export function Vehicles() {
                     if (!share) {
                       return (
                         <div className="mt-2">
-                          <button
-                            className="rounded-md px-2 py-3 text-sm font-bold text-blue-700 disabled:opacity-50 active:bg-blue-50"
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            fullWidth={false}
                             onClick={() => setSharingVehicle(vehicle)}
                           >
                             Compartilhar
-                          </button>
+                          </Button>
                         </div>
                       )
                     }
@@ -288,13 +303,15 @@ export function Vehicles() {
                             ? `Convite enviado para ${share.guestName ?? 'convidado'}`
                             : `Compartilhado com ${share.guestName}`}
                         </span>
-                        <button
-                          className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
+                        <Button
+                          variant="ghost-danger"
+                          size="sm"
+                          fullWidth={false}
                           disabled={isShareBusy}
                           onClick={() => handleRevoke(share)}
                         >
                           Revogar
-                        </button>
+                        </Button>
                       </div>
                     )
                   })()}
@@ -314,26 +331,30 @@ export function Vehicles() {
 
               return (
                 <li key={invite.id}>
-                  <Card>
+                  <Card interactive>
                     <p className="font-bold">
                       {invite.vehicleBrand} {invite.vehicleModel}
                     </p>
                     <p>De: {invite.ownerName}</p>
                     <div className="mt-3 flex flex-wrap items-center gap-2">
-                      <button
-                        className="rounded-md px-2 py-3 text-sm font-bold text-green-700 disabled:opacity-50 active:bg-green-50"
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        fullWidth={false}
                         disabled={isInviteBusy}
                         onClick={() => handleAcceptInvite(invite)}
                       >
                         Aceitar
-                      </button>
-                      <button
-                        className="rounded-md px-2 py-3 text-sm font-bold text-red-600 disabled:opacity-50 active:bg-red-50"
+                      </Button>
+                      <Button
+                        variant="ghost-danger"
+                        size="sm"
+                        fullWidth={false}
                         disabled={isInviteBusy}
                         onClick={() => handleRejectInvite(invite)}
                       >
                         Rejeitar
-                      </button>
+                      </Button>
                     </div>
                   </Card>
                 </li>
@@ -349,7 +370,7 @@ export function Vehicles() {
           <ul className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
             {sharedVehicles.map((share) => (
               <li key={share.id}>
-                <Card>
+                <Card interactive>
                   <div className="mb-1 flex items-center justify-between">
                     <p className="font-bold">
                       {share.vehicleBrand} {share.vehicleModel}
