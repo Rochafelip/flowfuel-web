@@ -11,6 +11,10 @@ export type Refuel = {
   totalAmount: number
   fullTank: boolean
   refuelType: RefuelType
+  stationName: string | null
+  stationAddress: string | null
+  stationLatitude: number | null
+  stationLongitude: number | null
 }
 
 export type RefuelRequest = {
@@ -20,4 +24,8 @@ export type RefuelRequest = {
   pricePerUnit: number
   fullTank: boolean
   refuelType: RefuelType | null
+  stationName: string | null
+  stationAddress: string | null
+  stationLatitude: number | null
+  stationLongitude: number | null
 }
