@@ -51,15 +51,15 @@ export function LocationSearchDialog({
         role="dialog"
         aria-modal="true"
         aria-label="Buscar localidade"
-        className="relative flex max-h-[80vh] w-full max-w-sm flex-col rounded-xl bg-white p-6 shadow-lg"
+        className="relative flex max-h-[80vh] w-full max-w-sm flex-col rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg"
       >
         <div className="mb-3 flex items-center justify-between">
-          <p className="text-base font-bold text-gray-900">Buscar localidade</p>
+          <p className="text-base font-bold text-gray-900 dark:text-gray-100">Buscar localidade</p>
           <button
             type="button"
             onClick={onDismiss}
             aria-label="Fechar"
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-lg text-gray-700 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
           >
             ✕
           </button>
@@ -71,7 +71,7 @@ export function LocationSearchDialog({
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Ex: Boa Viagem, Recife"
-            className="h-10 flex-1 rounded-lg border border-gray-300 px-3 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="h-10 flex-1 rounded-lg border border-gray-300 bg-white px-3 text-sm text-gray-900 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           />
           <Button type="submit" fullWidth={false} disabled={!canSearch}>
             Buscar
@@ -86,7 +86,7 @@ export function LocationSearchDialog({
 
         {state.status === 'error' && (
           <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <p className="text-sm text-gray-600">Não foi possível buscar essa localidade.</p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">Não foi possível buscar essa localidade.</p>
             <Button fullWidth={false} onClick={() => runSearch(query)}>
               Tentar novamente
             </Button>
@@ -94,7 +94,7 @@ export function LocationSearchDialog({
         )}
 
         {state.status === 'empty' && (
-          <p className="py-8 text-center text-sm text-gray-600">
+          <p className="py-8 text-center text-sm text-gray-600 dark:text-gray-400">
             Nenhum lugar encontrado. Tente um nome diferente ou mais específico.
           </p>
         )}
@@ -106,10 +106,10 @@ export function LocationSearchDialog({
                 <button
                   type="button"
                   onClick={() => onSelect(result)}
-                  className="flex w-full items-center gap-2 rounded-lg border border-gray-200 p-3 text-left transition-colors hover:border-gray-300 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                  className="flex w-full items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 p-3 text-left transition-colors hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                 >
                   <span className="text-gray-500">📍</span>
-                  <span className="truncate text-sm font-bold text-gray-900">
+                  <span className="truncate text-sm font-bold text-gray-900 dark:text-gray-100">
                     {result.displayName}
                   </span>
                 </button>
