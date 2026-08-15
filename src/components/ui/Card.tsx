@@ -11,8 +11,8 @@ export function Card({
 }) {
   return (
     <div
-      className={`rounded-xl border border-gray-200 bg-white p-3 shadow-sm transition-shadow ${
-        interactive ? 'hover:border-gray-300 hover:shadow-md' : ''
+      className={`rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-3 shadow-sm transition-shadow ${
+        interactive ? 'hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-md' : ''
       } ${className}`}
     >
       {children}
