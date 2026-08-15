@@ -2,7 +2,7 @@
 
 ## Contexto
 
-O app hoje só existe em light mode: `tailwind.config.js` não tem `darkMode` configurado, e cores fixas de light mode (`bg-white`, `text-gray-900`, `bg-green-50`, badges `bg-green-100`/`bg-red-100`/`bg-blue-100`, etc.) estão espalhadas por **39 dos 49 arquivos `.tsx`** do projeto. O usuário quer poder escolher entre tema Claro, Escuro, ou Seguir o Sistema (validado via perguntas diretas, sem necessidade de mockup visual — decisão de produto, não de layout).
+O app hoje só existe em light mode: `tailwind.config.js` não tem `darkMode` configurado, e cores fixas de light mode (`bg-white`, `text-gray-900`, `bg-green-50`, badges `bg-green-100`/`bg-red-100`/`bg-blue-100`, etc.) estão espalhadas por **41 dos 49 arquivos `.tsx`** do projeto. O usuário quer poder escolher entre tema Claro, Escuro, ou Seguir o Sistema (validado via perguntas diretas, sem necessidade de mockup visual — decisão de produto, não de layout).
 
 ## Escopo
 
@@ -10,7 +10,7 @@ O app hoje só existe em light mode: `tailwind.config.js` não tem `darkMode` co
 - `src/context/ThemeContext.tsx` (novo) — estado do tema, persistência, aplicação da classe `dark` no `<html>`.
 - `src/main.tsx` — registra o `ThemeProvider`.
 - `src/routes/Profile.tsx` — novo card "Aparência" com seletor de 3 opções.
-- **39 arquivos** com classes de cor fixas ganham a variante `dark:` correspondente, seguindo a tabela de conversão da seção 4 — organizados em 4 blocos (ordem de implementação, do mais reutilizado pro mais específico):
+- **41 arquivos** com classes de cor fixas ganham a variante `dark:` correspondente, seguindo a tabela de conversão da seção 4 — organizados em 4 blocos (ordem de implementação, do mais reutilizado pro mais específico):
   1. Componentes compartilhados (`Card`, `Button`, `Screen`, `TextField`, `PasswordField`, `Spinner`, `ErrorState`, `EmptyState`, `DataField`, `SegmentedToggle`, `ConfirmDialog`, `ShareVehicleDialog`, `DeleteAccountDialog`, `StationPickerDialog`, `LocationSearchDialog`, `SpendingBreakdownChart`)
   2. Navegação (`AppLayout`, `Topbar`, `Sidebar`, `MobileDrawer`, `NavLinks`, `VehicleSwitcherLink`)
   3. Autenticação (`Login`, `Register`, `Activate`, `ProtectedRoute`)
@@ -58,10 +58,10 @@ interface ThemeContextData {
 
 ## 3. Registro do provider e seletor no Perfil
 
-- `main.tsx`: `ThemeProvider` envolve o `<App />`, no mesmo nível de `AuthProvider`.
+- `App.tsx`: `ThemeProvider` envolve os demais providers (`ToastProvider`/`ConfirmProvider`/`AuthProvider`/`VehicleProvider`), que já ficam registrados lá — não em `main.tsx`, que hoje só monta `<App />`.
 - `Profile.tsx`: novo card "Aparência" (mesmo estilo dos cards de `InfoField`/`ActionRow` já existentes), com um seletor de 3 opções (Claro/Escuro/Sistema) — mesmo padrão visual do `SegmentedToggle`, mas com 3 opções em vez de 2. Usa `useTheme().theme`/`setTheme` diretamente.
 
-## 4. Tabela de conversão (aplicada nos 39 arquivos)
+## 4. Tabela de conversão (aplicada nos 41 arquivos)
 
 Toda ocorrência da classe à esquerda ganha a classe `dark:` à direita, adicionada ao mesmo elemento (não substitui a classe light — Tailwind aplica uma ou outra dependendo da classe `dark` no `<html>`):
 
@@ -93,7 +93,7 @@ Toda ocorrência da classe à esquerda ganha a classe `dark:` à direita, adicio
 | Borda do chip de localidade ativa (Postos) | `border-blue-200` | `dark:border-blue-800` |
 | Fundo do chip de localidade ativa (Postos) | `bg-blue-50` | `dark:bg-blue-900/30` |
 
-Regra para classes com variante (`hover:`, `active:`, `lg:`): a mesma tabela acima se aplica à parte "base" da classe, e o resultado ganha o prefixo de volta — ex. `hover:bg-gray-50` → adiciona `dark:hover:bg-gray-700`; `active:bg-gray-100` → adiciona `dark:active:bg-gray-700`; `lg:bg-white` (usado só na `Sidebar`, que já é `hidden lg:flex`) → adiciona `dark:lg:bg-gray-800`. Exceção: `hover:bg-green-50` (hover sutil com tom de marca, usado em itens de navegação e links) → adiciona `dark:hover:bg-green-950` (mesmo espírito: tom de verde bem sutil, agora sobre fundo escuro) em vez de seguir a tabela genérica de cinza.
+Regra para classes com variante (`hover:`, `active:`, `lg:`): a mesma tabela acima se aplica à parte "base" da classe, e o resultado ganha o prefixo de volta — ex. `hover:bg-gray-50` → adiciona `dark:hover:bg-gray-700`; `active:bg-gray-100` → adiciona `dark:active:bg-gray-700`; `lg:bg-white` (usado só na `Sidebar`, que já é `hidden lg:flex`) → adiciona `dark:lg:bg-gray-800`. Exceção: `hover:bg-green-50` (hover sutil com tom de marca, usado em itens de navegação e links) → adiciona `dark:hover:bg-gray-950` em vez de um tom de verde escuro — testado visualmente durante o design e um verde bem escuro (`green-950`) fica com aparência "suja"/pouco definida sobre o fundo já escuro da página; cinza neutro lê como um estado "pressionado" limpo, mantendo a mesma intenção (feedback discreto de hover).
 
 Cores que **não mudam** entre temas (já têm contraste suficiente nos dois): `bg-green-600`/`bg-green-700`/`bg-green-800` (botão primário), `bg-red-600`/`bg-red-700`/`bg-red-800` (botão de perigo), `border-green-500`/`border-green-600` (foco de campo de texto, preset de raio ativo), `text-white`, `bg-black/40` (overlay de diálogo), `focus-visible:outline-green-600`/`outline-red-600` (anéis de foco), ícones/emojis.
 
