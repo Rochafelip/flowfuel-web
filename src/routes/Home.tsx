@@ -45,7 +45,7 @@ type ActivityItem = {
 
 function IconBadge({ icon }: { icon: string }) {
   return (
-    <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 text-base text-green-700">
+    <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/40 text-base text-green-700 dark:text-green-400">
       {icon}
     </div>
   )
@@ -80,7 +80,7 @@ function FuelMetricsCard({
   return (
     <Card>
       <IconBadge icon={icon} />
-      <p className="mb-2 text-sm font-bold text-gray-700">{title}</p>
+      <p className="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">{title}</p>
 
       <div className="mb-2">
         <DataField
@@ -112,8 +112,8 @@ function VehicleHeader({
 }) {
   return (
     <button type="button" onClick={onPress} className="mb-3 block w-full text-left">
-      <h1 className="text-xl font-bold text-gray-900">{name}</h1>
-      <p className="text-sm text-gray-600">{subtitle}</p>
+      <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{name}</h1>
+      <p className="text-sm text-gray-600 dark:text-gray-400">{subtitle}</p>
     </button>
   )
 }
@@ -148,14 +148,14 @@ function SpendCarousel({
           type="button"
           aria-label={`Ver ${pages[(page - 1 + pages.length) % pages.length].label}`}
           onClick={() => goToPage(page - 1)}
-          className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-full p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-400"
         >
           ‹
         </button>
 
         <div className="text-center">
-          <p className="text-sm text-gray-600">{pages[page].label}</p>
-          <p className="font-mono text-3xl font-bold text-gray-900">
+          <p className="text-sm text-gray-600 dark:text-gray-400">{pages[page].label}</p>
+          <p className="font-mono text-3xl font-bold text-gray-900 dark:text-gray-100">
             {currencyFormatter.format(pages[page].value)}
           </p>
         </div>
@@ -164,7 +164,7 @@ function SpendCarousel({
           type="button"
           aria-label={`Ver ${pages[(page + 1) % pages.length].label}`}
           onClick={() => goToPage(page + 1)}
-          className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-full p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-400"
         >
           ›
         </button>
@@ -178,7 +178,7 @@ function SpendCarousel({
             aria-label={`Ver ${p.label}`}
             onClick={() => goToPage(index)}
             className={`h-2.5 w-2.5 rounded-full ${
-              index === page ? 'bg-green-600' : 'bg-gray-300'
+              index === page ? 'bg-green-600' : 'bg-gray-300 dark:bg-gray-600'
             }`}
           />
         ))}
@@ -216,18 +216,18 @@ function SpendingBreakdownCarousel({
           type="button"
           aria-label={`Ver ${pages[(page - 1 + pages.length) % pages.length].label}`}
           onClick={() => goToPage(page - 1)}
-          className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-full p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-400"
         >
           ‹
         </button>
 
-        <p className="text-sm font-bold text-gray-700">{current.label}</p>
+        <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{current.label}</p>
 
         <button
           type="button"
           aria-label={`Ver ${pages[(page + 1) % pages.length].label}`}
           onClick={() => goToPage(page + 1)}
-          className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-full p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-400"
         >
           ›
         </button>
@@ -235,7 +235,7 @@ function SpendingBreakdownCarousel({
 
       <div className="mt-4">
         {current.data.length === 0 ? (
-          <p className="text-center text-sm text-gray-600">Nenhum gasto neste período.</p>
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400">Nenhum gasto neste período.</p>
         ) : (
           <SpendingBreakdownChart data={current.data} />
         )}
@@ -249,7 +249,7 @@ function SpendingBreakdownCarousel({
             aria-label={`Ver ${p.label}`}
             onClick={() => goToPage(index)}
             className={`h-2.5 w-2.5 rounded-full ${
-              index === page ? 'bg-green-600' : 'bg-gray-300'
+              index === page ? 'bg-green-600' : 'bg-gray-300 dark:bg-gray-600'
             }`}
           />
         ))}
@@ -263,7 +263,7 @@ function LastRefuelDetailCard({ refuel }: { refuel: Refuel }) {
 
   return (
     <Card className="mt-6">
-      <p className="mb-2 text-sm font-bold text-gray-700">Último abastecimento</p>
+      <p className="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Último abastecimento</p>
 
       <div className="grid grid-cols-2 gap-3">
         <DataField
@@ -292,27 +292,27 @@ function LastRefuelDetailCard({ refuel }: { refuel: Refuel }) {
 function RecentActivityCard({ items }: { items: ActivityItem[] }) {
   return (
     <Card className="mt-6">
-      <p className="mb-2 text-sm font-bold text-gray-700">Atividade recente</p>
+      <p className="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Atividade recente</p>
 
       {items.length === 0 ? (
-        <p className="text-sm text-gray-600">Nenhuma atividade registrada ainda.</p>
+        <p className="text-sm text-gray-600 dark:text-gray-400">Nenhuma atividade registrada ainda.</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {items.map((item) => (
             <li
               key={item.id}
-              className="flex items-center justify-between rounded-lg px-1 py-1 transition-colors hover:bg-gray-50"
+              className="flex items-center justify-between rounded-lg px-1 py-1 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <div className="flex items-center gap-2">
                 <span className="text-lg">{item.icon}</span>
                 <div>
-                  <p className="text-sm font-bold text-gray-900">{item.title}</p>
-                  <p className="text-xs text-gray-600">
+                  <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{item.title}</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
                     {formatActivityDate(item.date)}
                   </p>
                 </div>
               </div>
-              <p className="font-mono text-sm font-bold text-gray-900">
+              <p className="font-mono text-sm font-bold text-gray-900 dark:text-gray-100">
                 {currencyFormatter.format(item.amount)}
               </p>
             </li>
