@@ -357,7 +357,7 @@ export function Home() {
   )
 
   const recentActivity: ActivityItem[] = [
-    ...refuels.slice(0, ACTIVITY_FEED_SIZE).map((refuel) => ({
+    ...refuels.slice(1, 1 + ACTIVITY_FEED_SIZE).map((refuel) => ({
       id: `refuel-${refuel.id}`,
       date: refuel.refuelDate,
       icon: refuel.refuelType === 'ELECTRIC' ? '🔌' : '⛽',
