@@ -230,7 +230,7 @@ export function VehicleNew() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">Cadastrar Veículo</h1>
+      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Cadastrar Veículo</h1>
 
       <WizardStepper currentStep={currentStep} />
 
@@ -303,7 +303,7 @@ export function VehicleNew() {
             <button
               type="button"
               onClick={skipLicensePlate}
-              className="text-center text-sm font-bold text-green-700"
+              className="text-center text-sm font-bold text-green-700 dark:text-green-400"
             >
               Preencher placa depois
             </button>
@@ -360,21 +360,21 @@ function WizardStepper({ currentStep }: { currentStep: number }) {
         return (
           <div key={label} className="flex flex-1 items-center">
             {index > 0 && (
-              <div className={`h-0.5 flex-1 ${step <= currentStep ? 'bg-green-600' : 'bg-gray-300'}`} />
+              <div className={`h-0.5 flex-1 ${step <= currentStep ? 'bg-green-600' : 'bg-gray-300 dark:bg-gray-600'}`} />
             )}
             <div className="flex flex-col items-center gap-1 px-1">
               <div
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${
                   isCompleted || isActive
                     ? 'border-green-600 bg-green-600 text-white'
-                    : 'border-gray-300 text-gray-500'
+                    : 'border-gray-300 dark:border-gray-600 text-gray-500'
                 }`}
               >
                 {isCompleted ? '✓' : step}
               </div>
               <span
                 className={`text-center text-[11px] ${
-                  isCompleted || isActive ? 'font-bold text-green-700' : 'text-gray-500'
+                  isCompleted || isActive ? 'font-bold text-green-700 dark:text-green-400' : 'text-gray-500'
                 }`}
               >
                 {label}
