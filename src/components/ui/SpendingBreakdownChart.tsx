@@ -89,7 +89,7 @@ export function SpendingBreakdownChart({ data }: { data: SpendingCategory[] }) {
           x="50%"
           y="47%"
           textAnchor="middle"
-          className="fill-gray-900 text-sm font-bold"
+          className="fill-gray-900 dark:fill-gray-100 text-sm font-bold"
         >
           {currencyFormatter.format(total)}
         </text>
