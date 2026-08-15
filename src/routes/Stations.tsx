@@ -59,14 +59,9 @@ export function Stations() {
     <Screen wide>
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-xl font-bold">Postos</h1>
-        <button
-          type="button"
-          onClick={() => setSearchDialogOpen(true)}
-          aria-label="Buscar localidade"
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-base text-gray-700 hover:border-gray-300 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-        >
-          🔍
-        </button>
+        <Button type="button" variant="ghost" fullWidth={false} onClick={() => setSearchDialogOpen(true)}>
+          🔍 Pesquisar postos
+        </Button>
       </div>
 
       {state.status !== 'permission-denied' && (
