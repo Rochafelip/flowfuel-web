@@ -114,6 +114,25 @@ export function Refuels() {
                 <DataField label="Total" value={currencyFormatter.format(item.totalAmount)} accent />
               </div>
 
+              {item.stationName && (
+                <p className="mt-2 truncate text-sm text-gray-600">
+                  📍 {item.stationName}
+                  {item.stationLatitude !== null && item.stationLongitude !== null && (
+                    <>
+                      {' · '}
+                      <a
+                        href={`https://www.google.com/maps/dir/?api=1&destination=${item.stationLatitude},${item.stationLongitude}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-bold text-green-700 hover:underline"
+                      >
+                        Ver no mapa
+                      </a>
+                    </>
+                  )}
+                </p>
+              )}
+
               <div className="mt-3 flex items-center gap-2">
                 <Link to={`/refuels/${item.id}/edit`} className={ghostButtonClasses}>
                   ✏️ Editar
