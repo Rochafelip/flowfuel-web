@@ -5,7 +5,7 @@ import { useFipeSelection } from '../../hooks/useFipeSelection'
 import type { FipeOption } from '../../services/fipe'
 
 export const selectClass =
-  'h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-60'
+  'h-12 w-full rounded-lg border border-gray-300 bg-white px-3 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-60 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100'
 
 export type VehicleTypeValue = 'Carro' | 'Moto'
 export type EnergyTypeValue = 'COMBUSTION' | 'ELECTRIC' | 'HYBRID'
@@ -84,9 +84,9 @@ export function Step1Identification({
       {useFipeSearch ? (
         <>
           {fipe.brandsError ? (
-            <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 px-3 py-3 text-sm">
-              <span>Não foi possível carregar as marcas.</span>
-              <button type="button" onClick={fipe.retryBrands} className="font-bold text-green-700">
+            <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-3 text-sm">
+              <span className="text-red-600 dark:text-red-400">Não foi possível carregar as marcas.</span>
+              <button type="button" onClick={fipe.retryBrands} className="font-bold text-green-700 dark:text-green-400">
                 Tentar novamente
               </button>
             </div>
@@ -107,12 +107,12 @@ export function Step1Identification({
               ))}
             </select>
           )}
-          {brandError && <p className="text-sm text-red-600">Selecione a marca.</p>}
+          {brandError && <p className="text-sm text-red-600 dark:text-red-400">Selecione a marca.</p>}
 
           {fipe.modelsError ? (
-            <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 px-3 py-3 text-sm">
-              <span>Não foi possível carregar os modelos.</span>
-              <button type="button" onClick={fipe.retryModels} className="font-bold text-green-700">
+            <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-3 text-sm">
+              <span className="text-red-600 dark:text-red-400">Não foi possível carregar os modelos.</span>
+              <button type="button" onClick={fipe.retryModels} className="font-bold text-green-700 dark:text-green-400">
                 Tentar novamente
               </button>
             </div>
@@ -133,12 +133,12 @@ export function Step1Identification({
               ))}
             </select>
           )}
-          {modelError && <p className="text-sm text-red-600">Selecione o modelo.</p>}
+          {modelError && <p className="text-sm text-red-600 dark:text-red-400">Selecione o modelo.</p>}
 
           {fipe.yearsError ? (
-            <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 px-3 py-3 text-sm">
-              <span>Não foi possível carregar os anos.</span>
-              <button type="button" onClick={fipe.retryYears} className="font-bold text-green-700">
+            <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-3 text-sm">
+              <span className="text-red-600 dark:text-red-400">Não foi possível carregar os anos.</span>
+              <button type="button" onClick={fipe.retryYears} className="font-bold text-green-700 dark:text-green-400">
                 Tentar novamente
               </button>
             </div>
@@ -157,7 +157,7 @@ export function Step1Identification({
               ))}
             </select>
           )}
-          {modelYearError && <p className="text-sm text-red-600">Ano do modelo inválido.</p>}
+          {modelYearError && <p className="text-sm text-red-600 dark:text-red-400">Ano do modelo inválido.</p>}
 
           <TextField
             placeholder="Ano de Fabricação"
@@ -165,12 +165,12 @@ export function Step1Identification({
             onChange={(e) => onManufactureYearChange(e.target.value)}
             inputMode="numeric"
           />
-          {manufactureYearError && <p className="text-sm text-red-600">Ano de fabricação inválido.</p>}
+          {manufactureYearError && <p className="text-sm text-red-600 dark:text-red-400">Ano de fabricação inválido.</p>}
 
           <button
             type="button"
             onClick={onToggleManualEntry}
-            className="text-sm font-bold text-green-700"
+            className="text-sm font-bold text-green-700 dark:text-green-400"
           >
             Não encontrou? Preencher manualmente
           </button>
@@ -178,10 +178,10 @@ export function Step1Identification({
       ) : (
         <>
           <TextField placeholder="Marca" value={brand} onChange={(e) => onBrandChange(e.target.value)} />
-          {brandError && <p className="text-sm text-red-600">Informe a marca.</p>}
+          {brandError && <p className="text-sm text-red-600 dark:text-red-400">Informe a marca.</p>}
 
           <TextField placeholder="Modelo" value={model} onChange={(e) => onModelChange(e.target.value)} />
-          {modelError && <p className="text-sm text-red-600">Informe o modelo.</p>}
+          {modelError && <p className="text-sm text-red-600 dark:text-red-400">Informe o modelo.</p>}
 
           <div className="flex gap-3">
             <div className="flex-1">
@@ -191,7 +191,7 @@ export function Step1Identification({
                 onChange={(e) => onManufactureYearChange(e.target.value)}
                 inputMode="numeric"
               />
-              {manufactureYearError && <p className="text-sm text-red-600">Inválido.</p>}
+              {manufactureYearError && <p className="text-sm text-red-600 dark:text-red-400">Inválido.</p>}
             </div>
             <div className="flex-1">
               <TextField
@@ -200,14 +200,14 @@ export function Step1Identification({
                 onChange={(e) => onModelYearChange(e.target.value)}
                 inputMode="numeric"
               />
-              {modelYearError && <p className="text-sm text-red-600">Inválido.</p>}
+              {modelYearError && <p className="text-sm text-red-600 dark:text-red-400">Inválido.</p>}
             </div>
           </div>
 
           <button
             type="button"
             onClick={onToggleManualEntry}
-            className="text-sm font-bold text-green-700"
+            className="text-sm font-bold text-green-700 dark:text-green-400"
           >
             Usar busca FIPE
           </button>
@@ -235,7 +235,7 @@ export function Step2Classification({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="mb-2 text-sm font-bold text-gray-700">Tipo de energia</p>
+        <p className="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Tipo de energia</p>
         <SegmentedToggle
           options={[
             { value: 'COMBUSTION', label: 'Combustão' },
@@ -249,7 +249,7 @@ export function Step2Classification({
 
       {showFuelType && (
         <div>
-          <p className="mb-2 text-sm font-bold text-gray-700">Tipo de combustível</p>
+          <p className="mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Tipo de combustível</p>
           <div className="flex flex-wrap gap-2">
             {FUEL_OPTIONS.map((option) => (
               <button
@@ -259,7 +259,7 @@ export function Step2Classification({
                 className={`rounded-full border px-3 py-1.5 text-sm font-bold transition-colors ${
                   fuelType === option
                     ? 'border-green-600 bg-green-600 text-white'
-                    : 'border-gray-300 text-gray-600'
+                    : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400'
                 }`}
               >
                 {option}
@@ -314,7 +314,7 @@ export function Step3Details({
             value={formatLicensePlateDisplay(licensePlate)}
             onChange={(e) => onLicensePlateChange(e.target.value)}
           />
-          {licensePlateError && <p className="text-sm text-red-600">Placa inválida.</p>}
+          {licensePlateError && <p className="text-sm text-red-600 dark:text-red-400">Placa inválida.</p>}
         </div>
         <div className="flex-1">
           <TextField placeholder="Cor" value={color} onChange={(e) => onColorChange(e.target.value)} />
@@ -327,7 +327,7 @@ export function Step3Details({
         onChange={(e) => onCurrentKmChange(e.target.value)}
         inputMode="numeric"
       />
-      {currentKmError && <p className="text-sm text-red-600">Informe o odômetro atual.</p>}
+      {currentKmError && <p className="text-sm text-red-600 dark:text-red-400">Informe o odômetro atual.</p>}
 
       {showTankCapacity && (
         <TextField
@@ -361,9 +361,9 @@ export function Step4Photo({ photoPreviewUrl, existingPhotoUrl, onPhotoChange }:
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <p className="text-center text-sm text-gray-600">Adicione uma foto do veículo (opcional).</p>
+      <p className="text-center text-sm text-gray-600 dark:text-gray-400">Adicione uma foto do veículo (opcional).</p>
 
-      <label className="flex h-40 w-40 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-gray-300 bg-gray-50">
+      <label className="flex h-40 w-40 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700">
         {displayUrl ? (
           <img src={displayUrl} alt="Foto do veículo" className="h-full w-full object-cover" />
         ) : (
