@@ -71,7 +71,7 @@ export function ProfileEdit() {
 
   return (
     <Screen>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">Editar Perfil</h1>
+      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Editar Perfil</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <TextField
@@ -82,7 +82,7 @@ export function ProfileEdit() {
             setNameError(false)
           }}
         />
-        {nameError && <p className="text-sm text-red-600">Informe seu nome.</p>}
+        {nameError && <p className="text-sm text-red-600 dark:text-red-400">Informe seu nome.</p>}
 
         <TextField
           placeholder="Telefone"
@@ -98,7 +98,7 @@ export function ProfileEdit() {
         <button
           type="button"
           onClick={() => navigate('/profile')}
-          className="block w-full text-center text-sm text-green-700"
+          className="block w-full text-center text-sm text-green-700 dark:text-green-400"
         >
           Cancelar
         </button>
