@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useVehicle } from '../context/VehicleContext'
-import { getNearbyStations } from '../services/stations'
+import { useNearbyStations } from '../hooks/useNearbyStations'
 import {
   STATION_TYPE_ICONS,
   STATION_TYPE_LABELS,
-  type Station,
   type StationType,
 } from '../types/Station'
 import {
@@ -23,25 +22,14 @@ import { ErrorState } from '../components/ui/ErrorState'
 import { Button } from '../components/ui/Button'
 import { SegmentedToggle } from '../components/ui/SegmentedToggle'
 
-interface Coordinates {
-  lat: number
-  lng: number
-}
-
-type ViewState =
-  | { status: 'loading' }
-  | { status: 'success'; stations: Station[] }
-  | { status: 'error' }
-  | { status: 'permission-denied' }
-  | { status: 'location-unavailable' }
-
 export function Stations() {
   const { activeVehicle } = useVehicle()
-  const [location, setLocation] = useState<Coordinates | null>(null)
   const [radiusMeters, setRadiusMeters] = useState(DEFAULT_STATION_RADIUS_METERS)
   const [selectedType, setSelectedType] = useState<StationType>('FUEL')
   const [typePreselected, setTypePreselected] = useState(false)
-  const [state, setState] = useState<ViewState>({ status: 'loading' })
+  const { state, retry, refetchAtRadius } = useNearbyStations(
+    stationDistanceBand(DEFAULT_STATION_RADIUS_METERS).maxMeters
+  )
 
   useEffect(() => {
     if (typePreselected || !activeVehicle) return
@@ -49,58 +37,18 @@ export function Stations() {
     setTypePreselected(true)
   }, [activeVehicle, typePreselected])
 
-  const fetchStations = useCallback(async (coords: Coordinates, preset: number) => {
-    setState({ status: 'loading' })
-    try {
-      const band = stationDistanceBand(preset)
-      const stations = await getNearbyStations(coords.lat, coords.lng, band.maxMeters)
-      const filtered = stations.filter((station) => station.distanceMeters >= band.minMeters)
-      setState({ status: 'success', stations: filtered })
-    } catch (err) {
-      console.log(err)
-      setState({ status: 'error' })
-    }
-  }, [])
-
-  const requestLocation = useCallback(() => {
-    setState({ status: 'loading' })
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const coords = { lat: position.coords.latitude, lng: position.coords.longitude }
-        setLocation(coords)
-        fetchStations(coords, radiusMeters)
-      },
-      (error) => {
-        setState(
-          error.code === error.PERMISSION_DENIED
-            ? { status: 'permission-denied' }
-            : { status: 'location-unavailable' }
-        )
-      },
-      { timeout: 10_000 }
-    )
-  }, [fetchStations, radiusMeters])
-
-  useEffect(() => {
-    requestLocation()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   function handleRadiusSelect(newRadius: number) {
     setRadiusMeters(newRadius)
-    if (location) fetchStations(location, newRadius)
+    refetchAtRadius(stationDistanceBand(newRadius).maxMeters)
   }
 
-  function handleRetry() {
-    if (location) {
-      fetchStations(location, radiusMeters)
-    } else {
-      requestLocation()
-    }
-  }
-
+  const band = stationDistanceBand(radiusMeters)
   const filteredStations =
-    state.status === 'success' ? state.stations.filter((station) => station.type === selectedType) : []
+    state.status === 'success'
+      ? state.stations.filter(
+          (station) => station.type === selectedType && station.distanceMeters >= band.minMeters
+        )
+      : []
 
   return (
     <Screen wide>
@@ -145,7 +93,7 @@ export function Stations() {
       {state.status === 'error' && (
         <div className="flex flex-col items-center gap-3 py-10 text-center">
           <ErrorState message="Não foi possível carregar os postos próximos." />
-          <Button fullWidth={false} onClick={handleRetry}>
+          <Button fullWidth={false} onClick={retry}>
             Tentar novamente
           </Button>
         </div>
@@ -154,7 +102,7 @@ export function Stations() {
       {state.status === 'location-unavailable' && (
         <div className="flex flex-col items-center gap-3 py-10 text-center">
           <p className="text-gray-600">Não foi possível obter sua localização.</p>
-          <Button fullWidth={false} onClick={requestLocation}>
+          <Button fullWidth={false} onClick={retry}>
             Tentar novamente
           </Button>
         </div>
@@ -167,7 +115,7 @@ export function Stations() {
             navegador já negou o acesso, libere pelo ícone de cadeado ao lado do endereço do
             site.
           </p>
-          <Button fullWidth={false} onClick={requestLocation}>
+          <Button fullWidth={false} onClick={retry}>
             Permitir localização
           </Button>
         </div>
@@ -176,7 +124,7 @@ export function Stations() {
       {state.status === 'success' && filteredStations.length === 0 && (
         <div className="flex flex-col items-center gap-3 py-10 text-center">
           <p className="text-gray-600">Nenhum posto encontrado nessa faixa de distância.</p>
-          <Button fullWidth={false} onClick={handleRetry}>
+          <Button fullWidth={false} onClick={retry}>
             Tentar novamente
           </Button>
         </div>
