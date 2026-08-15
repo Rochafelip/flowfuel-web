@@ -4,8 +4,10 @@ import { useNearbyStations } from '../hooks/useNearbyStations'
 import {
   STATION_TYPE_ICONS,
   STATION_TYPE_LABELS,
+  type GeocodeResult,
   type StationType,
 } from '../types/Station'
+import { LocationSearchDialog } from '../components/ui/LocationSearchDialog'
 import {
   DEFAULT_STATION_RADIUS_METERS,
   STATION_RADIUS_PRESETS_METERS,
@@ -27,8 +29,11 @@ export function Stations() {
   const [radiusMeters, setRadiusMeters] = useState(DEFAULT_STATION_RADIUS_METERS)
   const [selectedType, setSelectedType] = useState<StationType>('FUEL')
   const [typePreselected, setTypePreselected] = useState(false)
+  const [selectedLocation, setSelectedLocation] = useState<GeocodeResult | null>(null)
+  const [searchDialogOpen, setSearchDialogOpen] = useState(false)
   const { state, retry, refetchAtRadius } = useNearbyStations(
-    stationDistanceBand(DEFAULT_STATION_RADIUS_METERS).maxMeters
+    stationDistanceBand(DEFAULT_STATION_RADIUS_METERS).maxMeters,
+    selectedLocation ? { lat: selectedLocation.latitude, lng: selectedLocation.longitude } : null
   )
 
   useEffect(() => {
@@ -52,7 +57,17 @@ export function Stations() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-xl font-bold">Postos</h1>
+      <div className="mb-5 flex items-center justify-between">
+        <h1 className="text-xl font-bold">Postos</h1>
+        <button
+          type="button"
+          onClick={() => setSearchDialogOpen(true)}
+          aria-label="Buscar localidade"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-base text-gray-700 hover:border-gray-300 hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+        >
+          🔍
+        </button>
+      </div>
 
       {state.status !== 'permission-denied' && (
         <div className="mb-5 flex flex-col gap-3">
@@ -81,6 +96,20 @@ export function Stations() {
               </button>
             ))}
           </div>
+
+          {selectedLocation && (
+            <div className="flex items-center gap-2 self-start rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-bold text-blue-700">
+              <span className="truncate">📍 {selectedLocation.displayName}</span>
+              <button
+                type="button"
+                onClick={() => setSelectedLocation(null)}
+                aria-label="Voltar para minha localização"
+                className="text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+              >
+                ✕
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -168,6 +197,16 @@ export function Stations() {
             )
           })}
         </ul>
+      )}
+
+      {searchDialogOpen && (
+        <LocationSearchDialog
+          onSelect={(result) => {
+            setSelectedLocation(result)
+            setSearchDialogOpen(false)
+          }}
+          onDismiss={() => setSearchDialogOpen(false)}
+        />
       )}
     </Screen>
   )
