@@ -208,7 +208,7 @@ export function Vehicles() {
   return (
     <Screen wide>
       <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-xl font-bold">Meus veículos</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Meus veículos</h1>
         <Button fullWidth={false} className="text-sm" onClick={() => navigate('/vehicles/new')}>
           Novo veículo
         </Button>
@@ -236,14 +236,14 @@ export function Vehicles() {
                       {vehicle.brand} {vehicle.model}
                     </p>
                     {isActive && (
-                      <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-700">
+                      <span className="rounded-full bg-green-100 dark:bg-green-900/40 px-2 py-0.5 text-xs font-bold text-green-700 dark:text-green-400">
                         Ativo
                       </span>
                     )}
                   </div>
 
-                  <p>Placa: {vehicle.licensePlate || '—'}</p>
-                  <p>Odômetro: {formatKm(vehicle.currentKm)}</p>
+                  <p className="text-gray-900 dark:text-gray-100">Placa: {vehicle.licensePlate || '—'}</p>
+                  <p className="text-gray-900 dark:text-gray-100">Odômetro: {formatKm(vehicle.currentKm)}</p>
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
                     {!isActive && (
@@ -298,7 +298,7 @@ export function Vehicles() {
 
                     return (
                       <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
+                        <span className="rounded-full bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-300">
                           {share.status === 'PENDING'
                             ? `Convite enviado para ${share.guestName ?? 'convidado'}`
                             : `Compartilhado com ${share.guestName}`}
@@ -324,7 +324,7 @@ export function Vehicles() {
 
       {pendingInvites.length > 0 && (
         <div className="mt-8">
-          <h2 className="mb-3 text-lg font-bold">Convites pendentes</h2>
+          <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-100">Convites pendentes</h2>
           <ul className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
             {pendingInvites.map((invite) => {
               const isInviteBusy = shareBusyId === invite.id
@@ -335,7 +335,7 @@ export function Vehicles() {
                     <p className="font-bold">
                       {invite.vehicleBrand} {invite.vehicleModel}
                     </p>
-                    <p>De: {invite.ownerName}</p>
+                    <p className="text-gray-900 dark:text-gray-100">De: {invite.ownerName}</p>
                     <div className="mt-3 flex flex-wrap items-center gap-2">
                       <Button
                         variant="ghost"
@@ -366,7 +366,7 @@ export function Vehicles() {
 
       {sharedVehicles.length > 0 && (
         <div className="mt-8">
-          <h2 className="mb-3 text-lg font-bold">Compartilhados comigo</h2>
+          <h2 className="mb-3 text-lg font-bold text-gray-900 dark:text-gray-100">Compartilhados comigo</h2>
           <ul className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
             {sharedVehicles.map((share) => (
               <li key={share.id}>
@@ -375,12 +375,12 @@ export function Vehicles() {
                     <p className="font-bold">
                       {share.vehicleBrand} {share.vehicleModel}
                     </p>
-                    <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
+                    <span className="rounded-full bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-300">
                       Emprestado
                     </span>
                   </div>
-                  <p>Compartilhado por: {share.ownerName}</p>
-                  {share.expiresAt && <p>Até: {formatDate(share.expiresAt)}</p>}
+                  <p className="text-gray-900 dark:text-gray-100">Compartilhado por: {share.ownerName}</p>
+                  {share.expiresAt && <p className="text-gray-900 dark:text-gray-100">Até: {formatDate(share.expiresAt)}</p>}
                 </Card>
               </li>
             ))}
