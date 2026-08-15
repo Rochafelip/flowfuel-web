@@ -10,6 +10,9 @@ import { Spinner } from '../components/ui/Spinner'
 import { TextField } from '../components/ui/TextField'
 import { Button } from '../components/ui/Button'
 import { SegmentedToggle } from '../components/ui/SegmentedToggle'
+import { StationPickerDialog } from '../components/ui/StationPickerDialog'
+import { formatStationAddress } from '../lib/stationDistanceBand'
+import type { Station } from '../types/Station'
 
 type DistanceMode = 'odometer' | 'trip'
 type PriceMode = 'perUnit' | 'total'
@@ -33,6 +36,8 @@ export function RefuelForm() {
 
   const [fullTank, setFullTank] = useState(false)
   const [refuelType, setRefuelType] = useState<RefuelType>('FUEL')
+  const [station, setStation] = useState<Station | null>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
   const [loading, setLoading] = useState(isEditing)
   const [submitting, setSubmitting] = useState(false)
 
@@ -54,6 +59,19 @@ export function RefuelForm() {
       setPricePerUnit(String(refuel.pricePerUnit))
       setFullTank(refuel.fullTank)
       setRefuelType(refuel.refuelType)
+      if (refuel.stationName) {
+        setStation({
+          placeId: '',
+          name: refuel.stationName,
+          type: refuel.refuelType === 'ELECTRIC' ? 'ELECTRIC' : 'FUEL',
+          distanceMeters: 0,
+          rating: null,
+          latitude: refuel.stationLatitude ?? 0,
+          longitude: refuel.stationLongitude ?? 0,
+          street: refuel.stationAddress,
+          houseNumber: null,
+        })
+      }
     } catch (err) {
       console.log(err)
       showToast(err instanceof Error ? err.message : 'Erro ao carregar abastecimento')
@@ -107,6 +125,10 @@ export function RefuelForm() {
       pricePerUnit: finalPricePerUnit,
       fullTank,
       refuelType: isHybrid ? refuelType : null,
+      stationName: station?.name ?? null,
+      stationAddress: station ? formatStationAddress(station.street, station.houseNumber) : null,
+      stationLatitude: station?.latitude ?? null,
+      stationLongitude: station?.longitude ?? null,
     }
 
     try {
@@ -241,6 +263,54 @@ export function RefuelForm() {
             <option value="FUEL">Combustível</option>
             <option value="ELECTRIC">Elétrico</option>
           </select>
+        )}
+
+        {station ? (
+          <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-bold text-gray-900">📍 {station.name}</p>
+              {station.street && (
+                <p className="truncate text-xs text-gray-600">
+                  {formatStationAddress(station.street, station.houseNumber)}
+                </p>
+              )}
+            </div>
+            <div className="flex shrink-0 gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                fullWidth={false}
+                onClick={() => setPickerOpen(true)}
+              >
+                Trocar
+              </Button>
+              <Button
+                type="button"
+                variant="ghost-danger"
+                size="sm"
+                fullWidth={false}
+                onClick={() => setStation(null)}
+              >
+                Remover
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button type="button" variant="ghost" fullWidth={false} onClick={() => setPickerOpen(true)}>
+            📍 Adicionar posto
+          </Button>
+        )}
+
+        {pickerOpen && (
+          <StationPickerDialog
+            type={isHybrid ? refuelType : activeVehicle?.energyType === 'ELECTRIC' ? 'ELECTRIC' : 'FUEL'}
+            onSelect={(picked) => {
+              setStation(picked)
+              setPickerOpen(false)
+            }}
+            onDismiss={() => setPickerOpen(false)}
+          />
         )}
 
         <label className="flex items-center gap-2">
