@@ -7,6 +7,7 @@ import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { Spinner } from '../components/ui/Spinner'
 import { Button } from '../components/ui/Button'
+import { VehiclePhoto } from '../components/ui/VehiclePhoto'
 
 interface VehicleListItem {
   id: number
@@ -14,6 +15,7 @@ interface VehicleListItem {
   model: string
   modelYear: number
   licensePlate: string
+  photo: string | null
 }
 
 export function SelectVehicle() {
@@ -85,9 +87,7 @@ export function SelectVehicle() {
               className="flex w-full items-center gap-3 rounded-xl bg-white dark:bg-gray-800 p-4 text-left shadow-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-700"
               onClick={() => activateSelectedVehicle(item.id)}
             >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/40 text-base text-green-700 dark:text-green-400">
-                🚗
-              </div>
+              <VehiclePhoto path={item.photo} size="md" />
               <div>
                 <div className="flex items-center gap-2">
                   <p className="font-bold text-gray-900 dark:text-gray-100">
