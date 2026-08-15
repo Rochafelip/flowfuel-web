@@ -1,5 +1,5 @@
 import { authenticatedRequest } from './api'
-import type { Station } from '../types/Station'
+import type { GeocodeResult, Station } from '../types/Station'
 
 export function getNearbyStations(
   lat: number,
@@ -7,4 +7,8 @@ export function getNearbyStations(
   radiusMeters: number
 ): Promise<Station[]> {
   return authenticatedRequest(`/stations/nearby?lat=${lat}&lng=${lng}&radius=${radiusMeters}`)
+}
+
+export function geocodeLocation(query: string): Promise<GeocodeResult[]> {
+  return authenticatedRequest(`/stations/geocode?query=${encodeURIComponent(query)}`)
 }
