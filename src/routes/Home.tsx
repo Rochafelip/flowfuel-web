@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authenticatedRequest } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
-import type { Dashboard, FuelMetrics, SpendingCategory } from '../types/Dashboard'
+import type { Dashboard, FuelMetrics, MonthlySpending, SpendingCategory } from '../types/Dashboard'
 import type { Refuel } from '../types/Refuel'
 import type { VehicleEvent } from '../types/VehicleEvent'
 import {
@@ -15,6 +15,7 @@ import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
 import { Button } from '../components/ui/Button'
 import { SpendingBreakdownChart } from '../components/ui/SpendingBreakdownChart'
+import { MonthlySpendingChart } from '../components/ui/MonthlySpendingChart'
 import { DataField } from '../components/ui/DataField'
 import { EmptyState } from '../components/ui/EmptyState'
 import {
@@ -196,6 +197,15 @@ function SpendCarousel({
           />
         ))}
       </div>
+    </Card>
+  )
+}
+
+function MonthlySpendingCard({ data }: { data: MonthlySpending[] }) {
+  return (
+    <Card className="mt-6">
+      <p className="mb-4 text-sm font-bold text-gray-700 dark:text-gray-300">Gastos por mês</p>
+      <MonthlySpendingChart data={data} />
     </Card>
   )
 }
@@ -403,6 +413,8 @@ export function Home() {
             totalBreakdown={dashboard.spendingBreakdown}
             costPerKm={dashboard.costPerKm}
           />
+
+          <MonthlySpendingCard data={dashboard.monthlySpending} />
 
           <div className="mt-6 grid grid-cols-2 gap-3">
             {dashboard.energyType !== 'HYBRID' && dashboard.averageConsumption !== null && (
