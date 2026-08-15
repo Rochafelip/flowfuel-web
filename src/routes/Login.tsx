@@ -36,9 +36,9 @@ export function Login() {
     <Screen centered>
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+        className="w-full max-w-sm rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg"
       >
-        <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
+        <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">
           Entrar
         </h1>
 
@@ -62,7 +62,7 @@ export function Login() {
           Entrar
         </Button>
 
-        <Link to="/register" className="block text-center text-sm text-green-700">
+        <Link to="/register" className="block text-center text-sm text-green-700 dark:text-green-400">
           Não tem conta? Criar conta
         </Link>
       </form>
