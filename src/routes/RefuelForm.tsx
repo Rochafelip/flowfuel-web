@@ -171,7 +171,7 @@ export function RefuelForm() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
+      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">
         {isEditing ? 'Editar Abastecimento' : 'Novo Abastecimento'}
       </h1>
 
@@ -196,7 +196,7 @@ export function RefuelForm() {
               inputMode="numeric"
             />
             {baseline !== null && (
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 A partir de {baseline.toLocaleString('pt-BR')} km
               </p>
             )}
@@ -239,7 +239,7 @@ export function RefuelForm() {
               inputMode="decimal"
             />
             {computedPricePerUnit && (
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 R$ {computedPricePerUnit}
                 {isHybrid && refuelType === 'ELECTRIC' ? '/kWh' : '/L'}
               </p>
@@ -256,7 +256,7 @@ export function RefuelForm() {
 
         {isHybrid && (
           <select
-            className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="h-12 w-full rounded-lg border border-gray-300 bg-white px-3 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
             value={refuelType}
             onChange={(e) => setRefuelType(e.target.value as RefuelType)}
           >
@@ -266,11 +266,11 @@ export function RefuelForm() {
         )}
 
         {station ? (
-          <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
+          <div className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 p-3">
             <div className="min-w-0">
-              <p className="truncate text-sm font-bold text-gray-900">📍 {station.name}</p>
+              <p className="truncate text-sm font-bold text-gray-900 dark:text-gray-100">📍 {station.name}</p>
               {station.street && (
-                <p className="truncate text-xs text-gray-600">
+                <p className="truncate text-xs text-gray-600 dark:text-gray-400">
                   {formatStationAddress(station.street, station.houseNumber)}
                 </p>
               )}
@@ -329,7 +329,7 @@ export function RefuelForm() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="block w-full text-center text-sm text-green-700"
+          className="block w-full text-center text-sm text-green-700 dark:text-green-400"
         >
           Voltar
         </button>
