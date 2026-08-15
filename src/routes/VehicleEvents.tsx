@@ -68,7 +68,7 @@ export function VehicleEvents() {
   return (
     <Screen wide>
       <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-xl font-bold">Eventos</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Eventos</h1>
         <Button fullWidth={false} className="text-sm" onClick={() => navigate('/vehicle-events/new')}>
           Novo evento
         </Button>
@@ -92,12 +92,12 @@ export function VehicleEvents() {
             <Card interactive>
               <div className="mb-2 flex items-center justify-between">
                 <p className="font-bold">{VEHICLE_EVENT_TYPE_LABELS[item.type]}</p>
-                <p className="text-sm text-gray-600">{formatDate(item.eventDate)}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{formatDate(item.eventDate)}</p>
               </div>
 
               <p className="font-bold">{currencyFormatter.format(item.amount)}</p>
-              {item.odometer !== null && <p>Odômetro: {item.odometer} km</p>}
-              {item.description && <p>{truncate(item.description, 100)}</p>}
+              {item.odometer !== null && <p className="text-gray-900 dark:text-gray-100">Odômetro: {item.odometer} km</p>}
+              {item.description && <p className="text-gray-900 dark:text-gray-100">{truncate(item.description, 100)}</p>}
 
               <div className="mt-3 flex items-center gap-2">
                 <Link to={`/vehicle-events/${item.id}/edit`} className={ghostButtonClasses}>
@@ -119,7 +119,7 @@ export function VehicleEvents() {
 
       {hasMore && (
         <button
-          className="mx-auto mt-3 block w-auto rounded-lg bg-gray-200 px-6 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300 disabled:opacity-50"
+          className="mx-auto mt-3 block w-auto rounded-lg bg-gray-200 dark:bg-gray-700 px-6 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
           onClick={loadMore}
           disabled={loading}
         >
