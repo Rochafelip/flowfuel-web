@@ -58,7 +58,7 @@ export function Stations() {
   return (
     <Screen wide>
       <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-xl font-bold">Postos</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Postos</h1>
         <Button type="button" variant="ghost" fullWidth={false} onClick={() => setSearchDialogOpen(true)}>
           🔍 Pesquisar postos
         </Button>
@@ -83,8 +83,8 @@ export function Stations() {
                 onClick={() => handleRadiusSelect(preset)}
                 className={`rounded-full border px-3 py-1.5 text-sm font-bold transition-colors ${
                   preset === radiusMeters
-                    ? 'border-green-600 bg-green-100 text-green-700'
-                    : 'border-gray-300 text-gray-600'
+                    ? 'border-green-600 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400'
+                    : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400'
                 }`}
               >
                 {formatRadiusLabel(preset)}
@@ -93,13 +93,13 @@ export function Stations() {
           </div>
 
           {selectedLocation && (
-            <div className="flex items-center gap-2 self-start rounded-full border border-blue-200 bg-blue-50 px-3 py-1.5 text-sm font-bold text-blue-700">
+            <div className="flex items-center gap-2 self-start rounded-full border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 text-sm font-bold text-blue-700 dark:text-blue-300">
               <span className="truncate">📍 {selectedLocation.displayName}</span>
               <button
                 type="button"
                 onClick={() => setSelectedLocation(null)}
                 aria-label="Voltar para minha localização"
-                className="text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                className="text-blue-700 dark:text-blue-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
               >
                 ✕
               </button>
@@ -125,7 +125,7 @@ export function Stations() {
 
       {state.status === 'location-unavailable' && (
         <div className="flex flex-col items-center gap-3 py-10 text-center">
-          <p className="text-gray-600">Não foi possível obter sua localização.</p>
+          <p className="text-gray-600 dark:text-gray-400">Não foi possível obter sua localização.</p>
           <Button fullWidth={false} onClick={retry}>
             Tentar novamente
           </Button>
@@ -134,7 +134,7 @@ export function Stations() {
 
       {state.status === 'permission-denied' && (
         <div className="flex flex-col items-center gap-3 py-10 text-center">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Precisamos da sua localização para mostrar postos e estações próximos. Se o
             navegador já negou o acesso, libere pelo ícone de cadeado ao lado do endereço do
             site.
@@ -147,7 +147,7 @@ export function Stations() {
 
       {state.status === 'success' && filteredStations.length === 0 && (
         <div className="flex flex-col items-center gap-3 py-10 text-center">
-          <p className="text-gray-600">Nenhum posto encontrado nessa faixa de distância.</p>
+          <p className="text-gray-600 dark:text-gray-400">Nenhum posto encontrado nessa faixa de distância.</p>
           <Button fullWidth={false} onClick={retry}>
             Tentar novamente
           </Button>
@@ -164,25 +164,25 @@ export function Stations() {
                   <div className="flex items-center gap-2">
                     <span className="text-xl">{STATION_TYPE_ICONS[station.type]}</span>
                     <p className="flex-1 truncate font-bold">{station.name}</p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       {formatStationDistance(station.distanceMeters)}
                     </p>
                   </div>
 
                   <div className="mt-2 flex items-center gap-3">
                     {address ? (
-                      <p className="flex-1 truncate text-sm text-gray-600">{address}</p>
+                      <p className="flex-1 truncate text-sm text-gray-600 dark:text-gray-400">{address}</p>
                     ) : (
                       <span className="flex-1" />
                     )}
                     {station.rating !== null && (
-                      <p className="text-sm text-gray-600">⭐ {formatRating(station.rating)}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">⭐ {formatRating(station.rating)}</p>
                     )}
                     <a
                       href={`https://www.google.com/maps/dir/?api=1&destination=${station.latitude},${station.longitude}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-md px-2 py-1 text-sm font-bold text-green-700 hover:bg-green-50"
+                      className="rounded-md px-2 py-1 text-sm font-bold text-green-700 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-950"
                     >
                       Traçar rota
                     </a>
