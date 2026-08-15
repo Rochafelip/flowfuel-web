@@ -275,7 +275,7 @@ export function VehicleEdit() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">Editar veículo</h1>
+      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Editar veículo</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <section className="flex flex-col gap-4">
