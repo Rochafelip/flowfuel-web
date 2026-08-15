@@ -36,15 +36,15 @@ export function ConfirmDialog() {
         role="dialog"
         aria-modal="true"
         aria-label={request.message}
-        className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+        className="relative w-full max-w-sm rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg"
       >
-        <p className="mb-6 text-base text-gray-900">{request.message}</p>
+        <p className="mb-6 text-base text-gray-900 dark:text-gray-100">{request.message}</p>
         <div className="flex justify-end gap-3">
           <button
             ref={cancelRef}
             type="button"
             onClick={() => resolveRequest(false)}
-            className="rounded-lg px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-100"
+            className="rounded-lg px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             Cancelar
           </button>
