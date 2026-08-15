@@ -110,10 +110,10 @@ export function SpendingBreakdownChart({ data }: { data: SpendingCategory[] }) {
               className="h-3 w-3 shrink-0 rounded-full"
               style={{ backgroundColor: colorFor(d.category, index) }}
             />
-            <span className="flex-1 text-gray-700">
+            <span className="flex-1 text-gray-700 dark:text-gray-300">
               {iconFor(d.category)} {labelFor(d.category)}
             </span>
-            <span className="font-mono font-semibold text-gray-900">
+            <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
               {currencyFormatter.format(d.amount)}
             </span>
             <span className="w-12 text-right text-xs text-gray-500">
