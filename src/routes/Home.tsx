@@ -415,7 +415,7 @@ export function Home() {
               />
             )}
 
-            {dashboard.averagePrice !== null && (
+            {dashboard.energyType !== 'HYBRID' && dashboard.averagePrice !== null && (
               <MetricCard
                 icon="💲"
                 label="Preço médio"
