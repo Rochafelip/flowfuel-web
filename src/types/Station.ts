@@ -21,3 +21,9 @@ export const STATION_TYPE_ICONS: Record<StationType, string> = {
   FUEL: '⛽',
   ELECTRIC: '🔌',
 }
+
+export interface GeocodeResult {
+  displayName: string
+  latitude: number
+  longitude: number
+}
