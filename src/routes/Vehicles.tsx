@@ -23,6 +23,7 @@ import { ErrorState } from '../components/ui/ErrorState'
 import { Button } from '../components/ui/Button'
 import { ShareVehicleDialog } from '../components/ui/ShareVehicleDialog'
 import { EmptyState } from '../components/ui/EmptyState'
+import { VehiclePhoto } from '../components/ui/VehiclePhoto'
 
 function formatKm(km: number) {
   return `${km.toLocaleString('pt-BR')} km`
@@ -232,9 +233,12 @@ export function Vehicles() {
               <li key={vehicle.id}>
                 <Card interactive>
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="font-bold text-gray-900 dark:text-gray-100">
-                      {vehicle.brand} {vehicle.model}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <VehiclePhoto path={vehicle.photo} size="lg" />
+                      <p className="font-bold text-gray-900 dark:text-gray-100">
+                        {vehicle.brand} {vehicle.model}
+                      </p>
+                    </div>
                     {isActive && (
                       <span className="rounded-full bg-green-100 dark:bg-green-900/40 px-2 py-0.5 text-xs font-bold text-green-700 dark:text-green-400">
                         Ativo
