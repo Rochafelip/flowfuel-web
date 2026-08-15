@@ -116,6 +116,7 @@ function SpendCarousel({
   totalOverallSpent,
   monthlyBreakdown,
   totalBreakdown,
+  costPerKm,
 }: {
   page: number
   onPageChange: (page: number) => void
@@ -124,6 +125,7 @@ function SpendCarousel({
   totalOverallSpent: number
   monthlyBreakdown: SpendingCategory[]
   totalBreakdown: SpendingCategory[]
+  costPerKm: number
 }) {
   const pages: { label: string; value: number; breakdown?: SpendingCategory[] }[] = [
     { label: 'Gasto do mês', value: monthlySpent, breakdown: monthlyBreakdown },
@@ -154,6 +156,11 @@ function SpendCarousel({
           <p className="font-mono text-3xl font-bold text-gray-900 dark:text-gray-100">
             {currencyFormatter.format(current.value)}
           </p>
+          {page === 0 && costPerKm > 0 && (
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              {currencyFormatter.format(costPerKm)}/km
+            </p>
+          )}
         </div>
 
         <button
@@ -394,6 +401,7 @@ export function Home() {
             totalOverallSpent={dashboard.totalOverallSpent}
             monthlyBreakdown={monthlySpendingBreakdown}
             totalBreakdown={dashboard.spendingBreakdown}
+            costPerKm={dashboard.costPerKm}
           />
 
           <div className="mt-6 grid grid-cols-2 gap-3">
