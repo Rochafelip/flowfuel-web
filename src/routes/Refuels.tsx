@@ -62,7 +62,7 @@ export function Refuels() {
   return (
     <Screen wide>
       <div className="mb-5 flex items-center justify-between">
-        <h1 className="text-xl font-bold">Abastecimentos</h1>
+        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Abastecimentos</h1>
         <Button fullWidth={false} className="text-sm" onClick={() => navigate('/refuels/new')}>
           Novo abastecimento
         </Button>
@@ -87,14 +87,14 @@ export function Refuels() {
               <div className="mb-2 flex items-center justify-between">
                 <p className="font-bold">{formatDateTime(item.refuelDate)}</p>
                 {item.fullTank && (
-                  <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-bold text-green-700">
+                  <span className="rounded-full bg-green-100 dark:bg-green-900/40 px-2 py-1 text-xs font-bold text-green-700 dark:text-green-400">
                     Tanque cheio
                   </span>
                 )}
               </div>
 
               {item.kmSinceLastRefuel !== null && (
-                <p className="mb-2 text-sm text-gray-600">
+                <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">
                   +{item.kmSinceLastRefuel} km desde o último
                 </p>
               )}
@@ -115,7 +115,7 @@ export function Refuels() {
               </div>
 
               {item.stationName && (
-                <p className="mt-2 truncate text-sm text-gray-600">
+                <p className="mt-2 truncate text-sm text-gray-600 dark:text-gray-400">
                   📍 {item.stationName}
                   {item.stationLatitude !== null && item.stationLongitude !== null && (
                     <>
@@ -124,7 +124,7 @@ export function Refuels() {
                         href={`https://www.google.com/maps/dir/?api=1&destination=${item.stationLatitude},${item.stationLongitude}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="font-bold text-green-700 hover:underline"
+                        className="font-bold text-green-700 dark:text-green-400 hover:underline"
                       >
                         Ver no mapa
                       </a>
@@ -153,7 +153,7 @@ export function Refuels() {
 
       {hasMore && (
         <button
-          className="mx-auto mt-3 block w-auto rounded-lg bg-gray-200 px-6 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-300 disabled:opacity-50"
+          className="mx-auto mt-3 block w-auto rounded-lg bg-gray-200 dark:bg-gray-700 px-6 py-2.5 text-sm font-bold text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
           onClick={loadMore}
           disabled={loading}
         >
