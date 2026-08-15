@@ -18,12 +18,7 @@ import { SpendingBreakdownChart } from '../components/ui/SpendingBreakdownChart'
 import { MonthlySpendingChart } from '../components/ui/MonthlySpendingChart'
 import { DataField } from '../components/ui/DataField'
 import { EmptyState } from '../components/ui/EmptyState'
-import {
-  formatLastRefuelLabel,
-  formatActivityDate,
-  isDateStringInMonth,
-} from '../lib/relativeDate'
-import { buildSpendingBreakdown } from '../lib/spendingBreakdown'
+import { formatLastRefuelLabel, formatActivityDate } from '../lib/relativeDate'
 
 const currencyFormatter = new Intl.NumberFormat('pt-BR', {
   style: 'currency',
@@ -112,26 +107,17 @@ function VehicleHeader({ name, onPress }: { name: string; onPress: () => void })
 function SpendCarousel({
   page,
   onPageChange,
-  monthlySpent,
   totalSpent,
   totalOverallSpent,
-  monthlyBreakdown,
   totalBreakdown,
-  costPerKm,
-  monthlySpending,
 }: {
   page: number
   onPageChange: (page: number) => void
-  monthlySpent: number
   totalSpent: number
   totalOverallSpent: number
-  monthlyBreakdown: SpendingCategory[]
   totalBreakdown: SpendingCategory[]
-  costPerKm: number
-  monthlySpending: MonthlySpending[]
 }) {
   const pages: { label: string; value: number; breakdown?: SpendingCategory[] }[] = [
-    { label: 'Gasto do mês', value: monthlySpent, breakdown: monthlyBreakdown },
     { label: 'Gasto de combustível', value: totalSpent },
     { label: 'Gastos totais', value: totalOverallSpent, breakdown: totalBreakdown },
   ]
@@ -159,11 +145,6 @@ function SpendCarousel({
           <p className="font-mono text-3xl font-bold text-gray-900 dark:text-gray-100">
             {currencyFormatter.format(current.value)}
           </p>
-          {page === 0 && costPerKm > 0 && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {currencyFormatter.format(costPerKm)}/km
-            </p>
-          )}
         </div>
 
         <button
@@ -183,12 +164,6 @@ function SpendCarousel({
           ) : (
             <SpendingBreakdownChart data={current.breakdown} />
           )}
-        </div>
-      )}
-
-      {page === 0 && (
-        <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-700">
-          <MonthlySpendingChart data={monthlySpending} />
         </div>
       )}
 
@@ -345,33 +320,6 @@ export function Home() {
     )
   }
 
-  const now = new Date()
-  const currentYear = now.getFullYear()
-  const currentMonth = now.getMonth() + 1
-
-  const monthlyRefuels = refuels.filter((refuel) =>
-    isDateStringInMonth(refuel.refuelDate, currentYear, currentMonth)
-  )
-  const monthlyEvents = events.filter((event) =>
-    isDateStringInMonth(event.eventDate, currentYear, currentMonth)
-  )
-
-  const monthlyRefuelsTotal = monthlyRefuels.reduce((sum, refuel) => sum + refuel.totalAmount, 0)
-  const monthlySpent =
-    monthlyRefuelsTotal + monthlyEvents.reduce((sum, event) => sum + event.amount, 0)
-
-  const monthlyEventAmountsByType = monthlyEvents.reduce<Partial<Record<VehicleEvent['type'], number>>>(
-    (acc, event) => {
-      acc[event.type] = (acc[event.type] ?? 0) + event.amount
-      return acc
-    },
-    {}
-  )
-  const monthlySpendingBreakdown = buildSpendingBreakdown(
-    monthlyRefuelsTotal,
-    monthlyEventAmountsByType
-  )
-
   const recentActivity: ActivityItem[] = [
     ...refuels.slice(1, 1 + ACTIVITY_FEED_SIZE).map((refuel) => ({
       id: `refuel-${refuel.id}`,
@@ -414,13 +362,9 @@ export function Home() {
           <SpendCarousel
             page={spendPage}
             onPageChange={setSpendPage}
-            monthlySpent={monthlySpent}
             totalSpent={dashboard.totalSpent}
             totalOverallSpent={dashboard.totalOverallSpent}
-            monthlyBreakdown={monthlySpendingBreakdown}
             totalBreakdown={dashboard.spendingBreakdown}
-            costPerKm={dashboard.costPerKm}
-            monthlySpending={dashboard.monthlySpending}
           />
 
           <MonthlySpendingCard data={dashboard.monthlySpending} />
