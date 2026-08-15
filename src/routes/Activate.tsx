@@ -72,17 +72,17 @@ export function Activate() {
 
   return (
     <Screen centered>
-      <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
-        <h1 className="mb-2 text-center text-2xl font-bold text-gray-900">
+      <div className="w-full max-w-sm rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg">
+        <h1 className="mb-2 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">
           Verifique seu email
         </h1>
 
-        <p className="mb-1 text-center text-sm text-gray-600">
+        <p className="mb-1 text-center text-sm text-gray-600 dark:text-gray-400">
           Enviamos um código de ativação para{' '}
-          {email ? <span className="font-bold text-gray-900">{email}</span> : 'o seu email'}.
+          {email ? <span className="font-bold text-gray-900 dark:text-gray-100">{email}</span> : 'o seu email'}.
         </p>
 
-        <p className="mb-4 text-center text-sm text-gray-600">
+        <p className="mb-4 text-center text-sm text-gray-600 dark:text-gray-400">
           Cole o código abaixo para ativar sua conta. Não esqueça de checar a pasta de spam.
         </p>
 
@@ -95,7 +95,7 @@ export function Activate() {
               setTokenError(null)
             }}
           />
-          {tokenError && <p className="text-sm text-red-600">{tokenError}</p>}
+          {tokenError && <p className="text-sm text-red-600 dark:text-red-400">{tokenError}</p>}
 
           <Button type="submit" disabled={!token.trim() || isActivating}>
             {isActivating ? 'Ativando...' : 'Ativar conta'}
@@ -106,7 +106,7 @@ export function Activate() {
           type="button"
           onClick={handleResend}
           disabled={isResending || cooldown > 0}
-          className="mt-4 block w-full text-center text-sm font-bold text-green-700 disabled:opacity-60"
+          className="mt-4 block w-full text-center text-sm font-bold text-green-700 dark:text-green-400 disabled:opacity-60"
         >
           {isResending
             ? 'Reenviando...'
@@ -115,7 +115,7 @@ export function Activate() {
               : 'Reenviar código'}
         </button>
 
-        <Link to="/login" className="mt-3 block text-center text-sm text-green-700">
+        <Link to="/login" className="mt-3 block text-center text-sm text-green-700 dark:text-green-400">
           Já ativei, entrar
         </Link>
       </div>
