@@ -30,19 +30,19 @@ export function ShareVehicleDialog({
         role="dialog"
         aria-modal="true"
         aria-label={`Compartilhar ${vehicle.brand} ${vehicle.model}`}
-        className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+        className="relative w-full max-w-sm rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg"
       >
-        <p className="mb-3 text-base font-bold text-gray-900">
+        <p className="mb-3 text-base font-bold text-gray-900 dark:text-gray-100">
           Compartilhar {vehicle.brand} {vehicle.model}
         </p>
-        <p className="mb-1 text-sm font-bold text-gray-700">E-mail do convidado</p>
+        <p className="mb-1 text-sm font-bold text-gray-700 dark:text-gray-300">E-mail do convidado</p>
         <TextField
           type="email"
           placeholder="nome@exemplo.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <p className="mt-3 mb-1 text-sm font-bold text-gray-700">Validade (dias)</p>
+        <p className="mt-3 mb-1 text-sm font-bold text-gray-700 dark:text-gray-300">Validade (dias)</p>
         <TextField
           type="number"
           min={1}
@@ -54,7 +54,7 @@ export function ShareVehicleDialog({
           <button
             type="button"
             onClick={onDismiss}
-            className="rounded-lg px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-100"
+            className="rounded-lg px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             Cancelar
           </button>
