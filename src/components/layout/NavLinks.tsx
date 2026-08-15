@@ -1,6 +1,10 @@
+import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useConfirm } from '../../context/ConfirmContext'
+import { decodeUserIdFromToken } from '../../lib/jwt'
+import { getProfileRequest } from '../../services/profile'
+import { UserAvatar } from '../ui/UserAvatar'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: '📊', end: true },
@@ -12,9 +16,25 @@ const navItems = [
 ]
 
 export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
-  const { signOut } = useAuth()
+  const { token, signOut } = useAuth()
   const confirm = useConfirm()
   const navigate = useNavigate()
+
+  const [userName, setUserName] = useState<string | null>(null)
+  const [userPhoto, setUserPhoto] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!token) return
+    const userId = decodeUserIdFromToken(token)
+    if (!userId) return
+
+    getProfileRequest(userId)
+      .then((profile) => {
+        setUserName(profile.name ?? profile.email)
+        setUserPhoto(profile.profilePicture)
+      })
+      .catch((err) => console.log(err))
+  }, [token])
 
   async function handleLogout() {
     if (!(await confirm('Tem certeza que deseja sair?', 'Sair'))) return
@@ -40,7 +60,11 @@ export function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
               }`
             }
           >
-            <span className="text-base">{item.icon}</span>
+            {item.to === '/profile' ? (
+              <UserAvatar path={userPhoto} name={userName ?? '?'} size="sm" />
+            ) : (
+              <span className="text-base">{item.icon}</span>
+            )}
             {item.label}
           </NavLink>
         ))}
