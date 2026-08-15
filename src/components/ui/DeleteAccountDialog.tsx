@@ -18,13 +18,13 @@ export function DeleteAccountDialog({
         role="dialog"
         aria-modal="true"
         aria-label="Excluir conta permanentemente?"
-        className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+        className="relative w-full max-w-sm rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg"
       >
-        <p className="mb-3 text-base font-bold text-gray-900">Excluir conta permanentemente?</p>
-        <p className="mb-2 text-sm text-gray-600">
+        <p className="mb-3 text-base font-bold text-gray-900 dark:text-gray-100">Excluir conta permanentemente?</p>
+        <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">
           Esta ação é irreversível. Ao excluir sua conta:
         </p>
-        <ul className="mb-4 list-disc pl-5 text-sm text-gray-600">
+        <ul className="mb-4 list-disc pl-5 text-sm text-gray-600 dark:text-gray-400">
           <li>Todos os seus dados serão removidos</li>
           <li>Seu histórico de abastecimentos será perdido</li>
           <li>Seus veículos cadastrados serão excluídos</li>
@@ -38,7 +38,7 @@ export function DeleteAccountDialog({
           <button
             type="button"
             onClick={onDismiss}
-            className="rounded-lg px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-100"
+            className="rounded-lg px-4 py-2 text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             Cancelar
           </button>
