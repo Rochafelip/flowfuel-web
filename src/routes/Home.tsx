@@ -118,6 +118,7 @@ function SpendCarousel({
   monthlyBreakdown,
   totalBreakdown,
   costPerKm,
+  monthlySpending,
 }: {
   page: number
   onPageChange: (page: number) => void
@@ -127,6 +128,7 @@ function SpendCarousel({
   monthlyBreakdown: SpendingCategory[]
   totalBreakdown: SpendingCategory[]
   costPerKm: number
+  monthlySpending: MonthlySpending[]
 }) {
   const pages: { label: string; value: number; breakdown?: SpendingCategory[] }[] = [
     { label: 'Gasto do mês', value: monthlySpent, breakdown: monthlyBreakdown },
@@ -181,6 +183,12 @@ function SpendCarousel({
           ) : (
             <SpendingBreakdownChart data={current.breakdown} />
           )}
+        </div>
+      )}
+
+      {page === 0 && (
+        <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-700">
+          <MonthlySpendingChart data={monthlySpending} />
         </div>
       )}
 
@@ -412,6 +420,7 @@ export function Home() {
             monthlyBreakdown={monthlySpendingBreakdown}
             totalBreakdown={dashboard.spendingBreakdown}
             costPerKm={dashboard.costPerKm}
+            monthlySpending={dashboard.monthlySpending}
           />
 
           <MonthlySpendingCard data={dashboard.monthlySpending} />
