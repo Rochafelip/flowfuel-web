@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { ThemeProvider } from './context/ThemeContext'
 import { AuthProvider } from './context/AuthContext'
 import { VehicleProvider } from './context/VehicleContext'
 import { ToastProvider } from './context/ToastContext'
@@ -29,10 +30,11 @@ import { ChangePassword } from './routes/ChangePassword'
 export default function App() {
   return (
     <BrowserRouter>
-      <ToastProvider>
-        <ConfirmProvider>
-          <AuthProvider>
-            <VehicleProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <ConfirmProvider>
+            <AuthProvider>
+              <VehicleProvider>
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
@@ -62,10 +64,11 @@ export default function App() {
               <ServerStatusBanner />
               <ToastContainer />
               <ConfirmDialog />
-            </VehicleProvider>
-          </AuthProvider>
-        </ConfirmProvider>
-      </ToastProvider>
+              </VehicleProvider>
+            </AuthProvider>
+          </ConfirmProvider>
+        </ToastProvider>
+      </ThemeProvider>
     </BrowserRouter>
   )
 }
