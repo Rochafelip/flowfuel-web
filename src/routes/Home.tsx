@@ -124,83 +124,21 @@ function SpendCarousel({
   monthlySpent,
   totalSpent,
   totalOverallSpent,
+  monthlyBreakdown,
+  totalBreakdown,
 }: {
   page: number
   onPageChange: (page: number) => void
   monthlySpent: number
   totalSpent: number
   totalOverallSpent: number
+  monthlyBreakdown: SpendingCategory[]
+  totalBreakdown: SpendingCategory[]
 }) {
-  const pages = [
-    { label: 'Gasto do mês', value: monthlySpent },
+  const pages: { label: string; value: number; breakdown?: SpendingCategory[] }[] = [
+    { label: 'Gasto do mês', value: monthlySpent, breakdown: monthlyBreakdown },
     { label: 'Gasto de combustível', value: totalSpent },
-    { label: 'Gastos totais', value: totalOverallSpent },
-  ]
-
-  function goToPage(index: number) {
-    onPageChange((index + pages.length) % pages.length)
-  }
-
-  return (
-    <Card className="mt-6">
-      <div className="flex items-center justify-between">
-        <button
-          type="button"
-          aria-label={`Ver ${pages[(page - 1 + pages.length) % pages.length].label}`}
-          onClick={() => goToPage(page - 1)}
-          className="rounded-full p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-400"
-        >
-          ‹
-        </button>
-
-        <div className="text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">{pages[page].label}</p>
-          <p className="font-mono text-3xl font-bold text-gray-900 dark:text-gray-100">
-            {currencyFormatter.format(pages[page].value)}
-          </p>
-        </div>
-
-        <button
-          type="button"
-          aria-label={`Ver ${pages[(page + 1) % pages.length].label}`}
-          onClick={() => goToPage(page + 1)}
-          className="rounded-full p-2 text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-600 dark:hover:text-gray-400"
-        >
-          ›
-        </button>
-      </div>
-
-      <div className="mt-2 flex justify-center gap-2">
-        {pages.map((p, index) => (
-          <button
-            key={index}
-            type="button"
-            aria-label={`Ver ${p.label}`}
-            onClick={() => goToPage(index)}
-            className={`h-2.5 w-2.5 rounded-full ${
-              index === page ? 'bg-green-600' : 'bg-gray-300 dark:bg-gray-600'
-            }`}
-          />
-        ))}
-      </div>
-    </Card>
-  )
-}
-
-function SpendingBreakdownCarousel({
-  page,
-  onPageChange,
-  totalData,
-  monthlyData,
-}: {
-  page: number
-  onPageChange: (page: number) => void
-  totalData: SpendingCategory[]
-  monthlyData: SpendingCategory[]
-}) {
-  const pages = [
-    { label: 'Gastos totais', data: totalData },
-    { label: 'Gasto do mês', data: monthlyData },
+    { label: 'Gastos totais', value: totalOverallSpent, breakdown: totalBreakdown },
   ]
 
   function goToPage(index: number) {
@@ -221,7 +159,12 @@ function SpendingBreakdownCarousel({
           ‹
         </button>
 
-        <p className="text-sm font-bold text-gray-700 dark:text-gray-300">{current.label}</p>
+        <div className="text-center">
+          <p className="text-sm text-gray-600 dark:text-gray-400">{current.label}</p>
+          <p className="font-mono text-3xl font-bold text-gray-900 dark:text-gray-100">
+            {currencyFormatter.format(current.value)}
+          </p>
+        </div>
 
         <button
           type="button"
@@ -233,13 +176,15 @@ function SpendingBreakdownCarousel({
         </button>
       </div>
 
-      <div className="mt-4">
-        {current.data.length === 0 ? (
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400">Nenhum gasto neste período.</p>
-        ) : (
-          <SpendingBreakdownChart data={current.data} />
-        )}
-      </div>
+      {current.breakdown !== undefined && (
+        <div className="mt-4">
+          {current.breakdown.length === 0 ? (
+            <p className="text-center text-sm text-gray-600 dark:text-gray-400">Nenhum gasto neste período.</p>
+          ) : (
+            <SpendingBreakdownChart data={current.breakdown} />
+          )}
+        </div>
+      )}
 
       <div className="mt-4 flex justify-center gap-2">
         {pages.map((p, index) => (
@@ -333,7 +278,6 @@ export function Home() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [spendPage, setSpendPage] = useState(0)
-  const [breakdownPage, setBreakdownPage] = useState(0)
 
   useEffect(() => {
     loadHome()
@@ -459,6 +403,8 @@ export function Home() {
             monthlySpent={monthlySpent}
             totalSpent={dashboard.totalSpent}
             totalOverallSpent={dashboard.totalOverallSpent}
+            monthlyBreakdown={monthlySpendingBreakdown}
+            totalBreakdown={dashboard.spendingBreakdown}
           />
 
           <div className="mt-6 grid grid-cols-2 gap-3">
@@ -504,15 +450,6 @@ export function Home() {
             </div>
           )}
         </>
-      )}
-
-      {!isFirstUse && (
-        <SpendingBreakdownCarousel
-          page={breakdownPage}
-          onPageChange={setBreakdownPage}
-          totalData={dashboard.spendingBreakdown}
-          monthlyData={monthlySpendingBreakdown}
-        />
       )}
 
       {!isFirstUse && lastRefuel && <LastRefuelDetailCard refuel={lastRefuel} />}
