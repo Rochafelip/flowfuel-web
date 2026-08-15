@@ -8,7 +8,7 @@ export function SegmentedToggle<T extends string>({
   onChange: (value: T) => void
 }) {
   return (
-    <div className="flex rounded-lg border border-gray-300 p-1">
+    <div className="flex rounded-lg border border-gray-300 dark:border-gray-600 p-1">
       {options.map((option) => (
         <button
           key={option.value}
@@ -17,7 +17,7 @@ export function SegmentedToggle<T extends string>({
           className={`flex-1 rounded-md py-2 text-sm font-bold transition-colors ${
             value === option.value
               ? 'bg-green-600 text-white'
-              : 'text-gray-600'
+              : 'text-gray-600 dark:text-gray-400'
           }`}
         >
           {option.label}
