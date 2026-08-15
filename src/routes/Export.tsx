@@ -119,18 +119,18 @@ export function Export() {
   if (vehicles.length === 0) {
     return (
       <Screen centered>
-        <p>Nenhum veículo cadastrado</p>
+        <p className="text-gray-900 dark:text-gray-100">Nenhum veículo cadastrado</p>
       </Screen>
     )
   }
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-xl font-bold">Exportar dados</h1>
+      <h1 className="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Exportar dados</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <select
-          className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-3 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           value={vehicleId}
           onChange={(e) => setVehicleId(e.target.value)}
         >
@@ -152,7 +152,7 @@ export function Export() {
 
         {dataType === 'EVENTS' && (
           <select
-            className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="h-12 w-full rounded-lg border border-gray-300 bg-white px-3 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
             value={eventType}
             onChange={(e) => setEventType(e.target.value as VehicleEventType | '')}
           >
@@ -167,7 +167,7 @@ export function Export() {
 
         <div className="flex gap-3">
           <div className="flex-1">
-            <label className="mb-1 block text-sm text-gray-600">De</label>
+            <label className="mb-1 block text-sm text-gray-600 dark:text-gray-400">De</label>
             <TextField
               type="date"
               value={startDate}
@@ -175,7 +175,7 @@ export function Export() {
             />
           </div>
           <div className="flex-1">
-            <label className="mb-1 block text-sm text-gray-600">Até</label>
+            <label className="mb-1 block text-sm text-gray-600 dark:text-gray-400">Até</label>
             <TextField
               type="date"
               value={endDate}
@@ -184,7 +184,7 @@ export function Export() {
           </div>
         </div>
 
-        {dateError && <p className="text-sm text-red-600">{dateError}</p>}
+        {dateError && <p className="text-sm text-red-600 dark:text-red-400">{dateError}</p>}
 
         <SegmentedToggle
           value={format}
