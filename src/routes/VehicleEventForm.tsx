@@ -117,13 +117,13 @@ export function VehicleEventForm() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
+      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">
         {isEditing ? 'Editar Evento' : 'Novo Evento'}
       </h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <select
-          className="h-12 w-full rounded-lg border border-gray-300 px-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          className="h-12 w-full rounded-lg border border-gray-300 bg-white px-3 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           value={type}
           onChange={(e) => setType(e.target.value as VehicleEventType)}
         >
@@ -156,7 +156,7 @@ export function VehicleEventForm() {
         />
 
         <textarea
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
           placeholder="Descrição (opcional)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -171,7 +171,7 @@ export function VehicleEventForm() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="block w-full text-center text-sm text-green-700"
+          className="block w-full text-center text-sm text-green-700 dark:text-green-400"
         >
           Voltar
         </button>
