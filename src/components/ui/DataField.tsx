@@ -16,7 +16,7 @@ export function DataField({
       <p className="text-xs uppercase tracking-wide text-gray-500">{label}</p>
       <p
         className={`font-bold ${mono ? 'font-mono' : ''} ${size === 'lg' ? 'text-lg' : ''} ${
-          accent ? 'text-green-700' : 'text-gray-900'
+          accent ? 'text-green-700 dark:text-green-400' : 'text-gray-900 dark:text-gray-100'
         }`}
       >
         {value}
