@@ -48,9 +48,9 @@ export function Register() {
     <Screen centered>
       <form
         onSubmit={handleRegister}
-        className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+        className="w-full max-w-sm rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg"
       >
-        <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">
+        <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">
           Criar Conta
         </h1>
 
@@ -86,7 +86,7 @@ export function Register() {
           Criar Conta
         </Button>
 
-        <Link to="/login" className="block text-center text-sm text-green-700">
+        <Link to="/login" className="block text-center text-sm text-green-700 dark:text-green-400">
           Já tem conta? Entrar
         </Link>
       </form>
