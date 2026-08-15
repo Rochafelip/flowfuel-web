@@ -91,11 +91,11 @@ export function VehicleEvents() {
           <li key={item.id}>
             <Card interactive>
               <div className="mb-2 flex items-center justify-between">
-                <p className="font-bold">{VEHICLE_EVENT_TYPE_LABELS[item.type]}</p>
+                <p className="font-bold text-gray-900 dark:text-gray-100">{VEHICLE_EVENT_TYPE_LABELS[item.type]}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">{formatDate(item.eventDate)}</p>
               </div>
 
-              <p className="font-bold">{currencyFormatter.format(item.amount)}</p>
+              <p className="font-bold text-gray-900 dark:text-gray-100">{currencyFormatter.format(item.amount)}</p>
               {item.odometer !== null && <p className="text-gray-900 dark:text-gray-100">Odômetro: {item.odometer} km</p>}
               {item.description && <p className="text-gray-900 dark:text-gray-100">{truncate(item.description, 100)}</p>}
 

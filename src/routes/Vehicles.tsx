@@ -232,7 +232,7 @@ export function Vehicles() {
               <li key={vehicle.id}>
                 <Card interactive>
                   <div className="mb-2 flex items-center justify-between">
-                    <p className="font-bold">
+                    <p className="font-bold text-gray-900 dark:text-gray-100">
                       {vehicle.brand} {vehicle.model}
                     </p>
                     {isActive && (
@@ -332,7 +332,7 @@ export function Vehicles() {
               return (
                 <li key={invite.id}>
                   <Card interactive>
-                    <p className="font-bold">
+                    <p className="font-bold text-gray-900 dark:text-gray-100">
                       {invite.vehicleBrand} {invite.vehicleModel}
                     </p>
                     <p className="text-gray-900 dark:text-gray-100">De: {invite.ownerName}</p>
@@ -372,7 +372,7 @@ export function Vehicles() {
               <li key={share.id}>
                 <Card interactive>
                   <div className="mb-1 flex items-center justify-between">
-                    <p className="font-bold">
+                    <p className="font-bold text-gray-900 dark:text-gray-100">
                       {share.vehicleBrand} {share.vehicleModel}
                     </p>
                     <span className="rounded-full bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-xs font-bold text-blue-700 dark:text-blue-300">

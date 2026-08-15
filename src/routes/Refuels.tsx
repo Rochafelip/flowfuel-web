@@ -85,7 +85,7 @@ export function Refuels() {
           <li key={item.id}>
             <Card interactive>
               <div className="mb-2 flex items-center justify-between">
-                <p className="font-bold">{formatDateTime(item.refuelDate)}</p>
+                <p className="font-bold text-gray-900 dark:text-gray-100">{formatDateTime(item.refuelDate)}</p>
                 {item.fullTank && (
                   <span className="rounded-full bg-green-100 dark:bg-green-900/40 px-2 py-1 text-xs font-bold text-green-700 dark:text-green-400">
                     Tanque cheio

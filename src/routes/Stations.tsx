@@ -163,7 +163,7 @@ export function Stations() {
                 <Card interactive>
                   <div className="flex items-center gap-2">
                     <span className="text-xl">{STATION_TYPE_ICONS[station.type]}</span>
-                    <p className="flex-1 truncate font-bold">{station.name}</p>
+                    <p className="flex-1 truncate font-bold text-gray-900 dark:text-gray-100">{station.name}</p>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                       {formatStationDistance(station.distanceMeters)}
                     </p>

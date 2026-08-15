@@ -90,7 +90,7 @@ export function SelectVehicle() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="font-bold">
+                  <p className="font-bold text-gray-900 dark:text-gray-100">
                     {item.brand} {item.model}
                   </p>
                   {activeVehicle?.id === item.id && (

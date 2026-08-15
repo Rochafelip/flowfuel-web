@@ -84,7 +84,7 @@ export function StationPickerDialog({
                   className="flex w-full items-center gap-2 rounded-lg border border-gray-200 dark:border-gray-700 p-3 text-left transition-colors hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-bold">{station.name}</p>
+                    <p className="truncate font-bold text-gray-900 dark:text-gray-100">{station.name}</p>
                     <p className="truncate text-sm text-gray-600 dark:text-gray-400">
                       {formatStationAddress(station.street, station.houseNumber) ||
                         formatStationDistance(station.distanceMeters)}
