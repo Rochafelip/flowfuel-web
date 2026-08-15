@@ -14,9 +14,9 @@ export type NearbyStationsState =
   | { status: 'permission-denied' }
   | { status: 'location-unavailable' }
 
-export function useNearbyStations(radiusMeters: number) {
+export function useNearbyStations(radiusMeters: number, override: Coordinates | null = null) {
   const [state, setState] = useState<NearbyStationsState>({ status: 'loading' })
-  const [location, setLocation] = useState<Coordinates | null>(null)
+  const [gpsLocation, setGpsLocation] = useState<Coordinates | null>(null)
 
   const fetchStations = useCallback(async (coords: Coordinates, radius: number) => {
     setState({ status: 'loading' })
@@ -34,7 +34,7 @@ export function useNearbyStations(radiusMeters: number) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const coords = { lat: position.coords.latitude, lng: position.coords.longitude }
-        setLocation(coords)
+        setGpsLocation(coords)
         fetchStations(coords, radiusMeters)
       },
       (error) => {
@@ -50,20 +50,28 @@ export function useNearbyStations(radiusMeters: number) {
   }, [fetchStations])
 
   useEffect(() => {
-    requestLocation()
+    if (override) {
+      fetchStations(override, radiusMeters)
+    } else if (gpsLocation) {
+      fetchStations(gpsLocation, radiusMeters)
+    } else {
+      requestLocation()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [override?.lat, override?.lng])
 
   function retry() {
-    if (location) {
-      fetchStations(location, radiusMeters)
+    const coords = override ?? gpsLocation
+    if (coords) {
+      fetchStations(coords, radiusMeters)
     } else {
       requestLocation()
     }
   }
 
   function refetchAtRadius(radius: number) {
-    if (location) fetchStations(location, radius)
+    const coords = override ?? gpsLocation
+    if (coords) fetchStations(coords, radius)
   }
 
   return { state, retry, refetchAtRadius }
