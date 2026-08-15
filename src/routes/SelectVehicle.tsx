@@ -64,7 +64,7 @@ export function SelectVehicle() {
     return (
       <Screen centered>
         <div className="flex flex-col items-center gap-4">
-          <p>Nenhum veículo cadastrado</p>
+          <p className="text-gray-900 dark:text-gray-100">Nenhum veículo cadastrado</p>
 
           <Button onClick={() => navigate('/vehicles/new')} fullWidth={false}>
             Cadastrar Veículo
@@ -76,16 +76,16 @@ export function SelectVehicle() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-xl font-bold">Selecione um veículo</h1>
+      <h1 className="mb-5 text-xl font-bold text-gray-900 dark:text-gray-100">Selecione um veículo</h1>
 
       <ul className="flex flex-col gap-3 lg:grid lg:grid-cols-2">
         {vehicles.map((item) => (
           <li key={item.id}>
             <button
-              className="flex w-full items-center gap-3 rounded-xl bg-white p-4 text-left shadow-sm transition-colors hover:bg-gray-50 active:bg-gray-100"
+              className="flex w-full items-center gap-3 rounded-xl bg-white dark:bg-gray-800 p-4 text-left shadow-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-700"
               onClick={() => activateSelectedVehicle(item.id)}
             >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-base text-green-700">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/40 text-base text-green-700 dark:text-green-400">
                 🚗
               </div>
               <div>
@@ -94,13 +94,13 @@ export function SelectVehicle() {
                     {item.brand} {item.model}
                   </p>
                   {activeVehicle?.id === item.id && (
-                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-700">
+                    <span className="rounded-full bg-green-100 dark:bg-green-900/40 px-2 py-0.5 text-xs font-bold text-green-700 dark:text-green-400">
                       Ativo
                     </span>
                   )}
                 </div>
-                <p>Placa: {item.licensePlate}</p>
-                <p>Ano: {item.modelYear}</p>
+                <p className="text-gray-900 dark:text-gray-100">Placa: {item.licensePlate}</p>
+                <p className="text-gray-900 dark:text-gray-100">Ano: {item.modelYear}</p>
               </div>
             </button>
           </li>
