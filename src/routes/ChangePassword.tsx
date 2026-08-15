@@ -53,7 +53,7 @@ export function ChangePassword() {
 
   return (
     <Screen>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900">Trocar Senha</h1>
+      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Trocar Senha</h1>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
@@ -66,7 +66,7 @@ export function ChangePassword() {
             }}
           />
           {currentPasswordError && (
-            <p className="mt-1 text-sm text-red-600">{currentPasswordError}</p>
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{currentPasswordError}</p>
           )}
         </div>
 
@@ -89,7 +89,7 @@ export function ChangePassword() {
         <button
           type="button"
           onClick={() => navigate('/profile')}
-          className="block w-full text-center text-sm text-green-700"
+          className="block w-full text-center text-sm text-green-700 dark:text-green-400"
         >
           Cancelar
         </button>
