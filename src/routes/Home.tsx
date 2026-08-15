@@ -19,7 +19,6 @@ import { DataField } from '../components/ui/DataField'
 import { EmptyState } from '../components/ui/EmptyState'
 import {
   formatLastRefuelSubtitle,
-  formatLastRefuelLabel,
   formatActivityDate,
   isDateStringInMonth,
 } from '../lib/relativeDate'
@@ -434,12 +433,6 @@ export function Home() {
                   ? `${integerFormatter.format(dashboard.lastOdometer)} km`
                   : '—'
               }
-            />
-
-            <MetricCard
-              icon="📅"
-              label="Último abastecimento"
-              value={formatLastRefuelLabel(dashboard.lastRefuelDate)}
             />
           </div>
 
