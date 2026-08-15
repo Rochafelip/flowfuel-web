@@ -18,7 +18,7 @@ import { SpendingBreakdownChart } from '../components/ui/SpendingBreakdownChart'
 import { DataField } from '../components/ui/DataField'
 import { EmptyState } from '../components/ui/EmptyState'
 import {
-  formatLastRefuelSubtitle,
+  formatLastRefuelLabel,
   formatActivityDate,
   isDateStringInMonth,
 } from '../lib/relativeDate'
@@ -100,19 +100,10 @@ function FuelMetricsCard({
   )
 }
 
-function VehicleHeader({
-  name,
-  subtitle,
-  onPress,
-}: {
-  name: string
-  subtitle: string
-  onPress: () => void
-}) {
+function VehicleHeader({ name, onPress }: { name: string; onPress: () => void }) {
   return (
     <button type="button" onClick={onPress} className="mb-3 block w-full text-left">
       <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{name}</h1>
-      <p className="text-sm text-gray-600 dark:text-gray-400">{subtitle}</p>
     </button>
   )
 }
@@ -382,7 +373,6 @@ export function Home() {
     <Screen wide>
       <VehicleHeader
         name={`${activeVehicle.brand} ${activeVehicle.model}`}
-        subtitle={formatLastRefuelSubtitle(dashboard.lastRefuelDate)}
         onPress={() => navigate('/select-vehicle')}
       />
 
@@ -433,6 +423,12 @@ export function Home() {
                   ? `${integerFormatter.format(dashboard.lastOdometer)} km`
                   : '—'
               }
+            />
+
+            <MetricCard
+              icon="📅"
+              label="Último abastecimento"
+              value={formatLastRefuelLabel(dashboard.lastRefuelDate)}
             />
           </div>
 
