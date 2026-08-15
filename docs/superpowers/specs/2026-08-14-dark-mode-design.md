@@ -87,10 +87,15 @@ Toda ocorrência da classe à esquerda ganha a classe `dark:` à direita, adicio
 | Texto vermelho de destaque (badge, erro, ação destrutiva) | `text-red-600` / `text-red-700` | `dark:text-red-400` |
 | Fundo de badge azul | `bg-blue-100` | `dark:bg-blue-900/40` |
 | Texto azul de destaque (badge) | `text-blue-700` | `dark:text-blue-300` |
+| Borda do botão `ghost-danger` | `border-red-200` | `dark:border-red-800` |
+| Hover de borda do botão `ghost-danger` | `hover:border-red-300` | `dark:hover:border-red-700` |
+| Hover de fundo do botão `ghost-danger` / link "Sair" | `hover:bg-red-50` | `dark:hover:bg-red-900/30` |
+| Borda do chip de localidade ativa (Postos) | `border-blue-200` | `dark:border-blue-800` |
+| Fundo do chip de localidade ativa (Postos) | `bg-blue-50` | `dark:bg-blue-900/30` |
 
 Regra para classes com variante (`hover:`, `active:`, `lg:`): a mesma tabela acima se aplica à parte "base" da classe, e o resultado ganha o prefixo de volta — ex. `hover:bg-gray-50` → adiciona `dark:hover:bg-gray-700`; `active:bg-gray-100` → adiciona `dark:active:bg-gray-700`; `lg:bg-white` (usado só na `Sidebar`, que já é `hidden lg:flex`) → adiciona `dark:lg:bg-gray-800`. Exceção: `hover:bg-green-50` (hover sutil com tom de marca, usado em itens de navegação e links) → adiciona `dark:hover:bg-green-950` (mesmo espírito: tom de verde bem sutil, agora sobre fundo escuro) em vez de seguir a tabela genérica de cinza.
 
-Cores que **não mudam** entre temas (já têm contraste suficiente nos dois): `bg-green-600`/`bg-green-700`/`bg-green-800` (botão primário), `bg-red-600`/`bg-red-700`/`bg-red-800` (botão de perigo), `text-white`, `bg-black/40` (overlay de diálogo), `focus-visible:outline-green-600`/`outline-red-600` (anéis de foco), ícones/emojis.
+Cores que **não mudam** entre temas (já têm contraste suficiente nos dois): `bg-green-600`/`bg-green-700`/`bg-green-800` (botão primário), `bg-red-600`/`bg-red-700`/`bg-red-800` (botão de perigo), `border-green-500`/`border-green-600` (foco de campo de texto, preset de raio ativo), `text-white`, `bg-black/40` (overlay de diálogo), `focus-visible:outline-green-600`/`outline-red-600` (anéis de foco), ícones/emojis.
 
 ## 5. Card "Aparência" no Perfil
 
