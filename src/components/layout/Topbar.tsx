@@ -2,7 +2,10 @@ import { VehicleSwitcherLink } from './VehicleSwitcherLink'
 
 export function Topbar({ onOpenDrawer }: { onOpenDrawer: () => void }) {
   return (
-    <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 lg:px-6">
+    <header
+      className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 lg:px-6"
+      style={{ paddingTop: 'env(safe-area-inset-top)', height: 'calc(3.5rem + env(safe-area-inset-top))' }}
+    >
       <button
         type="button"
         onClick={onOpenDrawer}

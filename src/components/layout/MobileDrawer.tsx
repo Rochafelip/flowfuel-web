@@ -35,7 +35,10 @@ export function MobileDrawer({
         onClick={onClose}
         aria-hidden="true"
       />
-      <div className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white dark:bg-gray-800 p-4 shadow-xl">
+      <div
+        className="absolute inset-y-0 left-0 flex w-64 flex-col bg-white dark:bg-gray-800 p-4 shadow-xl"
+        style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}
+      >
         <div className="mb-6 flex items-center justify-between">
           <Link
             to="/"
