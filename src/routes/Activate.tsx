@@ -57,7 +57,7 @@ export function Activate() {
     setIsActivating(true)
     setTokenError(null)
     try {
-      const data = await activateRequest(token.trim())
+      const data = await activateRequest(email, token.trim())
       await signIn(data.accessToken)
       showToast('Conta ativada com sucesso!', 'success')
       navigate('/')

@@ -75,13 +75,13 @@ export async function resendActivationRequest(email: string) {
   return response.json()
 }
 
-export async function activateRequest(token: string) {
+export async function activateRequest(email: string, token: string) {
   const response = await apiFetch(`${BASE_URL}/api/v1/auth/activate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify({ email, token }),
   })
 
   if (!response.ok) {
