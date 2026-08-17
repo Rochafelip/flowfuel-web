@@ -16,7 +16,7 @@ export function Activate() {
   const { signIn } = useAuth()
   const { showToast } = useToast()
 
-  const [token, setToken] = useState(searchParams.get('token') ?? '')
+  const [token, setToken] = useState('')
   const [tokenError, setTokenError] = useState<string | null>(null)
   const [isActivating, setIsActivating] = useState(false)
   const [isResending, setIsResending] = useState(false)
