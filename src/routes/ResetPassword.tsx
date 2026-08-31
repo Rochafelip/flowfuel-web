@@ -4,6 +4,7 @@ import { forgotPasswordRequest, resetPasswordRequest } from '../services/api'
 import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { PasswordField } from '../components/ui/PasswordField'
+import { PasswordStrengthHint } from '../components/ui/PasswordStrengthHint'
 import { Button } from '../components/ui/Button'
 
 const RESEND_COOLDOWN_SECONDS = 30
@@ -22,6 +23,7 @@ export function ResetPassword() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isResending, setIsResending] = useState(false)
   const [cooldown, setCooldown] = useState(0)
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false)
 
   function startCooldown() {
     setCooldown(RESEND_COOLDOWN_SECONDS)
@@ -134,7 +136,11 @@ export function ResetPassword() {
               setNewPassword(e.target.value)
               setFormError(null)
             }}
+            onFocus={() => setIsPasswordFocused(true)}
+            onBlur={() => setIsPasswordFocused(false)}
           />
+
+          <PasswordStrengthHint password={newPassword} visible={isPasswordFocused} />
 
           <PasswordField
             placeholder="Confirmar nova senha"

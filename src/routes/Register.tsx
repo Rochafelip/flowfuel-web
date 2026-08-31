@@ -5,6 +5,7 @@ import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { TextField } from '../components/ui/TextField'
 import { PasswordField } from '../components/ui/PasswordField'
+import { PasswordStrengthHint } from '../components/ui/PasswordStrengthHint'
 import { Button } from '../components/ui/Button'
 
 export function Register() {
@@ -15,6 +16,7 @@ export function Register() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false)
 
   async function handleRegister(e: FormEvent) {
     e.preventDefault()
@@ -73,7 +75,11 @@ export function Register() {
             placeholder="Senha"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onFocus={() => setIsPasswordFocused(true)}
+            onBlur={() => setIsPasswordFocused(false)}
           />
+
+          <PasswordStrengthHint password={password} visible={isPasswordFocused} />
 
           <PasswordField
             placeholder="Confirmar Senha"
