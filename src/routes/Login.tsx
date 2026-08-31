@@ -56,6 +56,10 @@ export function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+
+          <Link to="/forgot-password" className="text-right text-sm text-green-700 dark:text-green-400">
+            Esqueci minha senha
+          </Link>
         </div>
 
         <Button type="submit" className="mb-4">
