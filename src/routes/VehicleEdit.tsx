@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { uploadVehiclePhoto } from '../services/api'
+import { uploadVehiclePhoto, ApiError } from '../services/api'
 import { getVehicle, updateVehicle } from '../services/vehicle'
 import { useVehicle } from '../context/VehicleContext'
 import { useToast } from '../context/ToastContext'
@@ -59,6 +59,9 @@ export function VehicleEdit() {
   const [batteryCapacity, setBatteryCapacity] = useState('')
   const [licensePlateError, setLicensePlateError] = useState(false)
   const [currentKmError, setCurrentKmError] = useState(false)
+  const [colorError, setColorError] = useState(false)
+  const [tankCapacityError, setTankCapacityError] = useState(false)
+  const [batteryCapacityError, setBatteryCapacityError] = useState(false)
 
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreviewUrl, setPhotoPreviewUrl] = useState<string | null>(null)
@@ -174,6 +177,21 @@ export function VehicleEdit() {
     setCurrentKmError(false)
   }
 
+  function handleColorChange(value: string) {
+    setColor(value)
+    setColorError(false)
+  }
+
+  function handleTankCapacityChange(value: string) {
+    setTankCapacity(value)
+    setTankCapacityError(false)
+  }
+
+  function handleBatteryCapacityChange(value: string) {
+    setBatteryCapacity(value)
+    setBatteryCapacityError(false)
+  }
+
   function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null
     setPhotoFile(file)
@@ -190,14 +208,27 @@ export function VehicleEdit() {
     const mdYearInvalid = modelYear.length !== 4
     const plateInvalid = licensePlate.length !== 7
     const kmInvalid = !currentKm.trim()
+    const tankInvalid = showTankCapacity && !tankCapacity.trim()
+    const batteryInvalid = showBatteryCapacity && !batteryCapacity.trim()
 
-    if (brandInvalid || modelInvalid || mfYearInvalid || mdYearInvalid || plateInvalid || kmInvalid) {
+    if (
+      brandInvalid ||
+      modelInvalid ||
+      mfYearInvalid ||
+      mdYearInvalid ||
+      plateInvalid ||
+      kmInvalid ||
+      tankInvalid ||
+      batteryInvalid
+    ) {
       setBrandError(brandInvalid)
       setModelError(modelInvalid)
       setManufactureYearError(mfYearInvalid)
       setModelYearError(mdYearInvalid)
       setLicensePlateError(plateInvalid)
       setCurrentKmError(kmInvalid)
+      setTankCapacityError(tankInvalid)
+      setBatteryCapacityError(batteryInvalid)
       return
     }
 
@@ -246,9 +277,52 @@ export function VehicleEdit() {
       navigate('/vehicles')
     } catch (error) {
       console.log(error)
-      showToast(error instanceof Error ? error.message : 'Erro ao salvar veículo')
+      if (error instanceof ApiError && error.fieldErrors.length > 0) {
+        applyServerFieldErrors(error.fieldErrors)
+        showToast(error.message)
+      } else {
+        showToast(error instanceof Error ? error.message : 'Erro ao salvar veículo')
+      }
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  function applyServerFieldErrors(fieldErrors: { field: string; message: string }[]) {
+    for (const { field } of fieldErrors) {
+      switch (field) {
+        case 'brand':
+          setBrandError(true)
+          break
+        case 'model':
+          setModelError(true)
+          break
+        case 'manufactureYear':
+          setManufactureYearError(true)
+          break
+        case 'modelYear':
+          setModelYearError(true)
+          break
+        case 'licensePlate':
+          setLicensePlateError(true)
+          break
+        case 'color':
+          setColorError(true)
+          break
+        case 'currentKm':
+          setCurrentKmError(true)
+          break
+        case 'capacity':
+          if (showBatteryCapacity && !showTankCapacity) {
+            setBatteryCapacityError(true)
+          } else {
+            setTankCapacityError(true)
+          }
+          break
+        case 'batteryCapacity':
+          setBatteryCapacityError(true)
+          break
+      }
     }
   }
 
@@ -331,16 +405,19 @@ export function VehicleEdit() {
             onLicensePlateChange={handleLicensePlateChange}
             licensePlateError={licensePlateError}
             color={color}
-            onColorChange={setColor}
+            onColorChange={handleColorChange}
+            colorError={colorError}
             currentKm={currentKm}
             onCurrentKmChange={handleCurrentKmChange}
             currentKmError={currentKmError}
             showTankCapacity={showTankCapacity}
             tankCapacity={tankCapacity}
-            onTankCapacityChange={setTankCapacity}
+            onTankCapacityChange={handleTankCapacityChange}
+            tankCapacityError={tankCapacityError}
             showBatteryCapacity={showBatteryCapacity}
             batteryCapacity={batteryCapacity}
-            onBatteryCapacityChange={setBatteryCapacity}
+            onBatteryCapacityChange={handleBatteryCapacityChange}
+            batteryCapacityError={batteryCapacityError}
           />
         </section>
 

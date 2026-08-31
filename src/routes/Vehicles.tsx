@@ -12,6 +12,7 @@ import {
   revokeVehicleShare,
   shareVehicle,
 } from '../services/vehicle'
+import { ApiError } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import { useToast } from '../context/ToastContext'
 import { useConfirm } from '../context/ConfirmContext'
@@ -48,6 +49,7 @@ export function Vehicles() {
   const [pendingInvites, setPendingInvites] = useState<VehicleShare[]>([])
   const [sharingVehicle, setSharingVehicle] = useState<Vehicle | null>(null)
   const [shareSubmitting, setShareSubmitting] = useState(false)
+  const [shareEmailError, setShareEmailError] = useState<string | null>(null)
   const [shareBusyId, setShareBusyId] = useState<number | null>(null)
 
   useEffect(() => {
@@ -125,6 +127,7 @@ export function Vehicles() {
   async function handleShareSubmit(vehicle: Vehicle, email: string, durationDays: number) {
     try {
       setShareSubmitting(true)
+      setShareEmailError(null)
       await shareVehicle(vehicle.id, email, durationDays)
       setSharingVehicle(null)
       const share = await getVehicleShare(vehicle.id)
@@ -132,7 +135,13 @@ export function Vehicles() {
       showToast('Convite enviado.', 'success')
     } catch (err) {
       console.log(err)
-      showToast(err instanceof Error ? err.message : 'Não foi possível compartilhar o veículo')
+      if (err instanceof ApiError && err.fieldErrors.length > 0) {
+        const emailError = err.fieldErrors.find((fe) => fe.field === 'inviteeEmail')
+        if (emailError) setShareEmailError(emailError.message)
+        showToast(err.message)
+      } else {
+        showToast(err instanceof Error ? err.message : 'Não foi possível compartilhar o veículo')
+      }
     } finally {
       setShareSubmitting(false)
     }
@@ -292,7 +301,10 @@ export function Vehicles() {
                             variant="ghost"
                             size="sm"
                             fullWidth={false}
-                            onClick={() => setSharingVehicle(vehicle)}
+                            onClick={() => {
+                              setShareEmailError(null)
+                              setSharingVehicle(vehicle)
+                            }}
                           >
                             Compartilhar
                           </Button>
@@ -396,6 +408,7 @@ export function Vehicles() {
         <ShareVehicleDialog
           vehicle={sharingVehicle}
           submitting={shareSubmitting}
+          emailError={shareEmailError}
           onConfirm={(email, durationDays) => handleShareSubmit(sharingVehicle, email, durationDays)}
           onDismiss={() => setSharingVehicle(null)}
         />

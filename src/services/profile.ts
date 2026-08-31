@@ -1,4 +1,4 @@
-import { authenticatedRequest, extractErrorMessage } from './api'
+import { authenticatedRequest, extractErrorMessage, parseApiError } from './api'
 import { apiFetch } from './httpClient'
 import type { PageResponse } from '../types/Page'
 
@@ -80,7 +80,7 @@ export async function changePasswordRequest(
   })
 
   if (!response.ok) {
-    throw new Error(await extractErrorMessage(response, 'Não foi possível trocar a senha'))
+    throw await parseApiError(response, 'Não foi possível trocar a senha')
   }
 }
 

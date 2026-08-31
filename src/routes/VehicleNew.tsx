@@ -1,6 +1,6 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { authenticatedRequest, uploadVehiclePhoto } from '../services/api'
+import { authenticatedRequest, uploadVehiclePhoto, ApiError } from '../services/api'
 import { activateVehicle } from '../services/vehicle'
 import { useVehicle } from '../context/VehicleContext'
 import { useFipeSelection } from '../hooks/useFipeSelection'
@@ -54,6 +54,9 @@ export function VehicleNew() {
   const [batteryCapacity, setBatteryCapacity] = useState('')
   const [licensePlateError, setLicensePlateError] = useState(false)
   const [currentKmError, setCurrentKmError] = useState(false)
+  const [colorError, setColorError] = useState(false)
+  const [tankCapacityError, setTankCapacityError] = useState(false)
+  const [batteryCapacityError, setBatteryCapacityError] = useState(false)
 
   // Etapa 4 — Foto (opcional)
   const [photoFile, setPhotoFile] = useState<File | null>(null)
@@ -127,6 +130,21 @@ export function VehicleNew() {
     setCurrentKmError(false)
   }
 
+  function handleColorChange(value: string) {
+    setColor(value)
+    setColorError(false)
+  }
+
+  function handleTankCapacityChange(value: string) {
+    setTankCapacity(value)
+    setTankCapacityError(false)
+  }
+
+  function handleBatteryCapacityChange(value: string) {
+    setBatteryCapacity(value)
+    setBatteryCapacityError(false)
+  }
+
   function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null
     setPhotoFile(file)
@@ -156,9 +174,13 @@ export function VehicleNew() {
     if (currentStep === 3) {
       const kmInvalid = !currentKm.trim()
       const plateInvalid = licensePlate.length !== 7
-      if (plateInvalid || kmInvalid) {
+      const tankInvalid = showTankCapacity && !tankCapacity.trim()
+      const batteryInvalid = showBatteryCapacity && !batteryCapacity.trim()
+      if (plateInvalid || kmInvalid || tankInvalid || batteryInvalid) {
         setLicensePlateError(plateInvalid)
         setCurrentKmError(kmInvalid)
+        setTankCapacityError(tankInvalid)
+        setBatteryCapacityError(batteryInvalid)
         return
       }
       setCurrentStep(4)
@@ -170,8 +192,13 @@ export function VehicleNew() {
   }
 
   function skipLicensePlate() {
-    if (!currentKm.trim()) {
-      setCurrentKmError(true)
+    const kmInvalid = !currentKm.trim()
+    const tankInvalid = showTankCapacity && !tankCapacity.trim()
+    const batteryInvalid = showBatteryCapacity && !batteryCapacity.trim()
+    if (kmInvalid || tankInvalid || batteryInvalid) {
+      setCurrentKmError(kmInvalid)
+      setTankCapacityError(tankInvalid)
+      setBatteryCapacityError(batteryInvalid)
       return
     }
     setLicensePlateError(false)
@@ -226,10 +253,64 @@ export function VehicleNew() {
       navigate('/')
     } catch (error) {
       console.log(error)
-      showToast(error instanceof Error ? error.message : 'Erro ao cadastrar veículo')
+      if (error instanceof ApiError && error.fieldErrors.length > 0) {
+        applyServerFieldErrors(error.fieldErrors)
+        showToast(error.message)
+      } else {
+        showToast(error instanceof Error ? error.message : 'Erro ao cadastrar veículo')
+      }
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  function applyServerFieldErrors(fieldErrors: { field: string; message: string }[]) {
+    let earliestStep = 4
+    for (const { field } of fieldErrors) {
+      switch (field) {
+        case 'brand':
+          setBrandError(true)
+          earliestStep = Math.min(earliestStep, 1)
+          break
+        case 'model':
+          setModelError(true)
+          earliestStep = Math.min(earliestStep, 1)
+          break
+        case 'manufactureYear':
+          setManufactureYearError(true)
+          earliestStep = Math.min(earliestStep, 1)
+          break
+        case 'modelYear':
+          setModelYearError(true)
+          earliestStep = Math.min(earliestStep, 1)
+          break
+        case 'licensePlate':
+          setLicensePlateError(true)
+          earliestStep = Math.min(earliestStep, 3)
+          break
+        case 'color':
+          setColorError(true)
+          earliestStep = Math.min(earliestStep, 3)
+          break
+        case 'currentKm':
+          setCurrentKmError(true)
+          earliestStep = Math.min(earliestStep, 3)
+          break
+        case 'capacity':
+          if (showBatteryCapacity && !showTankCapacity) {
+            setBatteryCapacityError(true)
+          } else {
+            setTankCapacityError(true)
+          }
+          earliestStep = Math.min(earliestStep, 3)
+          break
+        case 'batteryCapacity':
+          setBatteryCapacityError(true)
+          earliestStep = Math.min(earliestStep, 3)
+          break
+      }
+    }
+    if (earliestStep < 4) setCurrentStep(earliestStep)
   }
 
   function handleFormSubmit(e: FormEvent) {
@@ -298,16 +379,19 @@ export function VehicleNew() {
             onLicensePlateChange={handleLicensePlateChange}
             licensePlateError={licensePlateError}
             color={color}
-            onColorChange={setColor}
+            onColorChange={handleColorChange}
+            colorError={colorError}
             currentKm={currentKm}
             onCurrentKmChange={handleCurrentKmChange}
             currentKmError={currentKmError}
             showTankCapacity={showTankCapacity}
             tankCapacity={tankCapacity}
-            onTankCapacityChange={setTankCapacity}
+            onTankCapacityChange={handleTankCapacityChange}
+            tankCapacityError={tankCapacityError}
             showBatteryCapacity={showBatteryCapacity}
             batteryCapacity={batteryCapacity}
-            onBatteryCapacityChange={setBatteryCapacity}
+            onBatteryCapacityChange={handleBatteryCapacityChange}
+            batteryCapacityError={batteryCapacityError}
           />
         )}
 

@@ -272,15 +272,18 @@ export interface Step3Props {
   licensePlateError: boolean
   color: string
   onColorChange: (value: string) => void
+  colorError?: boolean
   currentKm: string
   onCurrentKmChange: (value: string) => void
   currentKmError?: boolean
   showTankCapacity: boolean
   tankCapacity: string
   onTankCapacityChange: (value: string) => void
+  tankCapacityError?: boolean
   showBatteryCapacity: boolean
   batteryCapacity: string
   onBatteryCapacityChange: (value: string) => void
+  batteryCapacityError?: boolean
 }
 
 export function Step3Details({
@@ -289,15 +292,18 @@ export function Step3Details({
   licensePlateError,
   color,
   onColorChange,
+  colorError = false,
   currentKm,
   onCurrentKmChange,
   currentKmError = false,
   showTankCapacity,
   tankCapacity,
   onTankCapacityChange,
+  tankCapacityError = false,
   showBatteryCapacity,
   batteryCapacity,
   onBatteryCapacityChange,
+  batteryCapacityError = false,
 }: Step3Props) {
   return (
     <div className="flex flex-col gap-4">
@@ -314,6 +320,7 @@ export function Step3Details({
         <div className="flex-1">
           <FieldLabel>Cor</FieldLabel>
           <TextField placeholder="Cor" value={color} onChange={(e) => onColorChange(e.target.value)} />
+          {colorError && <p className="text-sm text-red-600 dark:text-red-400">Cor inválida.</p>}
         </div>
       </div>
 
@@ -328,25 +335,27 @@ export function Step3Details({
 
       {showTankCapacity && (
         <div>
-          <FieldLabel>Capacidade do tanque (L)</FieldLabel>
+          <FieldLabel required>Capacidade do tanque (L)</FieldLabel>
           <TextField
             placeholder="Capacidade do tanque (L)"
             value={tankCapacity}
             onChange={(e) => onTankCapacityChange(e.target.value)}
             inputMode="decimal"
           />
+          {tankCapacityError && <p className="text-sm text-red-600 dark:text-red-400">Informe a capacidade do tanque.</p>}
         </div>
       )}
 
       {showBatteryCapacity && (
         <div>
-          <FieldLabel>Capacidade da bateria (kWh)</FieldLabel>
+          <FieldLabel required>Capacidade da bateria (kWh)</FieldLabel>
           <TextField
             placeholder="Capacidade da bateria (kWh)"
             value={batteryCapacity}
             onChange={(e) => onBatteryCapacityChange(e.target.value)}
             inputMode="decimal"
           />
+          {batteryCapacityError && <p className="text-sm text-red-600 dark:text-red-400">Informe a capacidade da bateria.</p>}
         </div>
       )}
     </div>

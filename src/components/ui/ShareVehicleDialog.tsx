@@ -8,11 +8,13 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 export function ShareVehicleDialog({
   vehicle,
   submitting,
+  emailError,
   onConfirm,
   onDismiss,
 }: {
   vehicle: Vehicle
   submitting: boolean
+  emailError?: string | null
   onConfirm: (email: string, durationDays: number) => void
   onDismiss: () => void
 }) {
@@ -42,6 +44,7 @@ export function ShareVehicleDialog({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        {emailError && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{emailError}</p>}
         <p className="mt-3 mb-1 text-sm font-bold text-gray-700 dark:text-gray-300">Validade (dias)</p>
         <TextField
           type="number"

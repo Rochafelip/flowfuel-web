@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { authenticatedRequest } from '../services/api'
+import { authenticatedRequest, ApiError } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import type { Refuel, RefuelRequest, RefuelType } from '../types/Refuel'
 import type { Dashboard } from '../types/Dashboard'
@@ -40,6 +40,7 @@ export function RefuelForm() {
   const [pickerOpen, setPickerOpen] = useState(false)
   const [loading, setLoading] = useState(isEditing)
   const [submitting, setSubmitting] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
   const isHybrid = activeVehicle?.energyType === 'HYBRID'
 
@@ -93,6 +94,15 @@ export function RefuelForm() {
       console.log(err)
       setBaseline(activeVehicle.currentKm)
     }
+  }
+
+  function clearFieldError(field: string) {
+    setFieldErrors((current) => {
+      if (!(field in current)) return current
+      const next = { ...current }
+      delete next[field]
+      return next
+    })
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -150,7 +160,14 @@ export function RefuelForm() {
       navigate('/refuels')
     } catch (err) {
       console.log(err)
-      showToast(err instanceof Error ? err.message : 'Erro ao salvar abastecimento')
+      if (err instanceof ApiError && err.fieldErrors.length > 0) {
+        const next: Record<string, string> = {}
+        for (const fe of err.fieldErrors) next[fe.field] = fe.message
+        setFieldErrors(next)
+        showToast(err.message)
+      } else {
+        showToast(err instanceof Error ? err.message : 'Erro ao salvar abastecimento')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -192,7 +209,10 @@ export function RefuelForm() {
             <TextField
               placeholder="Km rodados desde o último abastecimento"
               value={tripKm}
-              onChange={(e) => setTripKm(e.target.value)}
+              onChange={(e) => {
+                setTripKm(e.target.value)
+                clearFieldError('odometer')
+              }}
               inputMode="numeric"
             />
             {baseline !== null && (
@@ -200,26 +220,45 @@ export function RefuelForm() {
                 A partir de {baseline.toLocaleString('pt-BR')} km
               </p>
             )}
+            {fieldErrors.odometer && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.odometer}</p>
+            )}
           </div>
         ) : (
-          <TextField
-            placeholder="Odômetro (km)"
-            value={odometer}
-            onChange={(e) => setOdometer(e.target.value)}
-            inputMode="numeric"
-          />
+          <div>
+            <TextField
+              placeholder="Odômetro (km)"
+              value={odometer}
+              onChange={(e) => {
+                setOdometer(e.target.value)
+                clearFieldError('odometer')
+              }}
+              inputMode="numeric"
+            />
+            {fieldErrors.odometer && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.odometer}</p>
+            )}
+          </div>
         )}
 
-        <TextField
-          placeholder={
-            isHybrid && refuelType === 'ELECTRIC'
-              ? 'Quantidade (kWh)'
-              : 'Quantidade (L)'
-          }
-          value={energyAmount}
-          onChange={(e) => setEnergyAmount(e.target.value)}
-          inputMode="decimal"
-        />
+        <div>
+          <TextField
+            placeholder={
+              isHybrid && refuelType === 'ELECTRIC'
+                ? 'Quantidade (kWh)'
+                : 'Quantidade (L)'
+            }
+            value={energyAmount}
+            onChange={(e) => {
+              setEnergyAmount(e.target.value)
+              clearFieldError('energyAmount')
+            }}
+            inputMode="decimal"
+          />
+          {fieldErrors.energyAmount && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.energyAmount}</p>
+          )}
+        </div>
 
         <SegmentedToggle
           options={[
@@ -235,7 +274,10 @@ export function RefuelForm() {
             <TextField
               placeholder="Valor total pago"
               value={totalValue}
-              onChange={(e) => setTotalValue(e.target.value)}
+              onChange={(e) => {
+                setTotalValue(e.target.value)
+                clearFieldError('pricePerUnit')
+              }}
               inputMode="decimal"
             />
             {computedPricePerUnit && (
@@ -244,14 +286,25 @@ export function RefuelForm() {
                 {isHybrid && refuelType === 'ELECTRIC' ? '/kWh' : '/L'}
               </p>
             )}
+            {fieldErrors.pricePerUnit && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.pricePerUnit}</p>
+            )}
           </div>
         ) : (
-          <TextField
-            placeholder="Preço por unidade"
-            value={pricePerUnit}
-            onChange={(e) => setPricePerUnit(e.target.value)}
-            inputMode="decimal"
-          />
+          <div>
+            <TextField
+              placeholder="Preço por unidade"
+              value={pricePerUnit}
+              onChange={(e) => {
+                setPricePerUnit(e.target.value)
+                clearFieldError('pricePerUnit')
+              }}
+              inputMode="decimal"
+            />
+            {fieldErrors.pricePerUnit && (
+              <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.pricePerUnit}</p>
+            )}
+          </div>
         )}
 
         {isHybrid && (

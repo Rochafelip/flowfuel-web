@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { authenticatedRequest } from '../services/api'
+import { authenticatedRequest, ApiError } from '../services/api'
 import { useVehicle } from '../context/VehicleContext'
 import {
   VEHICLE_EVENT_TYPE_LABELS,
@@ -34,6 +34,7 @@ export function VehicleEventForm() {
   const [description, setDescription] = useState('')
   const [loading, setLoading] = useState(isEditing)
   const [submitting, setSubmitting] = useState(false)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (isEditing) {
@@ -58,6 +59,15 @@ export function VehicleEventForm() {
     } finally {
       setLoading(false)
     }
+  }
+
+  function clearFieldError(field: string) {
+    setFieldErrors((current) => {
+      if (!(field in current)) return current
+      const next = { ...current }
+      delete next[field]
+      return next
+    })
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -101,7 +111,14 @@ export function VehicleEventForm() {
       navigate('/vehicle-events')
     } catch (err) {
       console.log(err)
-      showToast(err instanceof Error ? err.message : 'Erro ao salvar evento')
+      if (err instanceof ApiError && err.fieldErrors.length > 0) {
+        const next: Record<string, string> = {}
+        for (const fe of err.fieldErrors) next[fe.field] = fe.message
+        setFieldErrors(next)
+        showToast(err.message)
+      } else {
+        showToast(err instanceof Error ? err.message : 'Erro ao salvar evento')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -134,35 +151,67 @@ export function VehicleEventForm() {
           ))}
         </select>
 
-        <TextField
-          placeholder="Valor (R$)"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          inputMode="decimal"
-        />
+        <div>
+          <TextField
+            placeholder="Valor (R$)"
+            value={amount}
+            onChange={(e) => {
+              setAmount(e.target.value)
+              clearFieldError('amount')
+            }}
+            inputMode="decimal"
+          />
+          {fieldErrors.amount && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.amount}</p>
+          )}
+        </div>
 
-        <TextField
-          type="date"
-          value={eventDate}
-          max={todayIsoDate()}
-          onChange={(e) => setEventDate(e.target.value)}
-        />
+        <div>
+          <TextField
+            type="date"
+            value={eventDate}
+            max={todayIsoDate()}
+            onChange={(e) => {
+              setEventDate(e.target.value)
+              clearFieldError('eventDate')
+            }}
+          />
+          {fieldErrors.eventDate && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.eventDate}</p>
+          )}
+        </div>
 
-        <TextField
-          placeholder="Odômetro (km) - opcional"
-          value={odometer}
-          onChange={(e) => setOdometer(e.target.value)}
-          inputMode="numeric"
-        />
+        <div>
+          <TextField
+            placeholder="Odômetro (km) - opcional"
+            value={odometer}
+            onChange={(e) => {
+              setOdometer(e.target.value)
+              clearFieldError('odometer')
+            }}
+            inputMode="numeric"
+          />
+          {fieldErrors.odometer && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.odometer}</p>
+          )}
+        </div>
 
-        <textarea
-          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
-          placeholder="Descrição (opcional)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          maxLength={2000}
-          rows={4}
-        />
+        <div>
+          <textarea
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+            placeholder="Descrição (opcional)"
+            value={description}
+            onChange={(e) => {
+              setDescription(e.target.value)
+              clearFieldError('description')
+            }}
+            maxLength={2000}
+            rows={4}
+          />
+          {fieldErrors.description && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{fieldErrors.description}</p>
+          )}
+        </div>
 
         <Button type="submit" disabled={submitting} className="lg:w-auto lg:self-end lg:px-10">
           {submitting ? 'Salvando...' : 'Salvar'}

@@ -8,23 +8,31 @@ export function clearSession() {
   localStorage.removeItem('@active_vehicle')
 }
 
+export interface ApiFieldError {
+  field: string
+  message: string
+}
+
 interface ApiErrorBody {
   message: string
   code?: string
+  fieldErrors: ApiFieldError[]
 }
 
 async function parseApiErrorBody(response: Response, fallback: string): Promise<ApiErrorBody> {
   try {
     const body = await response.json()
     if (Array.isArray(body?.errors) && body.errors.length > 0) {
-      const fieldMessages = body.errors
-        .map((e: { message?: string }) => e.message)
-        .filter(Boolean)
-      if (fieldMessages.length > 0) return { message: fieldMessages.join(' '), code: body?.code }
+      const fieldErrors: ApiFieldError[] = body.errors
+        .filter((e: { message?: string }) => Boolean(e?.message))
+        .map((e: { field?: string; message?: string }) => ({ field: e.field ?? '', message: e.message ?? '' }))
+      if (fieldErrors.length > 0) {
+        return { message: fieldErrors.map((e) => e.message).join(' '), code: body?.code, fieldErrors }
+      }
     }
-    return { message: body?.detail || fallback, code: body?.code }
+    return { message: body?.detail || fallback, code: body?.code, fieldErrors: [] }
   } catch {
-    return { message: fallback }
+    return { message: fallback, fieldErrors: [] }
   }
 }
 
@@ -32,7 +40,24 @@ export async function extractErrorMessage(response: Response, fallback: string):
   return (await parseApiErrorBody(response, fallback)).message
 }
 
+export async function parseApiError(response: Response, fallback: string): Promise<ApiError> {
+  const { message, code, fieldErrors } = await parseApiErrorBody(response, fallback)
+  return new ApiError(message, code, fieldErrors)
+}
+
 export class AccountNotActivatedError extends Error {}
+
+export class ApiError extends Error {
+  code?: string
+  fieldErrors: ApiFieldError[]
+
+  constructor(message: string, code: string | undefined, fieldErrors: ApiFieldError[]) {
+    super(message)
+    this.name = 'ApiError'
+    this.code = code
+    this.fieldErrors = fieldErrors
+  }
+}
 
 export async function loginRequest(email: string, password: string) {
   const response = await apiFetch(`${BASE_URL}/api/v1/auth/login`, {
@@ -158,7 +183,8 @@ export async function authenticatedRequest(
   }
 
   if (!response.ok) {
-    throw new Error(await extractErrorMessage(response, 'Erro na requisição'))
+    const { message, code, fieldErrors } = await parseApiErrorBody(response, 'Erro na requisição')
+    throw new ApiError(message, code, fieldErrors)
   }
 
   return response.json()

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { decodeUserIdFromToken } from '../lib/jwt'
 import { changePasswordRequest } from '../services/profile'
+import { ApiError } from '../services/api'
 import { Screen } from '../components/ui/Screen'
 import { PasswordField } from '../components/ui/PasswordField'
 import { Button } from '../components/ui/Button'
@@ -19,6 +20,7 @@ export function ChangePassword() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [currentPasswordError, setCurrentPasswordError] = useState<string | null>(null)
+  const [newPasswordError, setNewPasswordError] = useState<string | null>(null)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -39,13 +41,22 @@ export function ChangePassword() {
 
     setSubmitting(true)
     setCurrentPasswordError(null)
+    setNewPasswordError(null)
     try {
       await changePasswordRequest(userId, currentPassword, newPassword)
       showToast('Senha alterada com sucesso.', 'success')
       navigate('/profile')
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Não foi possível trocar a senha'
-      setCurrentPasswordError(message)
+      if (err instanceof ApiError && err.fieldErrors.length > 0) {
+        const currentError = err.fieldErrors.find((fe) => fe.field === 'currentPassword')
+        const newError = err.fieldErrors.find((fe) => fe.field === 'newPassword')
+        if (currentError) setCurrentPasswordError(currentError.message)
+        if (newError) setNewPasswordError(newError.message)
+        if (!currentError && !newError) showToast(err.message)
+      } else {
+        const message = err instanceof Error ? err.message : 'Não foi possível trocar a senha'
+        setCurrentPasswordError(message)
+      }
     } finally {
       setSubmitting(false)
     }
@@ -70,11 +81,19 @@ export function ChangePassword() {
           )}
         </div>
 
-        <PasswordField
-          placeholder="Nova senha"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
+        <div>
+          <PasswordField
+            placeholder="Nova senha"
+            value={newPassword}
+            onChange={(e) => {
+              setNewPassword(e.target.value)
+              setNewPasswordError(null)
+            }}
+          />
+          {newPasswordError && (
+            <p className="mt-1 text-sm text-red-600 dark:text-red-400">{newPasswordError}</p>
+          )}
+        </div>
 
         <PasswordField
           placeholder="Confirmar nova senha"
