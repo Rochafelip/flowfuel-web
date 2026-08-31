@@ -16,7 +16,7 @@ export function ResetPassword() {
   const navigate = useNavigate()
   const { showToast } = useToast()
 
-  const [token, setToken] = useState('')
+  const [token, setToken] = useState(searchParams.get('token') ?? '')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [formError, setFormError] = useState<string | null>(null)
