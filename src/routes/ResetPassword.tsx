@@ -3,7 +3,6 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { forgotPasswordRequest, resetPasswordRequest } from '../services/api'
 import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
-import { TextField } from '../components/ui/TextField'
 import { PasswordField } from '../components/ui/PasswordField'
 import { Button } from '../components/ui/Button'
 
@@ -13,10 +12,10 @@ const MIN_PASSWORD_LENGTH = 6
 export function ResetPassword() {
   const [searchParams] = useSearchParams()
   const email = searchParams.get('email') ?? ''
+  const token = searchParams.get('token') ?? ''
   const navigate = useNavigate()
   const { showToast } = useToast()
 
-  const [token, setToken] = useState(searchParams.get('token') ?? '')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [formError, setFormError] = useState<string | null>(null)
@@ -42,10 +41,10 @@ export function ResetPassword() {
     setIsResending(true)
     try {
       await forgotPasswordRequest(email)
-      showToast('Código reenviado. Confira seu email.', 'success')
+      showToast('Email reenviado. Confira sua caixa de entrada.', 'success')
       startCooldown()
     } catch (error) {
-      showToast(error instanceof Error ? error.message : 'Erro ao reenviar o código.')
+      showToast(error instanceof Error ? error.message : 'Erro ao reenviar o email.')
     } finally {
       setIsResending(false)
     }
@@ -67,17 +66,54 @@ export function ResetPassword() {
     setIsSubmitting(true)
     setFormError(null)
     try {
-      await resetPasswordRequest(token.trim(), newPassword)
+      await resetPasswordRequest(token, newPassword)
       showToast('Senha redefinida com sucesso! Faça login com sua nova senha.', 'success')
       navigate('/login')
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : 'Código inválido ou expirado.')
+      setFormError(error instanceof Error ? error.message : 'Link inválido ou expirado.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const canSubmit = token.trim() && newPassword && confirmPassword && !isSubmitting
+  const canSubmit = newPassword && confirmPassword && !isSubmitting
+
+  if (!token) {
+    return (
+      <Screen centered>
+        <div className="w-full max-w-sm rounded-xl bg-white dark:bg-gray-800 p-6 shadow-lg">
+          <h1 className="mb-2 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Verifique seu email
+          </h1>
+
+          <p className="mb-4 text-center text-sm text-gray-600 dark:text-gray-400">
+            Enviamos um link para{' '}
+            {email ? <span className="font-bold text-gray-900 dark:text-gray-100">{email}</span> : 'o seu email'}.
+            Abra-o para escolher uma nova senha.
+          </p>
+
+          {email && (
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={isResending || cooldown > 0}
+              className="block w-full text-center text-sm font-bold text-green-700 dark:text-green-400 disabled:opacity-60"
+            >
+              {isResending
+                ? 'Reenviando...'
+                : cooldown > 0
+                  ? `Reenviar email (${cooldown}s)`
+                  : 'Reenviar email'}
+            </button>
+          )}
+
+          <Link to="/login" className="mt-3 block text-center text-sm text-green-700 dark:text-green-400">
+            Lembrei minha senha, entrar
+          </Link>
+        </div>
+      </Screen>
+    )
+  }
 
   return (
     <Screen centered>
@@ -87,27 +123,10 @@ export function ResetPassword() {
         </h1>
 
         <p className="mb-4 text-center text-sm text-gray-600 dark:text-gray-400">
-          Cole o código que enviamos
-          {email ? (
-            <>
-              {' '}para <span className="font-bold text-gray-900 dark:text-gray-100">{email}</span>
-            </>
-          ) : (
-            ' para o seu email'
-          )}{' '}
-          e escolha uma nova senha.
+          Escolha uma nova senha para sua conta.
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <TextField
-            placeholder="Código de redefinição"
-            value={token}
-            onChange={(e) => {
-              setToken(e.target.value)
-              setFormError(null)
-            }}
-          />
-
           <PasswordField
             placeholder="Nova senha"
             value={newPassword}
@@ -132,21 +151,6 @@ export function ResetPassword() {
             {isSubmitting ? 'Redefinindo...' : 'Redefinir senha'}
           </Button>
         </form>
-
-        {email && (
-          <button
-            type="button"
-            onClick={handleResend}
-            disabled={isResending || cooldown > 0}
-            className="mt-4 block w-full text-center text-sm font-bold text-green-700 dark:text-green-400 disabled:opacity-60"
-          >
-            {isResending
-              ? 'Reenviando...'
-              : cooldown > 0
-                ? `Reenviar código (${cooldown}s)`
-                : 'Reenviar código'}
-          </button>
-        )}
 
         <Link to="/login" className="mt-3 block text-center text-sm text-green-700 dark:text-green-400">
           Lembrei minha senha, entrar
