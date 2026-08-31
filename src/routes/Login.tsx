@@ -42,7 +42,7 @@ export function Login() {
           Entrar
         </h1>
 
-        <div className="mb-4 flex flex-col gap-4">
+        <div className="mb-2 flex flex-col gap-4">
           <TextField
             placeholder="Email"
             type="email"
@@ -56,11 +56,11 @@ export function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
-          <Link to="/forgot-password" className="text-right text-sm text-green-700 dark:text-green-400">
-            Esqueci minha senha
-          </Link>
         </div>
+
+        <Link to="/forgot-password" className="mb-4 block text-right text-sm text-green-700 dark:text-green-400">
+          Esqueci minha senha
+        </Link>
 
         <Button type="submit" className="mb-4">
           Entrar
