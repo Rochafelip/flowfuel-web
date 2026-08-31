@@ -19,7 +19,7 @@ interface VehicleListItem {
 }
 
 type DataType = 'REFUELS' | 'EVENTS'
-type ExportFileFormat = 'csv' | 'xlsx'
+type ExportFileFormat = 'csv' | 'pdf'
 
 const EVENT_TYPES = Object.keys(VEHICLE_EVENT_TYPE_LABELS) as VehicleEventType[]
 
@@ -191,7 +191,7 @@ export function Export() {
           onChange={setFormat}
           options={[
             { value: 'csv', label: 'CSV' },
-            { value: 'xlsx', label: 'Excel' },
+            { value: 'pdf', label: 'PDF' },
           ]}
         />
 
