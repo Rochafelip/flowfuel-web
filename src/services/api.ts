@@ -91,6 +91,36 @@ export async function activateRequest(email: string, token: string) {
   return response.json()
 }
 
+export async function forgotPasswordRequest(email: string) {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/forgot-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email }),
+  })
+
+  if (!response.ok) {
+    throw new Error(await extractErrorMessage(response, 'Erro ao solicitar redefinição de senha'))
+  }
+
+  return response.json()
+}
+
+export async function resetPasswordRequest(token: string, newPassword: string) {
+  const response = await apiFetch(`${BASE_URL}/api/v1/auth/reset-password`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token, newPassword }),
+  })
+
+  if (!response.ok) {
+    throw new Error(await extractErrorMessage(response, 'Código inválido ou expirado'))
+  }
+}
+
 export async function authenticatedRequest(
   endpoint: string,
   options?: Partial<RequestInit>
