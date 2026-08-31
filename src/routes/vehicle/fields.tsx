@@ -1,11 +1,13 @@
 import type { ChangeEvent } from 'react'
 import { TextField } from '../../components/ui/TextField'
 import { SegmentedToggle } from '../../components/ui/SegmentedToggle'
+import { SearchableSelect } from '../../components/ui/SearchableSelect'
 import { useFipeSelection } from '../../hooks/useFipeSelection'
 import type { FipeOption } from '../../services/fipe'
 
-export const selectClass =
-  'h-12 w-full rounded-lg border border-gray-300 bg-white px-3 text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-60 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100'
+function toSearchableOptions(options: FipeOption[]) {
+  return options.map((o) => ({ value: String(o.codigo), label: o.nome }))
+}
 
 export type VehicleTypeValue = 'Carro' | 'Moto'
 export type EnergyTypeValue = 'COMBUSTION' | 'ELECTRIC' | 'HYBRID'
@@ -91,21 +93,14 @@ export function Step1Identification({
               </button>
             </div>
           ) : (
-            <select
-              className={selectClass}
+            <SearchableSelect
+              options={toSearchableOptions(fipe.brands)}
               value={fipe.brandCode}
-              onChange={(e) => onFipeBrandSelect(e.target.value)}
-              disabled={fipe.loadingBrands}
-            >
-              <option value="">
-                {fipe.loadingBrands ? 'Carregando marcas...' : 'Selecione a marca'}
-              </option>
-              {fipe.brands.map((b) => (
-                <option key={b.codigo} value={String(b.codigo)}>
-                  {b.nome}
-                </option>
-              ))}
-            </select>
+              onChange={onFipeBrandSelect}
+              placeholder="Selecione a marca"
+              loading={fipe.loadingBrands}
+              loadingLabel="Carregando marcas..."
+            />
           )}
           {brandError && <p className="text-sm text-red-600 dark:text-red-400">Selecione a marca.</p>}
 
@@ -117,21 +112,15 @@ export function Step1Identification({
               </button>
             </div>
           ) : (
-            <select
-              className={selectClass}
+            <SearchableSelect
+              options={toSearchableOptions(fipe.models)}
               value={fipe.modelCode}
-              onChange={(e) => onFipeModelSelect(e.target.value)}
-              disabled={!fipe.brandCode || fipe.loadingModels}
-            >
-              <option value="">
-                {fipe.loadingModels ? 'Carregando modelos...' : 'Selecione o modelo'}
-              </option>
-              {fipe.models.map((m) => (
-                <option key={m.codigo} value={String(m.codigo)}>
-                  {m.nome}
-                </option>
-              ))}
-            </select>
+              onChange={onFipeModelSelect}
+              placeholder="Selecione o modelo"
+              disabled={!fipe.brandCode}
+              loading={fipe.loadingModels}
+              loadingLabel="Carregando modelos..."
+            />
           )}
           {modelError && <p className="text-sm text-red-600 dark:text-red-400">Selecione o modelo.</p>}
 
@@ -143,19 +132,15 @@ export function Step1Identification({
               </button>
             </div>
           ) : (
-            <select
-              className={selectClass}
+            <SearchableSelect
+              options={toSearchableOptions(fipe.years)}
               value={fipe.yearCode}
-              onChange={(e) => onFipeYearSelect(e.target.value)}
-              disabled={!fipe.modelCode || fipe.loadingYears}
-            >
-              <option value="">{fipe.loadingYears ? 'Carregando anos...' : 'Selecione o ano'}</option>
-              {fipe.years.map((y) => (
-                <option key={y.codigo} value={String(y.codigo)}>
-                  {y.nome}
-                </option>
-              ))}
-            </select>
+              onChange={onFipeYearSelect}
+              placeholder="Selecione o ano"
+              disabled={!fipe.modelCode}
+              loading={fipe.loadingYears}
+              loadingLabel="Carregando anos..."
+            />
           )}
           {modelYearError && <p className="text-sm text-red-600 dark:text-red-400">Ano do modelo inválido.</p>}
 
