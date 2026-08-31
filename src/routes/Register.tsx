@@ -89,6 +89,13 @@ export function Register() {
         <Link to="/login" className="block text-center text-sm text-green-700 dark:text-green-400">
           Já tem conta? Entrar
         </Link>
+
+        <Link
+          to="/forgot-password"
+          className="mt-2 block text-center text-sm text-green-700 dark:text-green-400"
+        >
+          Esqueci minha senha
+        </Link>
       </form>
     </Screen>
   )
