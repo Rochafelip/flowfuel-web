@@ -12,6 +12,8 @@ import { ConfirmDialog } from './components/ui/ConfirmDialog'
 import { Login } from './routes/Login'
 import { Register } from './routes/Register'
 import { Activate } from './routes/Activate'
+import { ForgotPassword } from './routes/ForgotPassword'
+import { ResetPassword } from './routes/ResetPassword'
 import { SelectVehicle } from './routes/SelectVehicle'
 import { VehicleNew } from './routes/VehicleNew'
 import { Vehicles } from './routes/Vehicles'
@@ -39,6 +41,8 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/activate" element={<Activate />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
 
                 <Route element={<ProtectedRoute />}>
                   <Route element={<AppLayout />}>
