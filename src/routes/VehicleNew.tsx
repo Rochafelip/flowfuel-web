@@ -53,6 +53,7 @@ export function VehicleNew() {
   const [tankCapacity, setTankCapacity] = useState('')
   const [batteryCapacity, setBatteryCapacity] = useState('')
   const [licensePlateError, setLicensePlateError] = useState(false)
+  const [currentKmError, setCurrentKmError] = useState(false)
 
   // Etapa 4 — Foto (opcional)
   const [photoFile, setPhotoFile] = useState<File | null>(null)
@@ -121,6 +122,11 @@ export function VehicleNew() {
     setLicensePlateError(false)
   }
 
+  function handleCurrentKmChange(value: string) {
+    setCurrentKm(value)
+    setCurrentKmError(false)
+  }
+
   function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null
     setPhotoFile(file)
@@ -148,8 +154,11 @@ export function VehicleNew() {
       return
     }
     if (currentStep === 3) {
-      if (licensePlate.length !== 7) {
-        setLicensePlateError(true)
+      const kmInvalid = !currentKm.trim()
+      const plateInvalid = licensePlate.length !== 7
+      if (plateInvalid || kmInvalid) {
+        setLicensePlateError(plateInvalid)
+        setCurrentKmError(kmInvalid)
         return
       }
       setCurrentStep(4)
@@ -161,6 +170,10 @@ export function VehicleNew() {
   }
 
   function skipLicensePlate() {
+    if (!currentKm.trim()) {
+      setCurrentKmError(true)
+      return
+    }
     setLicensePlateError(false)
     setCurrentStep(4)
   }
@@ -230,7 +243,10 @@ export function VehicleNew() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Cadastrar Veículo</h1>
+      <h1 className="mb-1 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Cadastrar Veículo</h1>
+      <p className="mb-4 text-center text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-red-600 dark:text-red-400">*</span> campo obrigatório
+      </p>
 
       <WizardStepper currentStep={currentStep} />
 
@@ -284,7 +300,8 @@ export function VehicleNew() {
             color={color}
             onColorChange={setColor}
             currentKm={currentKm}
-            onCurrentKmChange={setCurrentKm}
+            onCurrentKmChange={handleCurrentKmChange}
+            currentKmError={currentKmError}
             showTankCapacity={showTankCapacity}
             tankCapacity={tankCapacity}
             onTankCapacityChange={setTankCapacity}

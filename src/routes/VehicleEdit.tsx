@@ -275,7 +275,10 @@ export function VehicleEdit() {
 
   return (
     <Screen wide>
-      <h1 className="mb-5 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Editar veículo</h1>
+      <h1 className="mb-1 text-center text-2xl font-bold text-gray-900 dark:text-gray-100">Editar veículo</h1>
+      <p className="mb-4 text-center text-xs text-gray-500 dark:text-gray-400">
+        <span className="text-red-600 dark:text-red-400">*</span> campo obrigatório
+      </p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <section className="flex flex-col gap-4">
