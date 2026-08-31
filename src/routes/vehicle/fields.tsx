@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react'
 import { TextField } from '../../components/ui/TextField'
+import { FieldLabel } from '../../components/ui/FieldLabel'
 import { SegmentedToggle } from '../../components/ui/SegmentedToggle'
 import { SearchableSelect } from '../../components/ui/SearchableSelect'
 import { useFipeSelection } from '../../hooks/useFipeSelection'
@@ -85,6 +86,7 @@ export function Step1Identification({
 
       {useFipeSearch ? (
         <>
+          <FieldLabel required>Marca</FieldLabel>
           {fipe.brandsError ? (
             <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-3 text-sm">
               <span className="text-red-600 dark:text-red-400">Não foi possível carregar as marcas.</span>
@@ -104,6 +106,7 @@ export function Step1Identification({
           )}
           {brandError && <p className="text-sm text-red-600 dark:text-red-400">Selecione a marca.</p>}
 
+          <FieldLabel required>Modelo</FieldLabel>
           {fipe.modelsError ? (
             <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-3 text-sm">
               <span className="text-red-600 dark:text-red-400">Não foi possível carregar os modelos.</span>
@@ -124,6 +127,7 @@ export function Step1Identification({
           )}
           {modelError && <p className="text-sm text-red-600 dark:text-red-400">Selecione o modelo.</p>}
 
+          <FieldLabel required>Ano do modelo</FieldLabel>
           {fipe.yearsError ? (
             <div className="flex items-center justify-between gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-3 text-sm">
               <span className="text-red-600 dark:text-red-400">Não foi possível carregar os anos.</span>
@@ -144,6 +148,7 @@ export function Step1Identification({
           )}
           {modelYearError && <p className="text-sm text-red-600 dark:text-red-400">Ano do modelo inválido.</p>}
 
+          <FieldLabel required>Ano de fabricação</FieldLabel>
           <TextField
             placeholder="Ano de Fabricação"
             value={manufactureYear}
@@ -162,14 +167,17 @@ export function Step1Identification({
         </>
       ) : (
         <>
+          <FieldLabel required>Marca</FieldLabel>
           <TextField placeholder="Marca" value={brand} onChange={(e) => onBrandChange(e.target.value)} />
           {brandError && <p className="text-sm text-red-600 dark:text-red-400">Informe a marca.</p>}
 
+          <FieldLabel required>Modelo</FieldLabel>
           <TextField placeholder="Modelo" value={model} onChange={(e) => onModelChange(e.target.value)} />
           {modelError && <p className="text-sm text-red-600 dark:text-red-400">Informe o modelo.</p>}
 
           <div className="flex gap-3">
             <div className="flex-1">
+              <FieldLabel required>Ano de fabricação</FieldLabel>
               <TextField
                 placeholder="Ano de Fabricação"
                 value={manufactureYear}
@@ -179,6 +187,7 @@ export function Step1Identification({
               {manufactureYearError && <p className="text-sm text-red-600 dark:text-red-400">Inválido.</p>}
             </div>
             <div className="flex-1">
+              <FieldLabel required>Ano do modelo</FieldLabel>
               <TextField
                 placeholder="Ano do Modelo"
                 value={modelYear}
@@ -294,6 +303,7 @@ export function Step3Details({
     <div className="flex flex-col gap-4">
       <div className="flex gap-3">
         <div className="flex-1">
+          <FieldLabel required>Placa</FieldLabel>
           <TextField
             placeholder="Placa (ABC1D23)"
             value={formatLicensePlateDisplay(licensePlate)}
@@ -302,10 +312,12 @@ export function Step3Details({
           {licensePlateError && <p className="text-sm text-red-600 dark:text-red-400">Placa inválida.</p>}
         </div>
         <div className="flex-1">
+          <FieldLabel>Cor</FieldLabel>
           <TextField placeholder="Cor" value={color} onChange={(e) => onColorChange(e.target.value)} />
         </div>
       </div>
 
+      <FieldLabel required>Km atual</FieldLabel>
       <TextField
         placeholder="Km Atual"
         value={currentKm}
@@ -315,21 +327,27 @@ export function Step3Details({
       {currentKmError && <p className="text-sm text-red-600 dark:text-red-400">Informe o odômetro atual.</p>}
 
       {showTankCapacity && (
-        <TextField
-          placeholder="Capacidade do tanque (L)"
-          value={tankCapacity}
-          onChange={(e) => onTankCapacityChange(e.target.value)}
-          inputMode="decimal"
-        />
+        <div>
+          <FieldLabel>Capacidade do tanque (L)</FieldLabel>
+          <TextField
+            placeholder="Capacidade do tanque (L)"
+            value={tankCapacity}
+            onChange={(e) => onTankCapacityChange(e.target.value)}
+            inputMode="decimal"
+          />
+        </div>
       )}
 
       {showBatteryCapacity && (
-        <TextField
-          placeholder="Capacidade da bateria (kWh)"
-          value={batteryCapacity}
-          onChange={(e) => onBatteryCapacityChange(e.target.value)}
-          inputMode="decimal"
-        />
+        <div>
+          <FieldLabel>Capacidade da bateria (kWh)</FieldLabel>
+          <TextField
+            placeholder="Capacidade da bateria (kWh)"
+            value={batteryCapacity}
+            onChange={(e) => onBatteryCapacityChange(e.target.value)}
+            inputMode="decimal"
+          />
+        </div>
       )}
     </div>
   )
