@@ -8,20 +8,31 @@ export function clearSession() {
   localStorage.removeItem('@active_vehicle')
 }
 
-export async function extractErrorMessage(response: Response, fallback: string): Promise<string> {
+interface ApiErrorBody {
+  message: string
+  code?: string
+}
+
+async function parseApiErrorBody(response: Response, fallback: string): Promise<ApiErrorBody> {
   try {
     const body = await response.json()
     if (Array.isArray(body?.errors) && body.errors.length > 0) {
       const fieldMessages = body.errors
         .map((e: { message?: string }) => e.message)
         .filter(Boolean)
-      if (fieldMessages.length > 0) return fieldMessages.join(' ')
+      if (fieldMessages.length > 0) return { message: fieldMessages.join(' '), code: body?.code }
     }
-    return body?.detail || fallback
+    return { message: body?.detail || fallback, code: body?.code }
   } catch {
-    return fallback
+    return { message: fallback }
   }
 }
+
+export async function extractErrorMessage(response: Response, fallback: string): Promise<string> {
+  return (await parseApiErrorBody(response, fallback)).message
+}
+
+export class AccountNotActivatedError extends Error {}
 
 export async function loginRequest(email: string, password: string) {
   const response = await apiFetch(`${BASE_URL}/api/v1/auth/login`, {
@@ -33,7 +44,11 @@ export async function loginRequest(email: string, password: string) {
   })
 
   if (!response.ok) {
-    throw new Error(await extractErrorMessage(response, 'Email ou senha inválidos'))
+    const { message, code } = await parseApiErrorBody(response, 'Email ou senha inválidos')
+    if (code === 'ACCOUNT_NOT_ACTIVATED') {
+      throw new AccountNotActivatedError(message)
+    }
+    throw new Error(message)
   }
 
   return response.json()

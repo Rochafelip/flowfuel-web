@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { loginRequest } from '../services/api'
+import { AccountNotActivatedError, loginRequest } from '../services/api'
 import { useToast } from '../context/ToastContext'
 import { Screen } from '../components/ui/Screen'
 import { TextField } from '../components/ui/TextField'
@@ -28,6 +28,11 @@ export function Login() {
       await signIn(data.accessToken)
       navigate('/')
     } catch (error) {
+      if (error instanceof AccountNotActivatedError) {
+        showToast(error.message)
+        navigate(`/activate?email=${encodeURIComponent(email)}`)
+        return
+      }
       showToast(error instanceof Error ? error.message : 'Email ou senha inválidos')
     }
   }
