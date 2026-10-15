@@ -24,6 +24,7 @@ import { RefuelForm } from './routes/RefuelForm'
 import { VehicleEvents } from './routes/VehicleEvents'
 import { VehicleEventForm } from './routes/VehicleEventForm'
 import { Stations } from './routes/Stations'
+import { FlexCalculator } from './routes/FlexCalculator'
 import { Export } from './routes/Export'
 import { Profile } from './routes/Profile'
 import { ProfileEdit } from './routes/ProfileEdit'
@@ -58,6 +59,7 @@ export default function App() {
                     <Route path="/vehicle-events/new" element={<VehicleEventForm />} />
                     <Route path="/vehicle-events/:id/edit" element={<VehicleEventForm />} />
                     <Route path="/stations" element={<Stations />} />
+                    <Route path="/flex-calculator" element={<FlexCalculator />} />
                     <Route path="/export" element={<Export />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/profile/edit" element={<ProfileEdit />} />
